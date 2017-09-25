@@ -1,0 +1,70 @@
+#!/usr/bin/env node
+'use strict'
+/*
+Copyright [yyyy] [name of copyright owner]
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+const buildSnap = require('.')
+const debug = require('debug')('electron-installer-snap:cli')
+const yargs = require('yargs')
+
+function parseArgs () {
+  let args = yargs.option('dir', {
+    describe: 'directory of the packaged Electron app',
+    default: process.cwd()
+  }).option('name', {
+    describe: 'name of the snap package (defaults to name in package.json)',
+    string: true
+  }).option('app-version', {
+    describe: 'version of the snap package (defaults to version in package.json)',
+    string: true
+  }).option('summary', {
+    describe: 'A 78 character long summary for the snap (defaults to description in package.json)',
+    string: true
+  }).option('description', {
+    describe: 'The longer description for the snap',
+    string: true
+  }).option('grade', {
+    describe: 'The quality grade of the snap',
+    string: true
+  }).option('confinement', {
+    describe: 'See: https://snapcraft.io/docs/reference/confinement',
+    string: true
+  }).strict()
+    .usage('$0\n\nBuilds a Snap for an already customized Electron app.\n' +
+           'For more details on Snap-specific arguments, see the snapcraft syntax page:\n' +
+           'https://snapcraft.io/docs/build-snaps/syntax')
+    .argv
+
+  debug('Original args:', args)
+
+  args.version = args.appVersion
+  delete args.appVersion
+
+  const filteredArgs = {}
+  const YARGS_KEYS = ['_', '$0', 'help']
+  for (const key in args) {
+    const value = args[key]
+    if (value !== undefined && key.indexOf('-') === -1 && YARGS_KEYS.indexOf(key) === -1) {
+      filteredArgs[key] = value
+    }
+  }
+
+  debug('Filtered args:', filteredArgs)
+
+  return filteredArgs
+}
+
+buildSnap(parseArgs())
