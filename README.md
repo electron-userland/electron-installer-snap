@@ -24,13 +24,15 @@ Then add to your `package.json`:
 {
   // ...
   "scripts": {
-    "build:snap": "electron-installer-snap"
+    "build:package": "electron-packager . --out=out"
+    "build:snap": "electron-installer-snap --dir=out/myappname-linux-x64"
   },
   // ...
 }
 ```
 
-Then you can run `npm run build:snap`, which will generate a `.snap` file in your current directory.
+Then you can run `npm run build:package && npm run build:snap`, which will prepare the Electron app
+for bundling, generate a `.snap` file in your current directory.
 It is recommended to ignore the generated `snap` directory in your version control.
 
 ## Legal
