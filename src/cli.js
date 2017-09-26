@@ -21,7 +21,7 @@ const debug = require('debug')('electron-installer-snap:cli')
 const yargs = require('yargs')
 
 function parseArgs () {
-  let args = yargs.option('dir', {
+  let args = yargs.option('src', {
     describe: 'directory of the packaged Electron app',
     default: process.cwd()
   }).option('snapcraft', {

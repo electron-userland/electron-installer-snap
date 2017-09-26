@@ -22,8 +22,8 @@ const Snapcraft = require('./snapcraft')
 const createYamlFromTemplate = require('./yaml')
 
 function buildSnap (userSupplied) {
-  const packageDir = path.resolve(userSupplied.dir)
-  delete userSupplied.dir
+  const packageDir = path.resolve(userSupplied.src)
+  delete userSupplied.src
 
   const snapcraft = new Snapcraft()
 
