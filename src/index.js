@@ -15,14 +15,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// const debug = require('debug')('electron-installer-snap:index')
 const nodeify = require('nodeify')
-// const spawn = require('cross-spawn-promise')
+const path = require('path')
 
+const Snapcraft = require('./snapcraft')
 const createYamlFromTemplate = require('./yaml')
 
 function buildSnap (userSupplied) {
-  return createYamlFromTemplate(userSupplied)
+  const packageDir = path.resolve(userSupplied.dir)
+  delete userSupplied.dir
+
+  const snapcraft = new Snapcraft()
+
+  return snapcraft.ensureInstalled(userSupplied.snapcraft)
+    .then(() => createYamlFromTemplate(packageDir, userSupplied))
+    .then(() => snapcraft.run(packageDir, 'snap'))
 }
 
 module.exports = nodeify(buildSnap)

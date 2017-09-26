@@ -53,10 +53,9 @@ function writeYaml (filename, data) {
   return fs.outputFile(filename, yaml.safeDump(data))
 }
 
-function createYamlFromTemplate (userSupplied) {
+function createYamlFromTemplate (packageDir, userSupplied) {
   const templateFilename = path.resolve(__dirname, '..', 'resources', 'snapcraft.yaml')
-  const packageDir = path.resolve(userSupplied.dir)
-  delete userSupplied.dir
+  delete userSupplied.snapcraft
 
   return readYaml(templateFilename)
     .then(yamlData => transformYaml(packageDir, yamlData, userSupplied))
