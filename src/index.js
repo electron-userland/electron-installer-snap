@@ -24,12 +24,14 @@ const createYamlFromTemplate = require('./yaml')
 function buildSnap (userSupplied) {
   const packageDir = path.resolve(userSupplied.dir)
   delete userSupplied.dir
+  const arch = String(userSupplied.arch)
+  delete userSupplied.arch
 
   const snapcraft = new Snapcraft()
 
   return snapcraft.ensureInstalled(userSupplied.snapcraft)
     .then(() => createYamlFromTemplate(packageDir, userSupplied))
-    .then(() => snapcraft.run(packageDir, 'snap'))
+    .then(() => snapcraft.run(packageDir, 'snap', { 'target-arch': snapcraft.translateArch(arch) }))
 }
 
 module.exports = nodeify(buildSnap)

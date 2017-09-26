@@ -35,9 +35,33 @@ class Snapcraft {
       })
   }
 
-  run (packageDir, command) {
+  /**
+   * Converts Node-style archs to Snap-compatible archs.
+   */
+  translateArch (arch) {
+    switch (arch) {
+      case 'ia32': return 'i386'
+      case 'x64': return 'amd64'
+      case 'armv7l':
+      case 'arm':
+        return 'armhf'
+      // arm64 => arm64
+      default: return arch
+    }
+  }
+
+  run (packageDir, command, options) {
     debug(`Running '${this.snapcraftPath} ${command}' in ${packageDir}`)
-    return spawn(this.snapcraftPath, [command])
+    const args = [command]
+    for (const flag in options) {
+      const value = options[flag]
+      if (value) {
+        args.push(`--${flag}=${value}`)
+      } else {
+        args.push(`--${flag}`)
+      }
+    }
+    return spawn(this.snapcraftPath, args)
       .catch(error => {
         let output = ''
         if (error.stdout) output += error.stdout.toString()
