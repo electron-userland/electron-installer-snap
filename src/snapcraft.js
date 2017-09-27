@@ -62,6 +62,7 @@ class Snapcraft {
     }
     debug(`Running '${this.snapcraftPath} ${args.join(' ')}' in ${packageDir}`)
     return spawn(this.snapcraftPath, args, { cwd: packageDir })
+      .then(stdout => debug('Snapcraft output:\n\n', stdout.toString()))
       .catch(error => {
         let output = ''
         if (error.stdout) output += error.stdout.toString()
