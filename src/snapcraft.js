@@ -51,7 +51,6 @@ class Snapcraft {
   }
 
   run (packageDir, command, options) {
-    debug(`Running '${this.snapcraftPath} ${command}' in ${packageDir}`)
     const args = [command]
     for (const flag in options) {
       const value = options[flag]
@@ -61,6 +60,7 @@ class Snapcraft {
         args.push(`--${flag}`)
       }
     }
+    debug(`Running '${this.snapcraftPath} ${args.join(' ')}' in ${packageDir}`)
     return spawn(this.snapcraftPath, args, { cwd: packageDir })
       .catch(error => {
         let output = ''
