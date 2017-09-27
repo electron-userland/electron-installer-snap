@@ -7,15 +7,31 @@ description: |
 grade: devel
 confinement: devmode
 
+apps:
+  electronApp:
+    plugs:
+    - browser-support
+    - desktop
+    - desktop-legacy
+    - gsettings
+    - home
+    - mount-observe
+    - network
+    - network-bind
+    - unity7
+    - x11
+    environment:
+      TMPDIR: $XDG_RUNTIME_DIR
+
 parts:
   electronApp:
     source: .
     plugin: dump
     stage-packages:
+    - libgconf2-4
+    - libnotify4
     - libnss3
     - libxss1
-    - libnotify4
-    - libgconf2-4
     - libxtst6
     after:
     - desktop-gtk2
