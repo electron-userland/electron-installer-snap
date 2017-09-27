@@ -61,7 +61,7 @@ class Snapcraft {
         args.push(`--${flag}`)
       }
     }
-    return spawn(this.snapcraftPath, args)
+    return spawn(this.snapcraftPath, args, { cwd: packageDir })
       .catch(error => {
         let output = ''
         if (error.stdout) output += error.stdout.toString()
