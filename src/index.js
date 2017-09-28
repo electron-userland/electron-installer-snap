@@ -15,31 +15,59 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+const debug = require('debug')('electron-installer-snap:index')
 const nodeify = require('nodeify')
 const path = require('path')
+const tmp = require('tmp-promise')
 
 const Snapcraft = require('./snapcraft')
 const createYamlFromTemplate = require('./yaml')
 
-function buildSnap (userSupplied) {
-  const packageDir = path.resolve(userSupplied.src)
-  delete userSupplied.src
+class SnapCreator {
+  constructor (userSupplied) {
+    this.userSupplied = userSupplied
+    this.snapcraft = new Snapcraft()
 
-  const snapcraft = new Snapcraft()
+    this.packageDir = path.resolve(userSupplied.src)
+    delete userSupplied.src
 
-  const options = {
-    'target-arch': snapcraft.translateArch(String(userSupplied.arch || process.arch))
+    this.options = {
+      'target-arch': this.snapcraft.translateArch(String(userSupplied.arch || process.arch))
+    }
+    delete userSupplied.arch
+
+    if (userSupplied.dest) {
+      this.options.output = String(userSupplied.dest)
+      delete userSupplied.dest
+    }
   }
-  delete userSupplied.arch
 
-  if (userSupplied.dest) {
-    options.output = String(userSupplied.dest)
-    delete userSupplied.dest
+  runInTempSnapDir (snapcraft, userSupplied, options) {
+    return tmp.dir({ prefix: 'electron-snap-', unsafeCleanup: !debug.enabled })
+      .then(tmpdir => {
+        this.tmpdir = tmpdir
+        return this.prepareAndBuildSnap(tmpdir.path)
+      }).catch(err => {
+        if (!debug.enabled) {
+          this.tmpdir.cleanup()
+        }
+        throw err
+      })
   }
 
-  return snapcraft.ensureInstalled(userSupplied.snapcraft)
-    .then(() => createYamlFromTemplate(packageDir, userSupplied))
-    .then(() => snapcraft.run(packageDir, 'snap', options))
+  prepareAndBuildSnap (snapDir) {
+    return createYamlFromTemplate(snapDir, this.packageDir, this.userSupplied)
+      .then(() => this.snapcraft.run(snapDir, 'snap', this.options))
+  }
+
+  create () {
+    return this.snapcraft.ensureInstalled(this.userSupplied.snapcraft)
+      .then(() => this.runInTempSnapDir())
+  }
 }
 
-module.exports = nodeify(buildSnap)
+function createSnap (userSupplied) {
+  return new SnapCreator(userSupplied).create()
+}
+
+module.exports = nodeify(createSnap)

@@ -86,6 +86,7 @@ function transformYaml (packageDir, yamlData, userSupplied) {
         throw new Error(`The max length of the summary is 79 characters, you have ${yamlData.summary.length}`)
       }
       yamlData.apps[yamlData.name].command = `desktop-launch '$SNAP/${yamlData.name}'`
+      yamlData.parts[yamlData.name].source = packageDir
 
       return yamlData
     })
@@ -95,13 +96,13 @@ function writeYaml (filename, data) {
   return fs.outputFile(filename, yaml.safeDump(data))
 }
 
-function createYamlFromTemplate (packageDir, userSupplied) {
+function createYamlFromTemplate (snapDir, packageDir, userSupplied) {
   const templateFilename = path.resolve(__dirname, '..', 'resources', 'snapcraft.yaml')
   delete userSupplied.snapcraft
 
   return readYaml(templateFilename)
     .then(yamlData => transformYaml(packageDir, yamlData, userSupplied))
-    .then(yamlData => writeYaml(path.join(packageDir, 'snap', 'snapcraft.yaml'), yamlData))
+    .then(yamlData => writeYaml(path.join(snapDir, 'snap', 'snapcraft.yaml'), yamlData))
 }
 
 module.exports = createYamlFromTemplate
