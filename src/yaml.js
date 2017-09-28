@@ -68,12 +68,23 @@ function renameYamlSubtree (parentObject, fromKey, toKey) {
   delete parentObject[fromKey]
 }
 
+/**
+ * Blank lines need to be dots, like Debian.
+ */
+function convertBlankLines (text) {
+  return text.replace(/^$/m, '.')
+}
+
 function transformYaml (packageDir, yamlData, userSupplied) {
   return defaultArgsFromApp(packageDir)
     .then(packageJSONArgs => {
       merge(yamlData, packageJSONArgs, userSupplied)
       renameYamlSubtree(yamlData.parts, 'electronApp', yamlData.name)
       renameYamlSubtree(yamlData.apps, 'electronApp', yamlData.name)
+      yamlData.description = convertBlankLines(yamlData.description)
+      if (yamlData.summary.length > 79) {
+        throw new Error(`The max length of the summary is 79 characters, you have ${yamlData.summary.length}`)
+      }
       yamlData.apps[yamlData.name].command = `desktop-launch '$SNAP/${yamlData.name}'`
 
       return yamlData
