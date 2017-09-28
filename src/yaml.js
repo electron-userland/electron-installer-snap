@@ -15,20 +15,45 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+const asar = require('asar')
 const debug = require('debug')('electron-installer-snap:yaml')
 const fs = require('fs-extra')
 const merge = require('lodash/merge')
 const path = require('path')
 const yaml = require('js-yaml')
 
-function defaultArgsFromPackageJSON (packageDir) {
-  debug('Loading package.json defaults from', packageDir)
-  return fs.readJson(path.resolve(packageDir, 'resources', 'app', 'package.json'))
+
+function defaultArgsFromAsar (asarFilename) {
+  const packageJSON = JSON.parse(asar.extractFile(asarFilename, 'package.json'))
+  return {
+    name: packageJSON.name,
+    version: packageJSON.version,
+    description: packageJSON.description
+  }
+}
+
+function defaultArgsFromPackageJSON (resourcesDir) {
+  return fs.readJson(path.join(resourcesDir, 'app', 'package.json'))
     .then(packageJSON => {
       return {
         name: packageJSON.name,
         version: packageJSON.version,
         description: packageJSON.description
+      }
+    })
+}
+
+function defaultArgsFromApp (packageDir) {
+  const resourcesDir = path.resolve(packageDir, 'resources')
+  const asarFilename = path.join(resourcesDir, 'app.asar')
+  return fs.pathExists(asarFilename)
+    .then(asarExists => {
+      if (asarExists) {
+        debug('Loading package.json defaults from', asarFilename)
+        return defaultArgsFromAsar(asarFilename)
+      } else {
+        debug('Loading package.json defaults from', packageDir)
+        return defaultArgsFromPackageJSON(resourcesDir)
       }
     })
 }
@@ -39,7 +64,7 @@ function readYaml (filename) {
 }
 
 function transformYaml (packageDir, yamlData, userSupplied) {
-  return defaultArgsFromPackageJSON(packageDir)
+  return defaultArgsFromApp(packageDir)
     .then(packageJSONArgs => {
       merge(yamlData, packageJSONArgs, userSupplied)
       yamlData.parts[yamlData.name] = yamlData.parts.electronApp
