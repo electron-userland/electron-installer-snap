@@ -28,7 +28,7 @@ function buildSnap (userSupplied) {
   const snapcraft = new Snapcraft()
 
   const options = {
-    'target-arch': snapcraft.translateArch(String(userSupplied.arch))
+    'target-arch': snapcraft.translateArch(String(userSupplied.arch || process.arch))
   }
   delete userSupplied.arch
 
