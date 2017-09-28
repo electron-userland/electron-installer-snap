@@ -66,15 +66,12 @@ class Snapcraft {
       env: {
         LC_ALL: 'C.UTF-8',
         LOCALE: 'C.UTF-8'
-      }
-    }).then(stdout => debug('Snapcraft output:\n\n', stdout.toString()))
-      .catch(error => {
-        let output = ''
-        if (error.stdout) output += error.stdout.toString()
-        if (error.stderr) output += error.stderr.toString()
-        console.error(`Snapcraft failed (${error.exitStatus}):\n${output}`)
-        throw error
-      })
+      },
+      stdio: 'inherit'
+    }).catch(error => {
+      console.error(`Snapcraft failed (${error.exitStatus})`)
+      throw error
+    })
   }
 }
 
