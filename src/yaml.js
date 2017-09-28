@@ -25,22 +25,23 @@ const yaml = require('js-yaml')
 
 function defaultArgsFromAsar (asarFilename) {
   const packageJSON = JSON.parse(asar.extractFile(asarFilename, 'package.json'))
+
+function defaultArgsFromPackageJSON (packageJSON) {
   return {
-    name: packageJSON.name,
+    name: packageJSON.productName || packageJSON.name,
     version: packageJSON.version,
     description: packageJSON.description
   }
 }
 
-function defaultArgsFromPackageJSON (resourcesDir) {
+function defaultArgsFromAsar (asarFilename) {
+  const packageJSON = JSON.parse(asar.extractFile(asarFilename, 'package.json'))
+  return defaultArgsFromPackageJSON(packageJSON)
+}
+
+function defaultArgsFromPackageJSONFile (resourcesDir) {
   return fs.readJson(path.join(resourcesDir, 'app', 'package.json'))
-    .then(packageJSON => {
-      return {
-        name: packageJSON.name,
-        version: packageJSON.version,
-        description: packageJSON.description
-      }
-    })
+    .then(packageJSON => defaultArgsFromPackageJSON(packageJSON))
 }
 
 function defaultArgsFromApp (packageDir) {
@@ -53,7 +54,7 @@ function defaultArgsFromApp (packageDir) {
         return defaultArgsFromAsar(asarFilename)
       } else {
         debug('Loading package.json defaults from', packageDir)
-        return defaultArgsFromPackageJSON(resourcesDir)
+        return defaultArgsFromPackageJSONFile(resourcesDir)
       }
     })
 }
