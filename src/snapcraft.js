@@ -50,7 +50,10 @@ class Snapcraft {
     }
   }
 
-  run (packageDir, command, options) {
+  /**
+   * Generate arguments to pass to snapcraft.
+   */
+  generateArgs (command, options) {
     const args = [command]
     for (const flag in options) {
       const value = options[flag]
@@ -60,18 +63,37 @@ class Snapcraft {
         args.push(`--${flag}`)
       }
     }
-    debug(`Running '${this.snapcraftPath} ${args.join(' ')}' in ${packageDir}`)
-    return spawn(this.snapcraftPath, args, {
+
+    return args
+  }
+
+  generateSpawnOptions (packageDir) {
+    const spawnOptions = {
       cwd: packageDir,
       env: {
         LC_ALL: 'C.UTF-8',
         LOCALE: 'C.UTF-8'
       },
-      stdio: 'inherit'
-    }).catch(error => {
-      console.error(`Snapcraft failed (${error.exitStatus})`)
-      throw error
-    })
+      stdio: ['pipe', 'pipe', process.stderr]
+    }
+    if (debug.enabled) {
+      spawnOptions.stdio = 'inherit'
+    }
+
+    return spawnOptions
+  }
+
+  run (packageDir, command, options) {
+    const args = this.generateArgs(command, options)
+    debug(`Running '${this.snapcraftPath} ${args.join(' ')}' in ${packageDir}`)
+    return spawn(this.snapcraftPath, args, this.generateSpawnOptions(packageDir))
+      .catch(error => {
+        console.error(`Snapcraft failed (${error.exitStatus})`)
+        if (!debug.enabled) {
+          console.error('Re-run with the environment variable DEBUG=electron-installer-snap:snapcraft for details.')
+        }
+        throw error
+      })
   }
 }
 
