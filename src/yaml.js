@@ -74,6 +74,7 @@ function transformYaml (packageDir, yamlData, userSupplied) {
       merge(yamlData, packageJSONArgs, userSupplied)
       renameYamlSubtree(yamlData.parts, 'electronApp', yamlData.name)
       renameYamlSubtree(yamlData.apps, 'electronApp', yamlData.name)
+      yamlData.apps[yamlData.name].command = `desktop-launch '$SNAP/${yamlData.name}`
 
       return yamlData
     })
