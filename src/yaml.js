@@ -28,7 +28,8 @@ function defaultArgsFromAsar (asarFilename) {
 
 function defaultArgsFromPackageJSON (packageJSON) {
   return {
-    name: packageJSON.productName || packageJSON.name,
+    name: packageJSON.name,
+    productName: packageJSON.productName || packageJSON.name,
     version: packageJSON.version,
     description: packageJSON.description
   }
@@ -86,8 +87,13 @@ function transformYaml (packageDir, yamlData, userSupplied) {
       if (yamlData.summary.length > 79) {
         throw new Error(`The max length of the summary is 79 characters, you have ${yamlData.summary.length}`)
       }
-      yamlData.apps[yamlData.name].command = `desktop-launch '$SNAP/${yamlData.name}'`
-      yamlData.parts[yamlData.name].source = packageDir
+      yamlData.apps[yamlData.name].command = `desktop-launch '$SNAP/${yamlData.name}/${yamlData.productName}'`
+      const parts = yamlData.parts[yamlData.name]
+      parts.source = path.dirname(packageDir)
+      parts.organize = {}
+      parts.organize[yamlData.name] = path.basename(packageDir)
+
+      delete yamlData.productName
 
       return yamlData
     })
