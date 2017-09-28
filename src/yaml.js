@@ -63,12 +63,17 @@ function readYaml (filename) {
     .then(data => yaml.safeLoad(data, { filename: filename }))
 }
 
+function renameYamlSubtree (parentObject, fromKey, toKey) {
+  parentObject[toKey] = parentObject[fromKey]
+  delete parentObject[fromKey]
+}
+
 function transformYaml (packageDir, yamlData, userSupplied) {
   return defaultArgsFromApp(packageDir)
     .then(packageJSONArgs => {
       merge(yamlData, packageJSONArgs, userSupplied)
-      yamlData.parts[yamlData.name] = yamlData.parts.electronApp
-      delete yamlData.parts.electronApp
+      renameYamlSubtree(yamlData.parts, 'electronApp', yamlData.name)
+      renameYamlSubtree(yamlData.apps, 'electronApp', yamlData.name)
 
       return yamlData
     })
