@@ -10,7 +10,8 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "test": "npm run lint && mocha test"
+    "mocha": "mocha test/*.js",
+    "test": "npm run lint && npm run mocha"
   },
   "repository": "electron-userland/electron-installer-snap",
   "keywords": [
