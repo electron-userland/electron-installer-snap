@@ -23,9 +23,6 @@ const path = require('path')
 const yaml = require('js-yaml')
 
 
-function defaultArgsFromAsar (asarFilename) {
-  const packageJSON = JSON.parse(asar.extractFile(asarFilename, 'package.json'))
-
 function defaultArgsFromPackageJSON (packageJSON) {
   return {
     name: packageJSON.name,
