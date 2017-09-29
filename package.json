@@ -38,6 +38,7 @@
     "js-yaml": "^3.10.0",
     "lodash.filter": "^4.6.0",
     "lodash.merge": "^4.6.0",
+    "lodash.pull": "^4.1.0",
     "nodeify": "^1.0.1",
     "pify": "^3.0.0",
     "tmp-promise": "^1.0.3",
