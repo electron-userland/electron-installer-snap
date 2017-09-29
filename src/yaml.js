@@ -91,7 +91,7 @@ function transformYaml (packageDir, yamlData, userSupplied) {
       const parts = yamlData.parts[yamlData.name]
       parts.source = path.dirname(packageDir)
       parts.organize = {}
-      parts.organize[yamlData.name] = path.basename(packageDir)
+      parts.organize[path.basename(packageDir)] = yamlData.name
 
       delete yamlData.productName
 
