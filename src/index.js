@@ -22,27 +22,29 @@ const tmp = require('tmp-promise')
 
 const Snapcraft = require('./snapcraft')
 const createYamlFromTemplate = require('./yaml')
+const defaultArgsFromApp = require('./default_args')
+
 
 class SnapCreator {
   constructor (userSupplied) {
-    this.userSupplied = userSupplied
-    this.snapcraft = new Snapcraft()
-
     this.packageDir = path.resolve(userSupplied.src)
     delete userSupplied.src
+
+    this.config = Object.assign(defaultArgsFromApp(this.packageDir), userSupplied)
+    this.snapcraft = new Snapcraft()
 
     this.options = {
       'target-arch': this.snapcraft.translateArch(String(userSupplied.arch || process.arch))
     }
-    delete userSupplied.arch
+    delete this.config.arch
 
     if (userSupplied.dest) {
       this.options.output = String(userSupplied.dest)
-      delete userSupplied.dest
+      delete this.config.dest
     }
   }
 
-  runInTempSnapDir (snapcraft, userSupplied, options) {
+  runInTempSnapDir () {
     return tmp.dir({ prefix: 'electron-snap-', unsafeCleanup: !debug.enabled })
       .then(tmpdir => {
         this.tmpdir = tmpdir
@@ -56,12 +58,12 @@ class SnapCreator {
   }
 
   prepareAndBuildSnap (snapDir) {
-    return createYamlFromTemplate(snapDir, this.packageDir, this.userSupplied)
+    return createYamlFromTemplate(snapDir, this.packageDir, this.config)
       .then(() => this.snapcraft.run(snapDir, 'snap', this.options))
   }
 
   create () {
-    return this.snapcraft.ensureInstalled(this.userSupplied.snapcraft)
+    return this.snapcraft.ensureInstalled(this.config.snapcraft)
       .then(() => this.runInTempSnapDir())
   }
 }

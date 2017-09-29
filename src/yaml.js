@@ -22,8 +22,6 @@ const path = require('path')
 const pull = require('lodash/pull')
 const yaml = require('js-yaml')
 
-const defaultArgsFromApp = require('./default_args')
-
 const FEATURES = {
   audio: {
     packages: ['libpulse0'],
@@ -154,28 +152,24 @@ class SnapcraftYAML {
   }
 
   transform (packageDir, userSupplied) {
-    return defaultArgsFromApp(packageDir)
-      .then(packageJSONArgs => {
-        this.userSupplied = merge({}, packageJSONArgs, userSupplied)
-        this.appName = this.userSupplied.name
-        this.features = merge({}, this.userSupplied.features || {})
-        delete this.userSupplied.features
+    this.appName = this.userSupplied.name
+    this.features = merge({}, this.userSupplied.features || {})
+    delete this.userSupplied.features
 
-        merge(this.data, this.userSupplied)
+    merge(this.data, this.userSupplied)
 
-        this.renameSubtree(this.data.parts, 'electronApp', this.appName)
-        this.renameSubtree(this.data.apps, 'electronApp', this.appName)
-        this.data.description = convertBlankLines(this.data.description)
-        this.validateSummary()
-        this.app.command = `desktop-launch '$SNAP/${this.data.name}/${this.data.productName}'`
-        this.transformFeatures()
-        this.transformParts(packageDir)
+    this.renameSubtree(this.data.parts, 'electronApp', this.appName)
+    this.renameSubtree(this.data.apps, 'electronApp', this.appName)
+    this.data.description = convertBlankLines(this.data.description)
+    this.validateSummary()
+    this.app.command = `desktop-launch '$SNAP/${this.data.name}/${this.data.productName}'`
+    this.transformFeatures()
+    this.transformParts(packageDir)
 
-        delete this.data.features
-        delete this.data.productName
+    delete this.data.features
+    delete this.data.productName
 
-        return this.data
-      })
+    return this.data
   }
 
   write (filename) {
