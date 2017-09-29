@@ -23,17 +23,6 @@ const yaml = require('js-yaml')
 
 const defaultArgsFromApp = require('./default_args')
 
-
-function readYaml (filename) {
-  return fs.readFile(filename)
-    .then(data => yaml.safeLoad(data, { filename: filename }))
-}
-
-function renameYamlSubtree (parentObject, fromKey, toKey) {
-  parentObject[toKey] = parentObject[fromKey]
-  delete parentObject[fromKey]
-}
-
 /**
  * Blank lines need to be dots, like Debian.
  */
@@ -41,39 +30,62 @@ function convertBlankLines (text) {
   return text.replace(/^$/m, '.')
 }
 
-function transformYaml (packageDir, yamlData, userSupplied) {
-  return defaultArgsFromApp(packageDir)
-    .then(packageJSONArgs => {
-      merge(yamlData, packageJSONArgs, userSupplied)
-      renameYamlSubtree(yamlData.parts, 'electronApp', yamlData.name)
-      renameYamlSubtree(yamlData.apps, 'electronApp', yamlData.name)
-      yamlData.description = convertBlankLines(yamlData.description)
-      if (yamlData.summary.length > 79) {
-        throw new Error(`The max length of the summary is 79 characters, you have ${yamlData.summary.length}`)
-      }
-      yamlData.apps[yamlData.name].command = `desktop-launch '$SNAP/${yamlData.name}/${yamlData.productName}'`
-      const parts = yamlData.parts[yamlData.name]
-      parts.source = path.dirname(packageDir)
-      parts.organize = {}
-      parts.organize[path.basename(packageDir)] = yamlData.name
+class SnapcraftYAML {
+  read (templateFilename) {
+    debug('Loading YAML template', templateFilename)
+    return fs.readFile(templateFilename)
+      .then(data => {
+        this.data = yaml.safeLoad(data, { filename: templateFilename })
+        return this.data
+      })
+  }
 
-      delete yamlData.productName
+  renameSubtree (parentObject, fromKey, toKey) {
+    parentObject[toKey] = parentObject[fromKey]
+    delete parentObject[fromKey]
+  }
 
-      return yamlData
-    })
-}
+  validateSummary () {
+    if (this.data.summary.length > 79) {
+      throw new Error(`The max length of the summary is 79 characters, you have ${this.data.summary.length}`)
+    }
+  }
 
-function writeYaml (filename, data) {
-  return fs.outputFile(filename, yaml.safeDump(data))
+  transform (packageDir, userSupplied) {
+    return defaultArgsFromApp(packageDir)
+      .then(packageJSONArgs => {
+        merge(this.data, packageJSONArgs, userSupplied)
+        this.renameSubtree(this.data.parts, 'electronApp', this.data.name)
+        this.renameSubtree(this.data.apps, 'electronApp', this.data.name)
+        this.data.description = convertBlankLines(this.data.description)
+        this.validateSummary()
+        this.data.apps[this.data.name].command = `desktop-launch '$SNAP/${this.data.name}/${this.data.productName}'`
+        const parts = this.data.parts[this.data.name]
+        parts.source = path.dirname(packageDir)
+        parts.organize = {}
+        parts.organize[path.basename(packageDir)] = this.data.name
+
+        delete this.data.productName
+
+        return this.data
+      })
+  }
+
+  write (filename) {
+    debug('Writing new YAML file', filename)
+    return fs.outputFile(filename, yaml.safeDump(this.data))
+  }
 }
 
 function createYamlFromTemplate (snapDir, packageDir, userSupplied) {
   const templateFilename = path.resolve(__dirname, '..', 'resources', 'snapcraft.yaml')
   delete userSupplied.snapcraft
 
-  return readYaml(templateFilename)
-    .then(yamlData => transformYaml(packageDir, yamlData, userSupplied))
-    .then(yamlData => writeYaml(path.join(snapDir, 'snap', 'snapcraft.yaml'), yamlData))
+  const yamlData = new SnapcraftYAML()
+
+  return yamlData.read(templateFilename)
+    .then(() => yamlData.transform(packageDir, userSupplied))
+    .then(() => yamlData.write(path.join(snapDir, 'snap', 'snapcraft.yaml')))
 }
 
 module.exports = createYamlFromTemplate
