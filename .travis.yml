@@ -1,0 +1,12 @@
+language: c
+os:
+- linux
+dist: trusty
+sudo: required
+services:
+- docker
+branches:
+  only:
+  - master
+  - /^v\d+\.\d+\.\d+/
+script: ci/script.sh
