@@ -16,14 +16,16 @@ limitations under the License.
 */
 
 const debug = require('debug')('electron-installer-snap:index')
+const fs = require('fs-extra')
 const nodeify = require('nodeify')
 const path = require('path')
 const tmp = require('tmp-promise')
 
 const Snapcraft = require('./snapcraft')
+const createDesktopFile = require('./desktop')
+const copyIcon = require('./icon')
 const createYamlFromTemplate = require('./yaml')
 const defaultArgsFromApp = require('./default_args')
-
 
 class SnapCreator {
   constructor (userSupplied) {
@@ -58,7 +60,11 @@ class SnapCreator {
   }
 
   prepareAndBuildSnap (snapDir) {
-    return createYamlFromTemplate(snapDir, this.packageDir, this.config)
+    const snapGuiDir = path.join(snapDir, 'snap', 'gui')
+    return fs.ensureDir(snapGuiDir)
+      .then(() => createDesktopFile(snapGuiDir, this.config))
+      .then(() => copyIcon(snapGuiDir, this.config))
+      .then(() => createYamlFromTemplate(snapDir, this.packageDir, this.config))
       .then(() => this.snapcraft.run(snapDir, 'snap', this.options))
   }
 
