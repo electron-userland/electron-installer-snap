@@ -28,22 +28,28 @@ const createYamlFromTemplate = require('./yaml')
 const defaultArgsFromApp = require('./default_args')
 
 class SnapCreator {
-  constructor (userSupplied) {
+  prepareOptions (userSupplied) {
     this.packageDir = path.resolve(userSupplied.src)
     delete userSupplied.src
 
-    this.config = Object.assign(defaultArgsFromApp(this.packageDir), userSupplied)
-    this.snapcraft = new Snapcraft()
+    this.userSupplied = userSupplied
+    return defaultArgsFromApp(this.packageDir)
+      .then(defaultArgs => {
+        this.config = Object.assign(defaultArgs, userSupplied)
+        this.snapcraft = new Snapcraft()
 
-    this.options = {
-      'target-arch': this.snapcraft.translateArch(String(userSupplied.arch || process.arch))
-    }
-    delete this.config.arch
+        this.options = {
+          'target-arch': this.snapcraft.translateArch(String(this.userSupplied.arch || process.arch))
+        }
+        delete this.config.arch
 
-    if (userSupplied.dest) {
-      this.options.output = String(userSupplied.dest)
-      delete this.config.dest
-    }
+        if (userSupplied.dest) {
+          this.options.output = String(userSupplied.dest)
+          delete this.config.dest
+        }
+
+        return this.options
+      })
   }
 
   runInTempSnapDir () {
@@ -75,7 +81,9 @@ class SnapCreator {
 }
 
 function createSnap (userSupplied) {
-  return new SnapCreator(userSupplied).create()
+  const creator = new SnapCreator()
+  return creator.prepareOptions(userSupplied)
+    .then(() => creator.create())
 }
 
 module.exports = nodeify(createSnap)
