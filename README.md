@@ -35,6 +35,11 @@ Then you can run `npm run build:package && npm run build:snap`, which will prepa
 for bundling, generate a `.snap` file in your current directory.
 It is recommended to ignore the generated `snap` directory in your version control.
 
+## Thanks
+
+Thank you to Canonical for the support in getting this module created, during the September 2017
+Ubuntu Rally.
+
 ## Legal
 
 This project is copyrighted under the Apache License (version 2). See LICENSE for details.
