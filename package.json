@@ -8,6 +8,11 @@
   "bin": {
     "electron-installer-snap": "src/cli.js"
   },
+  "files": [
+    "NEWS",
+    "resources",
+    "src"
+  ],
   "scripts": {
     "lint": "eslint .",
     "ava": "ava test",
@@ -52,7 +57,11 @@
   },
   "eslintConfig": {
     "extends": [
+      "eslint:recommended",
       "plugin:ava/recommended",
+      "plugin:import/errors",
+      "plugin:import/warnings",
+      "plugin:node/recommended",
       "plugin:promise/recommended",
       "standard"
     ],
@@ -60,8 +69,7 @@
       "sourceType": "script"
     },
     "plugins": [
-      "ava",
-      "promise"
+      "ava"
     ],
     "rules": {
       "indent": [
@@ -74,6 +82,7 @@
           "SwitchCase": 1
         }
       ],
+      "no-console": 0,
       "strict": "error"
     }
   }

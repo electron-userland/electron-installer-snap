@@ -17,9 +17,9 @@ limitations under the License.
 
 const debug = require('debug')('electron-installer-snap:yaml')
 const fs = require('fs-extra')
-const merge = require('lodash/merge')
+const merge = require('lodash.merge')
 const path = require('path')
-const pull = require('lodash/pull')
+const pull = require('lodash.pull')
 const yaml = require('js-yaml')
 
 const FEATURES = {

@@ -17,7 +17,7 @@ limitations under the License.
 
 const fs = require('fs-extra')
 const path = require('path')
-const template = require('lodash/template')
+const template = require('lodash.template')
 
 function getDesktopTemplatePath (userSupplied) {
   if (userSupplied.desktopTemplate) {
