@@ -29,7 +29,7 @@ const defaultArgsFromApp = require('./default_args')
 
 class SnapCreator {
   prepareOptions (userSupplied) {
-    this.packageDir = path.resolve(userSupplied.src)
+    this.packageDir = path.resolve(userSupplied.src || process.cwd())
     delete userSupplied.src
 
     this.userSupplied = userSupplied
@@ -81,6 +81,10 @@ class SnapCreator {
 }
 
 function createSnap (userSupplied) {
+  if (!userSupplied) {
+    throw new Error('Missing configuration')
+  }
+
   const creator = new SnapCreator()
   return creator.prepareOptions(userSupplied)
     .then(() => creator.create())
