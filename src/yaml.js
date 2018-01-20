@@ -152,11 +152,11 @@ class SnapcraftYAML {
   }
 
   transform (packageDir, userSupplied) {
-    this.appName = this.userSupplied.name
-    this.features = merge({}, this.userSupplied.features || {})
-    delete this.userSupplied.features
+    this.appName = userSupplied.name
+    this.features = merge({}, userSupplied.features || {})
+    delete userSupplied.features
 
-    merge(this.data, this.userSupplied)
+    merge(this.data, userSupplied)
 
     this.renameSubtree(this.data.parts, 'electronApp', this.appName)
     this.renameSubtree(this.data.apps, 'electronApp', this.appName)
