@@ -28,10 +28,10 @@ function getSourceIconPath (userSupplied) {
   }
 }
 
-function createIcon (snapGuiDir, userSupplied) {
-  const srcIconPath = getSourceIconPath()
+function copyIcon (snapGuiDir, userSupplied) {
+  const srcIconPath = getSourceIconPath(userSupplied)
   const destIconPath = path.resolve(snapGuiDir, `icon${path.extname(srcIconPath)}`)
   return fs.copy(srcIconPath, destIconPath)
 }
 
-module.exports = createIcon
+module.exports = copyIcon

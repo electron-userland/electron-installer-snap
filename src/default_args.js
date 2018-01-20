@@ -34,9 +34,11 @@ function defaultArgsFromAsar (asarFilename) {
   return defaultArgsFromPackageJSON(packageJSON)
 }
 
-function defaultArgsFromPackageJSONFile (resourcesDir) {
+function defaultArgsFromPackageJSONFile (packageDir, resourcesDir) {
   return fs.readJson(path.join(resourcesDir, 'app', 'package.json'))
-    .then(packageJSON => defaultArgsFromPackageJSON(packageJSON))
+    .catch(err => {
+      throw new Error(`Could not find, read, or parse package.json in packaged app '${packageDir}':\n${err.message}`)
+    }).then(packageJSON => defaultArgsFromPackageJSON(packageJSON))
 }
 
 function defaultArgsFromApp (packageDir) {
@@ -49,7 +51,7 @@ function defaultArgsFromApp (packageDir) {
         return defaultArgsFromAsar(asarFilename)
       } else {
         debug('Loading package.json defaults from', packageDir)
-        return defaultArgsFromPackageJSONFile(resourcesDir)
+        return defaultArgsFromPackageJSONFile(packageDir, resourcesDir)
       }
     })
 }
