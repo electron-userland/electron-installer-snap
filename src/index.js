@@ -32,24 +32,25 @@ class SnapCreator {
     this.packageDir = path.resolve(userSupplied.src || process.cwd())
     delete userSupplied.src
 
-    this.userSupplied = userSupplied
     return defaultArgsFromApp(this.packageDir)
-      .then(defaultArgs => {
-        this.config = Object.assign(defaultArgs, userSupplied)
-        this.snapcraft = new Snapcraft()
+      .then(defaultArgs => this.setOptions(defaultArgs, userSupplied))
+  }
 
-        this.options = {
-          'target-arch': this.snapcraft.translateArch(String(this.userSupplied.arch || process.arch))
-        }
-        delete this.config.arch
+  setOptions (defaultArgs, userSupplied) {
+    this.config = Object.assign(defaultArgs, userSupplied)
+    this.snapcraft = new Snapcraft()
 
-        if (userSupplied.dest) {
-          this.options.output = String(userSupplied.dest)
-          delete this.config.dest
-        }
+    this.snapcraftOptions = {
+      'target-arch': this.snapcraft.translateArch(String(userSupplied.arch || process.arch))
+    }
+    delete this.config.arch
 
-        return this.options
-      })
+    if (userSupplied.dest) {
+      this.snapcraftOptions.output = String(userSupplied.dest)
+      delete this.config.dest
+    }
+
+    return this.snapcraftOptions
   }
 
   runInTempSnapDir () {
@@ -71,7 +72,7 @@ class SnapCreator {
       .then(() => createDesktopFile(snapGuiDir, this.config))
       .then(() => copyIcon(snapGuiDir, this.config))
       .then(() => createYamlFromTemplate(snapDir, this.packageDir, this.config))
-      .then(() => this.snapcraft.run(snapDir, 'snap', this.options))
+      .then(() => this.snapcraft.run(snapDir, 'snap', this.snapcraftOptions))
   }
 
   create () {
