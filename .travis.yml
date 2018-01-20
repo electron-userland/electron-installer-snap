@@ -1,12 +1,18 @@
-language: c
-os:
-- linux
+language: node_js
+node_js: '4'
+os: linux
 dist: trusty
 sudo: required
 services:
 - docker
+cache:
+  directories:
+  - node_modules
 branches:
   only:
   - master
   - /^v\d+\.\d+\.\d+/
+install:
+- npm install
+- npm update
 script: ci/script.sh

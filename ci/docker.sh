@@ -1,4 +1,3 @@
 #!/bin/bash
 
-npm install
-npm test
+DEBUG=electron-installer-snap CI=true npm test
