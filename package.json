@@ -14,8 +14,9 @@
     "src"
   ],
   "scripts": {
-    "lint": "eslint .",
     "ava": "ava test",
+    "coverage": "nyc ava test",
+    "lint": "eslint .",
     "test": "npm run lint && npm run ava"
   },
   "repository": "electron-userland/electron-installer-snap",
@@ -34,7 +35,8 @@
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-node": "^5.1.1",
     "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1"
+    "eslint-plugin-standard": "^3.0.1",
+    "nyc": "^11.4.1"
   },
   "dependencies": {
     "asar": "^0.14.0",
