@@ -29,11 +29,23 @@ function getDesktopTemplatePath (userSupplied) {
   }
 }
 
+function templateScope (userSupplied) {
+  const defaults = {
+    productName: null,
+    description: null,
+    genericName: null,
+    name: null,
+    categories: null,
+    mimeType: null
+  }
+  return Object.assign(defaults, userSupplied)
+}
+
 function createDesktopFile (snapGuiDir, userSupplied) {
   const desktopFilePath = path.join(snapGuiDir, `${userSupplied.name}.desktop`)
 
   return fs.readFile(getDesktopTemplatePath(userSupplied))
-    .then(templateData => template(templateData)(userSupplied))
+    .then(templateData => template(templateData)(templateScope(userSupplied)))
     .then(desktopData => fs.writeFile(desktopFilePath, desktopData))
 }
 
