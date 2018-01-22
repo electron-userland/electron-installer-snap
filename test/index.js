@@ -24,4 +24,6 @@ test('packaged app not found', t => assertThrows(t, {}, /^Could not find, read, 
 
 test('cannot find custom snapcraft', t => assertThrows(t, {snapcraft: '/foo/bar/non-existent'}, /Cannot locate \/foo\/bar\/non-existent in your system/))
 
+test('package description too long', t => assertThrows(t, {}, /The max length of the summary/))
+
 test.serial('snapcraft fails', t => snap({src: path.join(__dirname, 'fixtures', 'package-stub')}))

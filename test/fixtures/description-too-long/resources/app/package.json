@@ -1,0 +1,5 @@
+{
+  "name": "package-stub",
+  "description": "This description is larger than seventy-nine characters, which is not allowed in snaps",
+  "version": "1.2.3"
+}
