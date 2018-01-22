@@ -1,5 +1,6 @@
 'use strict'
 
+const fs = require('fs-extra')
 const path = require('path')
 const snap = require('../src')
 const test = require('ava')
@@ -14,9 +15,7 @@ test.beforeEach(t => {
   process.chdir(t.context.tempDir.name)
 })
 
-test.afterEach.always(t => {
-  t.context.tempDir.removeCallback()
-})
+test.afterEach.always(t => fs.remove(t.context.tempDir.name))
 
 test('missing configuration', t => t.throws(snap, 'Missing configuration'))
 
@@ -26,4 +25,8 @@ test('cannot find custom snapcraft', t => assertThrows(t, {snapcraft: '/foo/bar/
 
 test('package description too long', t => assertThrows(t, {}, /The max length of the summary/))
 
-test.serial('snapcraft fails', t => snap({src: path.join(__dirname, 'fixtures', 'package-stub')}))
+test.serial('creates a snap', t =>
+  snap({src: path.join(__dirname, 'fixtures', 'app-with-asar')})
+    .then(fs.pathExists)
+    .then(exists => t.true(exists, 'Snap created'))
+)

@@ -69,10 +69,12 @@ class SnapCreator {
       })
   }
 
-  copySnapToOutputDir (snapDir) {
+  moveSnapToOutputDir (snapDir) {
     const snapFilename = `${this.config.name}_${this.config.version}_${this.snapcraftOptions['target-arch']}.snap`
+    const snapPath = path.join(this.outputDir, snapFilename)
     debug(`Copying '${snapFilename}' from '${snapDir}' to '${this.outputDir}`)
-    return fs.copy(path.join(snapDir, snapFilename), path.join(this.outputDir, snapFilename))
+    return fs.move(path.join(snapDir, snapFilename), snapPath)
+      .then(() => snapPath)
   }
 
   prepareAndBuildSnap (snapDir) {
@@ -82,7 +84,7 @@ class SnapCreator {
       .then(() => copyIcon(snapGuiDir, this.config))
       .then(() => createYamlFromTemplate(snapDir, this.packageDir, this.config))
       .then(() => this.snapcraft.run(snapDir, 'snap', this.snapcraftOptions))
-      .then(() => this.copySnapToOutputDir(snapDir))
+      .then(() => this.moveSnapToOutputDir(snapDir))
   }
 
   create () {
