@@ -16,3 +16,6 @@ install:
 - npm install
 - npm update
 script: ci/script.sh
+after_success:
+- nyc report --reporter=text-lcov > coverage.lcov
+- $(npm bin)/codecov
