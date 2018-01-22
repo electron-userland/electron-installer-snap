@@ -24,6 +24,9 @@ function parseArgs () {
   let args = yargs.option('src', {
     describe: 'directory of the packaged Electron app',
     default: process.cwd()
+  }).option('dest', {
+    describe: 'directory where snap is written',
+    default: process.cwd()
   }).option('snapcraft', {
     describe: 'The absolute path to snapcraft. Defaults to searching in PATH.',
     string: true
