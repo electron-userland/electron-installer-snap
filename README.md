@@ -25,7 +25,7 @@ Then add to your `package.json`:
   // ...
   "scripts": {
     "build:package": "electron-packager . --out=out"
-    "build:snap": "electron-installer-snap --dir=out/myappname-linux-x64"
+    "build:snap": "electron-installer-snap --src=out/myappname-linux-x64"
   },
   // ...
 }
