@@ -72,7 +72,8 @@ class Snapcraft {
       cwd: packageDir,
       env: {
         LC_ALL: 'C.UTF-8',
-        LOCALE: 'C.UTF-8'
+        LOCALE: 'C.UTF-8',
+        PATH: process.env.PATH
       },
       stdio: ['pipe', 'pipe', process.stderr]
     }
