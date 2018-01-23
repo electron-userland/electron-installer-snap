@@ -25,7 +25,7 @@ function parseArgs () {
     describe: 'directory of the packaged Electron app',
     default: process.cwd()
   }).option('dest', {
-    describe: 'directory where snap is written',
+    describe: 'directory where the snap is written',
     default: process.cwd()
   }).option('snapcraft', {
     describe: 'The absolute path to snapcraft. Defaults to searching in PATH.',
