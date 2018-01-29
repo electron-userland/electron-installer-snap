@@ -82,35 +82,34 @@ class SnapcraftYAML {
   transformFeature (feature) {
     let featureData = FEATURES[feature]
     if (!featureData) {
+      debug(`Feature '${feature}' is not found.`)
       return
     }
 
     if (feature === 'audio' && this.features.indexOf('alsa') >= 0) {
+      debug(`Features audio and alsa are both selected, preferring alsa.`)
       return
     }
 
+    // For aliases
     if (featureData.feature) {
-      featureData = FEATURES[featureData.feature]
+      return this.transformFeature(featureData.feature)
     }
 
     if (featureData.transform) {
       this[featureData.transform]()
     } else {
       if (featureData.packages) {
-        this.parts['stage-packages'].push.apply(featureData.packages)
+        Array.prototype.push.apply(this.parts['stage-packages'], featureData.packages)
       }
       if (featureData.plugs) {
-        this.app.plugs.push.apply(featureData.plugs)
+        Array.prototype.push.apply(this.app.plugs, featureData.plugs)
       }
     }
   }
 
   transformFeatures () {
-    if (!this.features) {
-      return
-    }
-
-    for (const feature in this.features) {
+    for (const feature of this.features) {
       this.transformFeature(feature)
     }
   }
@@ -153,7 +152,7 @@ class SnapcraftYAML {
 
   transform (packageDir, userSupplied) {
     this.appName = userSupplied.name
-    this.features = merge({}, userSupplied.features || {})
+    this.features = merge([], userSupplied.features || [])
     delete userSupplied.features
 
     merge(this.data, userSupplied)
@@ -166,7 +165,6 @@ class SnapcraftYAML {
     this.transformFeatures()
     this.transformParts(packageDir)
 
-    delete this.data.features
     delete this.data.productName
 
     return this.data

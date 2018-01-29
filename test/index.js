@@ -12,6 +12,10 @@ function assertThrows (t, options, messageRegex) {
   return t.throws(snap(options)).catch(err => t.regex(err.message, messageRegex))
 }
 
+function assertIncludes (t, array, value, message) {
+  return t.not(array.indexOf(value), -1, message)
+}
+
 test.beforeEach(t => {
   t.context.tempDir = tmp.dirSync({ prefix: 'electron-installer-snap-' })
   process.chdir(t.context.tempDir.name)
@@ -48,5 +52,23 @@ test('set custom parts on app', t => {
     }).then(data => {
       const deserialized = yaml.safeLoad(data, { filename: yamlPath })
       return t.deepEqual(deserialized.parts.newPart, newPart)
+    })
+})
+
+test('set feature on app', t => {
+  const yamlPath = path.join(t.context.tempDir.name, 'snap', 'snapcraft.yaml')
+  const userDefined = {
+    name: 'electronAppName',
+    features: ['audio', 'invalid']
+  }
+  return createYamlFromTemplate(t.context.tempDir.name, 'my-app', userDefined)
+    .then(() => fs.pathExists(yamlPath))
+    .then(exists => {
+      t.true(exists, 'snapcraft.yaml exists')
+      return fs.readFile(yamlPath)
+    }).then(data => {
+      const deserialized = yaml.safeLoad(data, { filename: yamlPath })
+      assertIncludes(t, deserialized.parts.electronAppName['stage-packages'], 'libpulse0', 'libpulse0 is in stage-packages')
+      return assertIncludes(t, deserialized.apps.electronAppName.plugs, 'pulseaudio', 'pulseaudio is in app plugs')
     })
 })
