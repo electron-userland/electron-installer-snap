@@ -8,6 +8,8 @@ const test = require('ava')
 const tmp = require('tmp-promise')
 const yaml = require('js-yaml')
 
+const createDesktopLaunchCommand = createYamlFromTemplate.createDesktopLaunchCommand
+
 function assertThrows (t, options, messageRegex) {
   return t.throws(snap(options)).catch(err => t.regex(err.message, messageRegex))
 }
@@ -71,4 +73,14 @@ test('set feature on app', t => {
       assertIncludes(t, deserialized.parts.electronAppName['stage-packages'], 'libpulse0', 'libpulse0 is in stage-packages')
       return assertIncludes(t, deserialized.apps.electronAppName.plugs, 'pulseaudio', 'pulseaudio is in app plugs')
     })
+})
+
+test('desktop-launch command uses productName by default', t => {
+  const command = createDesktopLaunchCommand({name: 'app-name', productName: 'App Name'})
+  t.true(command.endsWith("/App Name'"), 'Command uses exe-name')
+})
+
+test('desktop-launch command uses executableName if specified', t => {
+  const command = createDesktopLaunchCommand({name: 'app-name', productName: 'App Name', executableName: 'exe-name'})
+  t.true(command.endsWith("/exe-name'"), 'Command uses exe-name')
 })

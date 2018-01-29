@@ -42,6 +42,9 @@ function parseArgs () {
   }).option('description', {
     describe: 'The longer description for the snap',
     string: true
+  }).option('executable-name', {
+    describe: 'The executable name of the Electron app, sans file extension (defaults to productName or name in package.json)',
+    string: true
   }).option('grade', {
     describe: 'The quality grade of the snap',
     string: true

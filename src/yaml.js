@@ -50,6 +50,15 @@ function convertBlankLines (text) {
   return text.replace(/^$/m, '.')
 }
 
+function createDesktopLaunchCommand(data) {
+  const executableName = data.executableName || data.productName
+
+  delete data.executableName
+  delete data.productName
+
+  return `desktop-launch '$SNAP/${data.name}/${executableName}'`
+}
+
 class SnapcraftYAML {
   read (templateFilename) {
     debug('Loading YAML template', templateFilename)
@@ -161,11 +170,9 @@ class SnapcraftYAML {
     this.renameSubtree(this.data.apps, 'electronApp', this.appName)
     this.data.description = convertBlankLines(this.data.description)
     this.validateSummary()
-    this.app.command = `desktop-launch '$SNAP/${this.data.name}/${this.data.productName}'`
+    this.app.command = createDesktopLaunchCommand(this.data)
     this.transformFeatures()
     this.transformParts(packageDir)
-
-    delete this.data.productName
 
     return this.data
   }
@@ -188,3 +195,4 @@ function createYamlFromTemplate (snapDir, packageDir, userSupplied) {
 }
 
 module.exports = createYamlFromTemplate
+module.exports.createDesktopLaunchCommand = createDesktopLaunchCommand
