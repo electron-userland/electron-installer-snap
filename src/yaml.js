@@ -50,7 +50,7 @@ function convertBlankLines (text) {
   return text.replace(/^$/m, '.')
 }
 
-function createDesktopLaunchCommand(data) {
+function createDesktopLaunchCommand (data) {
   const executableName = data.executableName || data.productName
 
   delete data.executableName
