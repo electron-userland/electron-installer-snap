@@ -1,5 +1,6 @@
 'use strict'
 
+const createDesktopFile = require('../src/desktop')
 const createYamlFromTemplate = require('../src/yaml')
 const fs = require('fs-extra')
 const path = require('path')
@@ -21,8 +22,8 @@ function createYaml (t, userDefined) {
     }).then(data => yaml.safeLoad(data, { filename: yamlPath }))
 }
 
-function assertIncludes (t, array, value, message) {
-  return t.not(array.indexOf(value), -1, message)
+function assertIncludes (t, collection, value, message) {
+  return t.not(collection.indexOf(value), -1, message)
 }
 
 test.beforeEach(t => {
@@ -76,4 +77,15 @@ test('desktop-launch command uses productName by default', t => {
 test('desktop-launch command uses executableName if specified', t => {
   const command = createDesktopLaunchCommand({name: 'app-name', productName: 'App Name', executableName: 'exe-name'})
   t.true(command.endsWith("/exe-name'"), 'Command uses exe-name')
+})
+
+test('custom desktop template', t => {
+  const desktopFilePath = path.join(t.context.tempDir.name, 'app.desktop')
+  const desktopTemplatePath = path.join(__dirname, 'fixtures', 'custom.desktop.ejs')
+  return createDesktopFile(t.context.tempDir.name, { name: 'app', desktopTemplate: desktopTemplatePath })
+    .then(() => fs.pathExists(desktopFilePath))
+    .then(exists => {
+      t.true(exists, 'desktop file exists')
+      return fs.readFile(desktopFilePath)
+    }).then(desktopData => assertIncludes(t, desktopData.toString(), 'Comment=Hardcoded comment', 'uses custom template'))
 })
