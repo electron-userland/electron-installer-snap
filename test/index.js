@@ -1,10 +1,12 @@
 'use strict'
 
+const createYamlFromTemplate = require('../src/yaml')
 const fs = require('fs-extra')
 const path = require('path')
 const snap = require('../src')
 const test = require('ava')
 const tmp = require('tmp-promise')
+const yaml = require('js-yaml')
 
 function assertThrows (t, options, messageRegex) {
   return t.throws(snap(options)).catch(err => t.regex(err.message, messageRegex))
@@ -30,3 +32,21 @@ test.serial('creates a snap', t =>
     .then(fs.pathExists)
     .then(exists => t.true(exists, 'Snap created'))
 )
+
+test('set custom parts on app', t => {
+  const yamlPath = path.join(t.context.tempDir.name, 'snap', 'snapcraft.yaml')
+  const newPart = { plugin: 'nil', 'stage-packages': ['foo', 'bar'] }
+  const userDefined = {
+    name: 'electronAppName',
+    parts: { newPart: newPart }
+  }
+  return createYamlFromTemplate(t.context.tempDir.name, 'my-app', userDefined)
+    .then(() => fs.pathExists(yamlPath))
+    .then(exists => {
+      t.true(exists, 'snapcraft.yaml exists')
+      return fs.readFile(yamlPath)
+    }).then(data => {
+      const deserialized = yaml.safeLoad(data, { filename: yamlPath })
+      return t.deepEqual(deserialized.parts.newPart, newPart)
+    })
+})

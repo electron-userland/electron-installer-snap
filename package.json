@@ -75,6 +75,7 @@
       "ava"
     ],
     "rules": {
+      "ava/prefer-async-await": 0,
       "indent": [
         "error",
         2,
