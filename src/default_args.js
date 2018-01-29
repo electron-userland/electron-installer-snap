@@ -25,7 +25,7 @@ function defaultArgsFromPackageJSON (packageJSON) {
     name: packageJSON.name,
     productName: packageJSON.productName || packageJSON.name,
     version: packageJSON.version,
-    description: packageJSON.description
+    summary: packageJSON.description
   }
 }
 
