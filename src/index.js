@@ -44,10 +44,11 @@ class SnapCreator {
     const outputDir = path.resolve(this.config.dest || process.cwd())
     delete this.config.dest
     const snapFilename = `${this.config.name}_${this.config.version}_${snapArch}.snap`
+    this.snapDestPath = path.join(outputDir, snapFilename)
 
     this.snapcraftOptions = {
       'target-arch': snapArch,
-      output: path.join(outputDir, snapFilename)
+      output: this.snapDestPath
     }
     delete this.config.arch
 
@@ -74,6 +75,7 @@ class SnapCreator {
       .then(() => copyIcon(snapGuiDir, this.config))
       .then(() => createYamlFromTemplate(snapDir, this.packageDir, this.config))
       .then(() => this.snapcraft.run(snapDir, 'snap', this.snapcraftOptions))
+      .then(() => this.snapDestPath)
   }
 
   create () {

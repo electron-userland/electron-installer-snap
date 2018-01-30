@@ -47,19 +47,26 @@ test('cannot find custom snapcraft', t => t.throws(snap({src: path.join(__dirnam
 
 test('package description too long', t => t.throws(snap({src: path.join(__dirname, 'fixtures', 'description-too-long')}), /The max length of the summary/))
 
-test.serial('creates a snap', t =>
-  snap({src: path.join(__dirname, 'fixtures', 'app-with-asar')})
-    .then(fs.pathExists)
-    .then(exists => t.true(exists, 'Snap created'))
-)
+test.serial('creates a snap', t => {
+  let snapPath
+  return snap({src: path.join(__dirname, 'fixtures', 'app-with-asar')})
+    .then(path => {
+      t.truthy(path, 'snap returns a truthy value')
+      snapPath = path
+      return fs.pathExists(snapPath)
+    }).then(exists => t.true(exists, `Snap created at ${snapPath}`))
+})
 
-test.serial('creates a snap in a custom output directory', t =>
-  snap({src: path.join(__dirname, 'fixtures', 'app-with-asar')})
-    .then(snapPath => {
+test.serial('creates a snap in a custom output directory', t => {
+  let snapPath
+  return snap({src: path.join(__dirname, 'fixtures', 'app-with-asar')})
+    .then(path => {
+      t.truthy(path, 'snap returns a truthy value')
+      snapPath = path
       assertIncludes(t, snapPath, 'custom-output-directory', 'path contains custom output directory')
       return fs.pathExists(snapPath)
-    }).then(exists => t.true(exists, 'Snap created'))
-)
+    }).then(exists => t.true(exists, `Snap created at ${snapPath}`))
+})
 
 test('set custom parts on app', t => {
   const newPart = { plugin: 'nil', 'stage-packages': ['foo', 'bar'] }
