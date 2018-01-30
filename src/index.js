@@ -32,9 +32,6 @@ class SnapCreator {
     this.packageDir = path.resolve(userSupplied.src || process.cwd())
     delete userSupplied.src
 
-    this.outputDir = path.resolve(userSupplied.dest || process.cwd())
-    delete userSupplied.dest
-
     return defaultArgsFromApp(this.packageDir)
       .then(defaultArgs => this.setOptions(defaultArgs, userSupplied))
   }
@@ -43,15 +40,16 @@ class SnapCreator {
     this.config = Object.assign(defaultArgs, userSupplied)
     this.snapcraft = new Snapcraft()
 
+    const snapArch = this.snapcraft.translateArch(String(this.config.arch || process.arch))
+    const outputDir = path.resolve(this.config.dest || process.cwd())
+    delete this.config.dest
+    const snapFilename = `${this.config.name}_${this.config.version}_${snapArch}.snap`
+
     this.snapcraftOptions = {
-      'target-arch': this.snapcraft.translateArch(String(userSupplied.arch || process.arch))
+      'target-arch': snapArch,
+      output: path.join(outputDir, snapFilename)
     }
     delete this.config.arch
-
-    if (userSupplied.dest) {
-      this.snapcraftOptions.output = String(userSupplied.dest)
-      delete this.config.dest
-    }
 
     return this.snapcraftOptions
   }
@@ -69,14 +67,6 @@ class SnapCreator {
       })
   }
 
-  moveSnapToOutputDir (snapDir) {
-    const snapFilename = `${this.config.name}_${this.config.version}_${this.snapcraftOptions['target-arch']}.snap`
-    const snapPath = path.join(this.outputDir, snapFilename)
-    debug(`Copying '${snapFilename}' from '${snapDir}' to '${this.outputDir}`)
-    return fs.move(path.join(snapDir, snapFilename), snapPath)
-      .then(() => snapPath)
-  }
-
   prepareAndBuildSnap (snapDir) {
     const snapGuiDir = path.join(snapDir, 'snap', 'gui')
     return fs.ensureDir(snapGuiDir)
@@ -84,7 +74,6 @@ class SnapCreator {
       .then(() => copyIcon(snapGuiDir, this.config))
       .then(() => createYamlFromTemplate(snapDir, this.packageDir, this.config))
       .then(() => this.snapcraft.run(snapDir, 'snap', this.snapcraftOptions))
-      .then(() => this.moveSnapToOutputDir(snapDir))
   }
 
   create () {

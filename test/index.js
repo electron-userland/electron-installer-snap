@@ -53,6 +53,14 @@ test.serial('creates a snap', t =>
     .then(exists => t.true(exists, 'Snap created'))
 )
 
+test.serial('creates a snap in a custom output directory', t =>
+  snap({src: path.join(__dirname, 'fixtures', 'app-with-asar')})
+    .then(snapPath => {
+      assertIncludes(t, snapPath, 'custom-output-directory', 'path contains custom output directory')
+      return fs.pathExists(snapPath)
+    }).then(exists => t.true(exists, 'Snap created'))
+)
+
 test('set custom parts on app', t => {
   const newPart = { plugin: 'nil', 'stage-packages': ['foo', 'bar'] }
   const userDefined = {
