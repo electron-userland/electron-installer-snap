@@ -59,7 +59,9 @@ test.serial('creates a snap', t => {
 
 test.serial('creates a snap in a custom output directory', t => {
   let snapPath
-  return snap({src: path.join(__dirname, 'fixtures', 'app-with-asar')})
+  const destDir = path.join(t.context.tempDir.name, 'custom-output-directory')
+  return fs.mkdirs(destDir)
+    .then(() => snap({src: path.join(__dirname, 'fixtures', 'app-with-asar'), dest: destDir}))
     .then(path => {
       t.truthy(path, 'snap returns a truthy value')
       snapPath = path
