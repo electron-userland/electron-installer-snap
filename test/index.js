@@ -157,3 +157,10 @@ test('translate node arches to snap arches', t => {
   t.is(snapcraft.translateArch('arm'), 'armhf', 'generic ARM')
   t.is(snapcraft.translateArch('arm64'), 'arm64', '64-bit ARM')
 })
+
+test('generateArgs flags and options', t => {
+  const snapcraft = new Snapcraft()
+  const args = snapcraft.generateArgs('nonexistent', {a: 1, b: null}, ['foo', 'bar'])
+
+  t.deepEqual(args, ['nonexistent', '--a=1', '--b', 'foo', 'bar'], 'generated args')
+})

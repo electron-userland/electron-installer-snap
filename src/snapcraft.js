@@ -57,7 +57,6 @@ class Snapcraft {
     const args = [command]
     for (const flag in options) {
       const value = options[flag]
-      /* istanbul ignore else */
       if (value) {
         args.push(`--${flag}=${value}`)
       } else {
@@ -65,7 +64,6 @@ class Snapcraft {
       }
     }
 
-    /* istanbul ignore if */
     if (extraArgs) {
       Array.prototype.push.apply(args, extraArgs)
     }
