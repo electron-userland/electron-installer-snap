@@ -45,6 +45,8 @@ function parseArgs () {
   }).option('executable-name', {
     describe: 'The executable name of the Electron app, sans file extension (defaults to productName or name in package.json)',
     string: true
+  }).option('feature', {
+    describe: 'The functionality to enable with the snap. Valid features are listed in the API docs. Examples: --feature.audio --feature.mpris=com.example.mpris'
   }).option('hook', {
     describe: 'One or more hook types to use with the snap. Example: --hook.install=/path/to/script . For more types, see https://docs.snapcraft.io/build-snaps/hooks'
   }).option('grade', {
@@ -63,6 +65,11 @@ function parseArgs () {
 
   args.version = args.appVersion
   delete args.appVersion
+
+  if (args.feature) {
+    args.features = args.feature
+    delete args.feature
+  }
 
   if (args.hook) {
     args.hookScripts = args.hook
