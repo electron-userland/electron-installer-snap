@@ -1,5 +1,6 @@
 'use strict'
 
+const copyIcon = require('../src/icon')
 const createDesktopFile = require('../src/desktop')
 const createYamlFromTemplate = require('../src/yaml')
 const fs = require('fs-extra')
@@ -121,4 +122,11 @@ test('custom desktop template', t => {
       t.true(exists, 'desktop file exists')
       return fs.readFile(desktopFilePath)
     }).then(desktopData => assertIncludes(t, desktopData.toString(), 'Comment=Hardcoded comment', 'uses custom template'))
+})
+
+test('custom icon', t => {
+  const iconPath = path.join(t.context.tempDir.name, 'icon.png')
+  return copyIcon(t.context.tempDir.name, { icon: path.join(__dirname, 'fixtures', 'icon.png') })
+    .then(() => fs.pathExists(iconPath))
+    .then(exists => t.true(exists, 'icon exists'))
 })
