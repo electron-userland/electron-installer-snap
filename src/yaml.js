@@ -95,12 +95,13 @@ class SnapcraftYAML {
       return
     }
 
-    if (feature === 'audio' && this.features.indexOf('alsa') >= 0) {
+    if (feature === 'audio' && this.features.alsa) {
       debug(`Features audio and alsa are both selected, preferring alsa.`)
       return
     }
 
     // For aliases
+    /* istanbul ignore if */
     if (featureData.feature) {
       return this.transformFeature(featureData.feature)
     }
@@ -118,7 +119,7 @@ class SnapcraftYAML {
   }
 
   transformFeatures () {
-    for (const feature of this.features) {
+    for (const feature of Object.keys(this.features)) {
       this.transformFeature(feature)
     }
   }
@@ -161,7 +162,7 @@ class SnapcraftYAML {
 
   transform (packageDir, userSupplied) {
     this.appName = userSupplied.name
-    this.features = merge([], userSupplied.features || [])
+    this.features = merge({}, userSupplied.features || {})
     delete userSupplied.features
 
     merge(this.data, userSupplied)

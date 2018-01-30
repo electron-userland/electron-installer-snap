@@ -26,6 +26,10 @@ function assertIncludes (t, collection, value, message) {
   return t.not(collection.indexOf(value), -1, message)
 }
 
+function assertNotIncludes (t, collection, value, message) {
+  return t.is(collection.indexOf(value), -1, message)
+}
+
 test.beforeEach(t => {
   t.context.tempDir = tmp.dirSync({ prefix: 'electron-installer-snap-' })
   process.chdir(t.context.tempDir.name)
@@ -60,7 +64,10 @@ test('set custom parts on app', t => {
 test('set feature on app', t => {
   const userDefined = {
     name: 'electronAppName',
-    features: ['audio', 'invalid']
+    features: {
+      'audio': true,
+      'invalid': true
+    }
   }
   return createYaml(t, userDefined)
     .then(snapcraftYaml => {
@@ -68,6 +75,32 @@ test('set feature on app', t => {
       return assertIncludes(t, snapcraftYaml.apps.electronAppName.plugs, 'pulseaudio', 'pulseaudio is in app plugs')
     })
 })
+
+test('setting both audio and alsa prefers alsa', t =>
+  createYaml(t, { name: 'electronAppName', features: { 'audio': true, 'alsa': true } })
+    .then(snapcraftYaml => {
+      assertNotIncludes(t, snapcraftYaml.parts.electronAppName['stage-packages'], 'libpulse0', 'libpulse0 is not in stage-packages')
+      assertNotIncludes(t, snapcraftYaml.apps.electronAppName.plugs, 'pulseaudio', 'pulseaudio is not in app plugs')
+      assertIncludes(t, snapcraftYaml.parts.electronAppName['stage-packages'], 'libasound2', 'libasound2 is in stage-packages')
+      return assertIncludes(t, snapcraftYaml.apps.electronAppName.plugs, 'alsa', 'alsa is in app plugs')
+    })
+)
+
+test('browserSandbox feature', t =>
+  createYaml(t, { name: 'electronAppName', features: { 'browserSandbox': true } })
+    .then(snapcraftYaml => {
+      assertIncludes(t, snapcraftYaml.apps.electronAppName.plugs, 'browser-sandbox', 'browser-sandbox is in app plugs')
+      return t.deepEqual(snapcraftYaml.plugs['browser-sandbox'], { interface: 'browser-support', 'allow-sandbox': true }, 'browser-sandbox plug exists')
+    })
+)
+
+test('MPRIS feature', t =>
+  createYaml(t, { name: 'electronAppName', features: { 'mpris': 'com.example.mpris' } })
+    .then(snapcraftYaml => {
+      assertIncludes(t, snapcraftYaml.apps.electronAppName.slots, 'electronAppName-mpris', 'mpris is in app slots')
+      return t.deepEqual(snapcraftYaml.slots['electronAppName-mpris'], { interface: 'mpris', name: 'com.example.mpris' }, 'mpris slot defined')
+    })
+)
 
 test('desktop-launch command uses productName by default', t => {
   const command = createDesktopLaunchCommand({name: 'app-name', productName: 'App Name'})
