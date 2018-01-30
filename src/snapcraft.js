@@ -83,8 +83,8 @@ class Snapcraft {
       },
       stdio: ['pipe', 'pipe', process.stderr]
     }
-    /* istanbul ignore if */
     if (debug.enabled) {
+      /* istanbul ignore next */
       spawnOptions.stdio = 'inherit'
     }
 
