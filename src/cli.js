@@ -45,6 +45,8 @@ function parseArgs () {
   }).option('executable-name', {
     describe: 'The executable name of the Electron app, sans file extension (defaults to productName or name in package.json)',
     string: true
+  }).option('hook', {
+    describe: 'One or more hook types to use with the snap. Example: --hook.install=/path/to/script . For more types, see https://docs.snapcraft.io/build-snaps/hooks'
   }).option('grade', {
     describe: 'The quality grade of the snap',
     string: true
@@ -61,6 +63,11 @@ function parseArgs () {
 
   args.version = args.appVersion
   delete args.appVersion
+
+  if (args.hook) {
+    args.hookScripts = args.hook
+    delete args.hook
+  }
 
   const filteredArgs = {}
   const YARGS_KEYS = ['_', '$0', 'help']

@@ -23,6 +23,7 @@ const tmp = require('tmp-promise')
 
 const Snapcraft = require('./snapcraft')
 const createDesktopFile = require('./desktop')
+const copyHooks = require('./hooks')
 const copyIcon = require('./icon')
 const createYamlFromTemplate = require('./yaml')
 const defaultArgsFromApp = require('./default_args')
@@ -69,11 +70,13 @@ class SnapCreator {
   }
 
   prepareAndBuildSnap (snapDir) {
-    const snapGuiDir = path.join(snapDir, 'snap', 'gui')
+    const snapMetaDir = path.join(snapDir, 'snap')
+    const snapGuiDir = path.join(snapMetaDir, 'gui')
     return fs.ensureDir(snapGuiDir)
       .then(() => createDesktopFile(snapGuiDir, this.config))
       .then(() => copyIcon(snapGuiDir, this.config))
       .then(() => createYamlFromTemplate(snapDir, this.packageDir, this.config))
+      .then(() => copyHooks(snapMetaDir, this.config))
       .then(() => this.snapcraft.run(snapDir, 'snap', this.snapcraftOptions))
       .then(() => this.snapDestPath)
   }

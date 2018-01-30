@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+const copyHooks = require('../src/hooks')
 const copyIcon = require('../src/icon')
 const createDesktopFile = require('../src/desktop')
 const createYamlFromTemplate = require('../src/yaml')
@@ -178,4 +179,18 @@ test('generateArgs flags and options', t => {
   const args = snapcraft.generateArgs('nonexistent', {a: 1, b: null}, ['foo', 'bar'])
 
   t.deepEqual(args, ['nonexistent', '--a=1', '--b', 'foo', 'bar'], 'generated args')
+})
+
+test('copyHooks fails with an invalid script', t =>
+  t.throws(copyHooks(t.context.tempDir.name, { hookScripts: { install: '/does/not/exist' } }), /Hook install at .* does not exist/)
+)
+
+test('copyHooks installs a hook script', t => {
+  const config = { hookScripts: { install: path.join(__dirname, 'fixtures', 'install-hook') } }
+  const snapHookPath = path.join(t.context.tempDir.name, 'install')
+  return copyHooks(t.context.tempDir.name, config)
+    .then(() => {
+      t.is(typeof config.hookScripts, 'undefined', 'hookScripts removed from config')
+      return fs.access(snapHookPath, fs.constants.X_OK)
+    }).catch(err => t.fail(`Could not access ${snapHookPath}: ${err}`))
 })
