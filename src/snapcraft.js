@@ -53,7 +53,7 @@ class Snapcraft {
   /**
    * Generate arguments to pass to snapcraft.
    */
-  generateArgs (command, options) {
+  generateArgs (command, options, extraArgs) {
     const args = [command]
     for (const flag in options) {
       const value = options[flag]
@@ -63,6 +63,11 @@ class Snapcraft {
       } else {
         args.push(`--${flag}`)
       }
+    }
+
+    /* istanbul ignore if */
+    if (extraArgs) {
+      Array.prototype.push.apply(args, extraArgs)
     }
 
     return args
