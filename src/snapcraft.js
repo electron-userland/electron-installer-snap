@@ -57,6 +57,7 @@ class Snapcraft {
     const args = [command]
     for (const flag in options) {
       const value = options[flag]
+      /* istanbul ignore else */
       if (value) {
         args.push(`--${flag}=${value}`)
       } else {
@@ -77,6 +78,7 @@ class Snapcraft {
       },
       stdio: ['pipe', 'pipe', process.stderr]
     }
+    /* istanbul ignore if */
     if (debug.enabled) {
       spawnOptions.stdio = 'inherit'
     }
@@ -88,7 +90,7 @@ class Snapcraft {
     const args = this.generateArgs(command, options)
     debug(`Running '${this.snapcraftPath} ${args.join(' ')}' in ${packageDir}`)
     return spawn(this.snapcraftPath, args, this.generateSpawnOptions(packageDir))
-      .catch(error => {
+      .catch(/* istanbul ignore next */ error => {
         console.error(`Snapcraft failed (${error.exitStatus})`)
         if (!debug.enabled) {
           console.error('Re-run with the environment variable DEBUG=electron-installer-snap:snapcraft for details.')
