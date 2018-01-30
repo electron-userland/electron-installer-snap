@@ -35,10 +35,17 @@ Then you can run `npm run build:package && npm run build:snap`, which will prepa
 for bundling, generate a `.snap` file in your current directory.
 It is recommended to ignore the generated `snap` directory in your version control.
 
+## Options
+
+Available command-line options are displayed when you run `electron-installer-snap --help`.
+
+For the JavaScript API, please see the [API
+docs](https://github.com/electron-userland/electron-installer-snap/blob/master/docs/api.md).
+
 ## Thanks
 
 Thank you to Canonical for the support in getting this module created, during the September 2017
-Ubuntu Rally.
+Ubuntu Rally and the January 2018 Snapcraft Summit.
 
 ## Legal
 
