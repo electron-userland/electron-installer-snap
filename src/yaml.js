@@ -165,7 +165,19 @@ class SnapcraftYAML {
     this.features = merge({}, userSupplied.features || {})
     delete userSupplied.features
 
-    merge(this.data, userSupplied)
+    const appConfig = { apps: { electronApp: userSupplied.appConfig || {} } }
+    delete userSupplied.appConfig
+    const appPlugsSlots = { apps: { electronApp: {} } }
+    if (userSupplied.appPlugs) {
+      appPlugsSlots.apps.electronApp.plugs = userSupplied.appPlugs
+      delete userSupplied.appPlugs
+    }
+    if (userSupplied.appSlots) {
+      appPlugsSlots.apps.electronApp.slots = userSupplied.appSlots
+      delete userSupplied.appSlots
+    }
+
+    merge(this.data, userSupplied, appConfig, appPlugsSlots)
 
     this.renameSubtree(this.data.parts, 'electronApp', this.appName)
     this.renameSubtree(this.data.apps, 'electronApp', this.appName)

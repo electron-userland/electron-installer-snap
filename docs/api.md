@@ -43,6 +43,65 @@ Packager.
 
 ### Optional
 
+#### `appConfig`
+
+*Object* (Default: `{}`)
+
+[Additional Snapcraft configuration](https://docs.snapcraft.io/build-snaps/syntax#app-name) for the
+Electron app.
+
+#### `appPlugs`
+
+*Array* of *String*s
+
+Additional [plugs](https://docs.snapcraft.io/reference/interfaces) for the Electron app which are
+necessary for the app to be a consumer of a feature in the system. Common features can be set via
+the [`features`](#features) option. To set any attributes for the plugs, set them in the
+`plugs` option.
+
+For example, if the app uses a DBus interface:
+
+```javascript
+{
+  appPlugs: ['my-dbus-interface'],
+  plugs: {
+    'my-dbus-interface': {
+      interface: 'dbus',
+      name: 'com.example.my-interface',
+      bus: 'session'
+    }
+  }
+}
+```
+
+`plugs` will be passed through directly to the generated `snapcraft.yaml`.
+
+#### `appSlots`
+
+*Array* of *String*s
+
+Additional [slots](https://docs.snapcraft.io/reference/interfaces) for the Electron app which are
+necessary for the app to be a producer of a feature in the system. Common features can be set via
+the [`features`](#features) option. To set any attributes for the plugs, set them in the
+`slots` option.
+
+For example, if the app creates a DBus interface:
+
+```javascript
+{
+  appSlots: ['my-dbus-interface'],
+  slots: {
+    'my-dbus-interface': {
+      interface: 'dbus',
+      name: 'com.example.my-interface',
+      bus: 'session'
+    }
+  }
+}
+```
+
+`slots` will be passed through directly to the generated `snapcraft.yaml`.
+
 #### `arch`
 
 *String* (Default: host arch, via `process.arch`)
@@ -90,7 +149,8 @@ Available features:
 
 * `audio` - PulseAudio support
 * `alsa` - ALSA support *(replaces `audio` support if both are specified)*
-* `browserSandbox` - web browser functionality (e.g., Brave)
+* `browserSandbox` - [web browser functionality](https://github.com/snapcore/snapd/wiki/Interfaces#browser-support)
+  (e.g., Brave)
 * `mpris` - [MPRIS](https://specifications.freedesktop.org/mpris-spec/latest/) support. If enabled,
   the interface name must be specified as the feature value.
 * `webgl` - WebGL support (requires Mesa, etc.)

@@ -129,12 +129,32 @@ test('browserSandbox feature', t =>
     })
 )
 
+test('browserSandbox feature with custom plugs', t =>
+  createYaml(t, { name: 'electronAppName', appPlugs: ['foobar'], features: { 'browserSandbox': true }, plugs: { foobar: { interface: 'dbus', name: 'com.example.foobar' } } })
+    .then(snapcraftYaml => {
+      assertIncludes(t, snapcraftYaml.apps.electronAppName.plugs, 'browser-sandbox', 'browser-sandbox is in app plugs')
+      assertIncludes(t, snapcraftYaml.apps.electronAppName.plugs, 'foobar', 'foobar is in app plugs')
+      t.deepEqual(snapcraftYaml.plugs.foobar, { interface: 'dbus', name: 'com.example.foobar' })
+      return t.deepEqual(snapcraftYaml.plugs['browser-sandbox'], { interface: 'browser-support', 'allow-sandbox': true }, 'browser-sandbox plug exists')
+    })
+)
+
 test('MPRIS feature', t =>
   createYaml(t, { name: 'electronAppName', features: { 'mpris': 'com.example.mpris' } })
     .then(snapcraftYaml => {
       assertIncludes(t, snapcraftYaml.apps.electronAppName.slots, 'electronAppName-mpris', 'mpris is in app slots')
       return t.deepEqual(snapcraftYaml.slots['electronAppName-mpris'], { interface: 'mpris', name: 'com.example.mpris' }, 'mpris slot defined')
     })
+)
+
+test('custom app slots config', t =>
+  createYaml(t, { name: 'electronAppName', appSlots: ['foobar'] })
+    .then(snapcraftYaml => assertIncludes(t, snapcraftYaml.apps.electronAppName.slots, 'foobar', 'foobar is set in app slots'))
+)
+
+test('custom app config', t =>
+  createYaml(t, { name: 'electronAppName', appConfig: { daemon: true } })
+    .then(snapcraftYaml => t.true(snapcraftYaml.apps.electronAppName.daemon, 'daemon is set in app'))
 )
 
 test('desktop-launch command uses productName by default', t => {
