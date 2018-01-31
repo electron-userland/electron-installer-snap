@@ -49,13 +49,6 @@ const FEATURES = {
   }
 }
 
-/**
- * Blank lines need to be dots, like Debian.
- */
-function convertBlankLines (text) {
-  return text.replace(/^$/m, '.')
-}
-
 class SnapcraftYAML {
   read (templateFilename) {
     debug('Loading YAML template', templateFilename)
@@ -178,7 +171,6 @@ class SnapcraftYAML {
 
     this.renameSubtree(this.data.parts, 'electronApp', this.appName)
     this.renameSubtree(this.data.apps, 'electronApp', this.appName)
-    this.data.description = convertBlankLines(this.data.description)
     this.validateSummary()
     this.app.command = createDesktopLaunchCommand(this.data)
     this.transformFeatures()
