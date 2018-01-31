@@ -1,5 +1,8 @@
 # Electron Installer: Snap
 
+[![Build Status](https://travis-ci.org/electron-userland/electron-installer-snap.svg?branch=master)](https://travis-ci.org/electron-userland/electron-installer-snap)
+[![Code Coverage](https://codecov.io/gh/electron-userland/electron-installer-snap/branch/master/graph/badge.svg)](https://codecov.io/gh/electron-userland/electron-installer-snap)
+
 Builds Snap files for Electron applications that have already been bundled and customized.
 
 ## Requirements
