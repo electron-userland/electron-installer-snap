@@ -110,7 +110,7 @@ Either the Node.js-formatted arch or Snap-formatted arch, used to specify the Sn
 
 #### `confinement`
 
-*String*
+*String* (default: `devmode`)
 
 See the [Snapcraft documentation](https://snapcraft.io/docs/reference/confinement).
 
@@ -173,7 +173,7 @@ Setting a feature to a `false`-y value does not disable the feature, only omitti
 
 #### `grade`
 
-*String*
+*String* (Default: `devel`)
 
 The quality grade of the Snap. See the [Snapcraft documentation](https://docs.snapcraft.io/build-snaps/syntax#grade)
 for valid values.
