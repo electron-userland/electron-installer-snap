@@ -116,7 +116,7 @@ class SnapcraftYAML {
 
   transformBrowserSandbox () {
     debug('Replacing brower-support plug with browser-sandbox')
-    pull(this.app.plugs, ['browser-support'])
+    pull(this.app.plugs, 'browser-support')
     this.app.plugs.push('browser-sandbox')
     if (!this.data.plugs) {
       this.data.plugs = {}

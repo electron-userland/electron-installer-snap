@@ -71,6 +71,7 @@ test('setting both audio and alsa prefers alsa', t =>
 test('browserSandbox feature', t =>
   createYaml(t, { name: 'electronAppName', features: { 'browserSandbox': true } })
     .then(snapcraftYaml => {
+      util.assertNotIncludes(t, snapcraftYaml.apps.electronAppName.plugs, 'browser-support', 'browser-support is not in app plugs')
       util.assertIncludes(t, snapcraftYaml.apps.electronAppName.plugs, 'browser-sandbox', 'browser-sandbox is in app plugs')
       return t.deepEqual(snapcraftYaml.plugs['browser-sandbox'], { interface: 'browser-support', 'allow-sandbox': true }, 'browser-sandbox plug exists')
     })
