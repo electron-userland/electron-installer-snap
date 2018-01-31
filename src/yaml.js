@@ -39,6 +39,10 @@ const FEATURES = {
   mpris: {
     transform: 'transformMPRIS'
   },
+  passwords: {
+    packages: ['libgnome-keyring0'],
+    plugs: ['password-manager-service']
+  },
   webgl: {
     packages: ['libgl1-mesa-glx', 'libglu1-mesa'],
     plugs: ['opengl']

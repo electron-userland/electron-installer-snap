@@ -153,6 +153,7 @@ Available features:
   (e.g., Brave)
 * `mpris` - [MPRIS](https://specifications.freedesktop.org/mpris-spec/latest/) support. If enabled,
   the interface name must be specified as the feature value.
+* `passwords` - Access the secret service (e.g., GNOME Keyring)
 * `webgl` - WebGL support (requires Mesa, etc.)
 
 Example:
