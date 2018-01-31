@@ -79,7 +79,7 @@ class Snapcraft {
         LOCALE: 'C.UTF-8',
         PATH: process.env.PATH
       },
-      stdio: ['pipe', 'pipe', process.stderr]
+      stdio: ['ignore', 'ignore', process.stderr]
     }
     if (debug.enabled) {
       /* istanbul ignore next */
