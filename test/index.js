@@ -20,14 +20,13 @@ const copyIcon = require('../src/icon')
 const createDesktopFile = require('../src/desktop')
 const createYamlFromTemplate = require('../src/yaml')
 const fs = require('fs-extra')
+const launcher = require('../src/launcher')
 const path = require('path')
 const snap = require('../src')
 const Snapcraft = require('../src/snapcraft')
 const test = require('ava')
 const tmp = require('tmp-promise')
 const yaml = require('js-yaml')
-
-const createDesktopLaunchCommand = createYamlFromTemplate.createDesktopLaunchCommand
 
 function createYaml (t, userDefined) {
   const yamlPath = path.join(t.context.tempDir.name, 'snap', 'snapcraft.yaml')
@@ -158,14 +157,33 @@ test('custom app config', t =>
 )
 
 test('desktop-launch command uses productName by default', t => {
-  const command = createDesktopLaunchCommand({name: 'app-name', productName: 'App Name'})
+  const command = launcher.createDesktopLaunchCommand({name: 'app-name', productName: 'App Name'})
+  t.true(command.startsWith('desktop-launch'), 'Command uses desktop-launch')
   t.true(command.endsWith("/App Name'"), 'Command uses exe-name')
 })
 
 test('desktop-launch command uses executableName if specified', t => {
-  const command = createDesktopLaunchCommand({name: 'app-name', productName: 'App Name', executableName: 'exe-name'})
+  const command = launcher.createDesktopLaunchCommand({name: 'app-name', productName: 'App Name', executableName: 'exe-name'})
+  t.true(command.startsWith('desktop-launch'), 'Command uses desktop-launch')
   t.true(command.endsWith("/exe-name'"), 'Command uses exe-name')
 })
+
+test('launcher is classic launcher in classic confinement', t => {
+  const command = launcher.createDesktopLaunchCommand({productName: 'App Name', confinement: 'classic'})
+  t.true(command.startsWith('bin/electron-launch'), 'Command uses electron-launch')
+})
+
+test('no custom launcher is copied to bin folder in non-classic confinement', t =>
+  launcher.copyLauncher(t.context.tempDir.name, { confinement: 'strict' })
+    .then(() => fs.pathExists(path.join(t.context.tempDir.name, 'bin', 'electron-launch')))
+    .then(exists => t.false(exists, 'launcher does not exist'))
+)
+
+test('custom launcher is copied to bin folder in classic confinement', t =>
+  launcher.copyLauncher(t.context.tempDir.name, { confinement: 'classic' })
+    .then(() => fs.pathExists(path.join(t.context.tempDir.name, 'bin', 'electron-launch')))
+    .then(exists => t.true(exists, 'launcher exists'))
+)
 
 test('custom desktop template', t => {
   const desktopFilePath = path.join(t.context.tempDir.name, 'app.desktop')

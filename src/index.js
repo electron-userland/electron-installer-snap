@@ -25,6 +25,7 @@ const Snapcraft = require('./snapcraft')
 const createDesktopFile = require('./desktop')
 const copyHooks = require('./hooks')
 const copyIcon = require('./icon')
+const copyLauncher = require('./launcher').copyLauncher
 const createYamlFromTemplate = require('./yaml')
 const defaultArgsFromApp = require('./default_args')
 
@@ -75,6 +76,7 @@ class SnapCreator {
     return fs.ensureDir(snapGuiDir)
       .then(() => createDesktopFile(snapGuiDir, this.config))
       .then(() => copyIcon(snapGuiDir, this.config))
+      .then(() => copyLauncher(snapDir, this.config))
       .then(() => createYamlFromTemplate(snapDir, this.packageDir, this.config))
       .then(() => copyHooks(snapMetaDir, this.config))
       .then(() => this.snapcraft.run(snapDir, 'snap', this.snapcraftOptions))

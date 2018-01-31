@@ -22,6 +22,8 @@ const path = require('path')
 const pull = require('lodash.pull')
 const yaml = require('js-yaml')
 
+const createDesktopLaunchCommand = require('./launcher').createDesktopLaunchCommand
+
 const FEATURES = {
   audio: {
     packages: ['libpulse0'],
@@ -48,15 +50,6 @@ const FEATURES = {
  */
 function convertBlankLines (text) {
   return text.replace(/^$/m, '.')
-}
-
-function createDesktopLaunchCommand (data) {
-  const executableName = data.executableName || data.productName
-
-  delete data.executableName
-  delete data.productName
-
-  return `desktop-launch '$SNAP/${data.name}/${executableName}'`
 }
 
 class SnapcraftYAML {
@@ -208,4 +201,3 @@ function createYamlFromTemplate (snapDir, packageDir, userSupplied) {
 }
 
 module.exports = createYamlFromTemplate
-module.exports.createDesktopLaunchCommand = createDesktopLaunchCommand
