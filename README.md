@@ -35,7 +35,7 @@ Then add to your `package.json`:
 ```
 
 Then you can run `npm run build:package && npm run build:snap`, which will prepare the Electron app
-for bundling, generate a `.snap` file in your current directory.
+for bundling and generate a `.snap` file in your current directory.
 It is recommended to ignore the generated `snap` directory in your version control.
 
 ## Options
