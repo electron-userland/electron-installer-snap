@@ -1,6 +1,6 @@
 {
   "name": "electron-installer-snap",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Build snapcraft packages for Electron applications",
   "author": "Mark Lee",
   "license": "MIT",
