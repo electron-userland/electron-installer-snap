@@ -22,10 +22,16 @@ const test = require('ava')
 const util = require('./_util')
 const yaml = require('js-yaml')
 
-function createYaml (t, userDefined) {
+function createYaml (t, userDefined, electronVersion) {
   const yamlPath = path.join(t.context.tempDir.name, 'snap', 'snapcraft.yaml')
+  if (typeof electronVersion === 'undefined') {
+    electronVersion = '1.0.0'
+  }
+  const packageDir = path.join(t.context.tempDir.name, 'my-app')
 
-  return createYamlFromTemplate(t.context.tempDir.name, 'my-app', userDefined)
+  return fs.mkdirs(packageDir)
+    .then(() => fs.writeFile(path.join(packageDir, 'version'), `v${electronVersion}`))
+    .then(() => createYamlFromTemplate(t.context.tempDir.name, packageDir, userDefined))
     .then(() => fs.pathExists(yamlPath))
     .then(exists => {
       t.true(exists, 'snapcraft.yaml exists')
@@ -103,4 +109,14 @@ test('custom app slots config', t =>
 test('custom app config', t =>
   createYaml(t, { name: 'electronAppName', appConfig: { daemon: true } })
     .then(snapcraftYaml => t.true(snapcraftYaml.apps.electronAppName.daemon, 'daemon is set in app'))
+)
+
+test('Electron < 2 apps use desktop-gtk2', t =>
+  createYaml(t, { name: 'electronAppName' }, '1.8.2')
+    .then(snapcraftYaml => t.deepEqual(snapcraftYaml.parts.electronAppName.after, ['desktop-gtk2']))
+)
+
+test('Electron 2 apps use desktop-gtk3', t =>
+  createYaml(t, { name: 'electronAppName' }, '2.0.0-beta.1')
+    .then(snapcraftYaml => t.deepEqual(snapcraftYaml.parts.electronAppName.after, ['desktop-gtk3']))
 )
