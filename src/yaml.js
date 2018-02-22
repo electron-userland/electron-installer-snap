@@ -20,6 +20,7 @@ const fs = require('fs-extra')
 const merge = require('lodash.merge')
 const path = require('path')
 const pull = require('lodash.pull')
+const semver = require('semver')
 const yaml = require('js-yaml')
 
 const createDesktopLaunchCommand = require('./launcher').createDesktopLaunchCommand
@@ -148,6 +149,25 @@ class SnapcraftYAML {
     this.parts.source = path.dirname(packageDir)
     this.parts.organize = {}
     this.parts.organize[path.basename(packageDir)] = this.data.name
+
+    return this.updateGTKDependency(packageDir)
+  }
+
+  updateGTKDependency (packageDir) {
+    return this.readElectronVersion(packageDir)
+      .then(version => {
+        if (semver.gte(version, '2.0.0-beta.1')) {
+          this.parts.after[0] = 'desktop-gtk3'
+        }
+
+        return this.data
+      })
+  }
+
+  readElectronVersion (packageDir) {
+    return fs.readFile(path.resolve(packageDir, 'version'))
+      // The content of the version file is the tag name, e.g. "v1.8.1"
+      .then(tag => tag.toString().slice(1).trim())
   }
 
   transform (packageDir, userSupplied) {
@@ -174,9 +194,7 @@ class SnapcraftYAML {
     this.validateSummary()
     this.app.command = createDesktopLaunchCommand(this.data)
     this.transformFeatures()
-    this.transformParts(packageDir)
-
-    return this.data
+    return this.transformParts(packageDir)
   }
 
   write (filename) {
