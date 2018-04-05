@@ -20,11 +20,11 @@ const test = require('ava')
 const tmp = require('tmp-promise')
 
 function assertIncludes (t, collection, value, message) {
-  return t.not(collection.indexOf(value), -1, message)
+  return t.true(collection.includes(value), message)
 }
 
 function assertNotIncludes (t, collection, value, message) {
-  return t.is(collection.indexOf(value), -1, message)
+  return t.false(collection.includes(value), message)
 }
 
 test.beforeEach(t => {
