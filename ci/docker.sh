@@ -3,4 +3,4 @@
 cd /code
 
 npm run lint
-CI=true npm run coverage
+DEBUG=electron-installer-snap:snapcraft CI=true npm run coverage
