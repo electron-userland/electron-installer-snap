@@ -63,6 +63,7 @@ class SnapCreator {
         this.tmpdir = tmpdir
         return this.prepareAndBuildSnap(tmpdir.path)
       }).catch(err => {
+        /* istanbul ignore if */
         if (!debug.enabled) {
           this.tmpdir.cleanup()
         }
