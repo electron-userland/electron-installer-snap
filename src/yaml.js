@@ -23,7 +23,7 @@ const pull = require('lodash.pull')
 const semver = require('semver')
 const yaml = require('js-yaml')
 
-const createDesktopLaunchCommand = require('./launcher').createDesktopLaunchCommand
+const { createDesktopLaunchCommand } = require('./launcher')
 
 const FEATURES = {
   audio: {

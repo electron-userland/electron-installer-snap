@@ -25,7 +25,7 @@ const Snapcraft = require('./snapcraft')
 const createDesktopFile = require('./desktop')
 const copyHooks = require('./hooks')
 const copyIcon = require('./icon')
-const copyLauncher = require('./launcher').copyLauncher
+const { copyLauncher } = require('./launcher')
 const createYamlFromTemplate = require('./yaml')
 const defaultArgsFromApp = require('./default_args')
 
