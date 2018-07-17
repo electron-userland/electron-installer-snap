@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/electron-userland/electron-installer-snap/compare/v2.0.1...master
+[Unreleased]: https://github.com/electron-userland/electron-installer-snap/compare/v3.0.0...master
 
 ## [3.0.0] - 2018-07-16
 
