@@ -81,8 +81,8 @@ class Snapcraft {
       },
       stdio: ['ignore', 'ignore', process.stderr]
     }
+    /* istanbul ignore if */
     if (debug.enabled) {
-      /* istanbul ignore next */
       spawnOptions.stdio = 'inherit'
     }
 

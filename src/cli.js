@@ -80,7 +80,7 @@ function parseArgs () {
   const YARGS_KEYS = ['_', '$0', 'help']
   for (const key in args) {
     const value = args[key]
-    if (value !== undefined && key.indexOf('-') === -1 && YARGS_KEYS.indexOf(key) === -1) {
+    if (value !== undefined && !key.includes('-') && !YARGS_KEYS.includes(key)) {
       filteredArgs[key] = value
     }
   }
