@@ -3,7 +3,7 @@
   "version": "3.0.0",
   "description": "Build snapcraft packages for Electron applications",
   "author": "Mark Lee",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "main": "src/index.js",
   "bin": {
     "electron-installer-snap": "src/cli.js"
