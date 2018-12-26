@@ -17,7 +17,8 @@
     "ava": "ava test",
     "coverage": "nyc ava test",
     "lint": "eslint .",
-    "test": "npm run lint && npm run ava"
+    "test": "npm run lint && npm run ava",
+    "test:fast": "cross-env FAST_TESTS_ONLY=1 npm test"
   },
   "repository": "electron-userland/electron-installer-snap",
   "keywords": [
@@ -30,6 +31,7 @@
   "devDependencies": {
     "ava": "^0.25.0",
     "codecov": "^3.0.0",
+    "cross-env": "^5.2.0",
     "eslint": "^4.7.2",
     "eslint-config-standard": "^11.0.0",
     "eslint-plugin-ava": "^4.4.0",

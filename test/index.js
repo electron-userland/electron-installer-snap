@@ -29,25 +29,27 @@ test('packaged app not found', t => t.throws(snap({}), /Could not find, read, or
 
 test('cannot find custom snapcraft', t => t.throws(snap({src: path.join(__dirname, 'fixtures', 'app-with-asar'), snapcraft: '/foo/bar/non-existent'}), /Cannot locate \/foo\/bar\/non-existent in your system/))
 
-test.serial('creates a snap', t => {
-  let snapPath
-  return snap({src: path.join(__dirname, 'fixtures', 'app-with-asar')})
-    .then(path => {
-      t.truthy(path, 'snap returns a truthy value')
-      snapPath = path
-      return fs.pathExists(snapPath)
-    }).then(exists => t.true(exists, `Snap created at ${snapPath}`))
-})
+if (!process.env['FAST_TESTS_ONLY']) {
+  test.serial('creates a snap', t => {
+    let snapPath
+    return snap({src: path.join(__dirname, 'fixtures', 'app-with-asar')})
+      .then(path => {
+        t.truthy(path, 'snap returns a truthy value')
+        snapPath = path
+        return fs.pathExists(snapPath)
+      }).then(exists => t.true(exists, `Snap created at ${snapPath}`))
+  })
 
-test.serial('creates a snap in a custom output directory', t => {
-  let snapPath
-  const destDir = path.join(t.context.tempDir.name, 'custom-output-directory')
-  return fs.mkdirs(destDir)
-    .then(() => snap({src: path.join(__dirname, 'fixtures', 'app-with-asar'), dest: destDir}))
-    .then(path => {
-      t.truthy(path, 'snap returns a truthy value')
-      snapPath = path
-      util.assertIncludes(t, snapPath, 'custom-output-directory', 'path contains custom output directory')
-      return fs.pathExists(snapPath)
-    }).then(exists => t.true(exists, `Snap created at ${snapPath}`))
-})
+  test.serial('creates a snap in a custom output directory', t => {
+    let snapPath
+    const destDir = path.join(t.context.tempDir.name, 'custom-output-directory')
+    return fs.mkdirs(destDir)
+      .then(() => snap({src: path.join(__dirname, 'fixtures', 'app-with-asar'), dest: destDir}))
+      .then(path => {
+        t.truthy(path, 'snap returns a truthy value')
+        snapPath = path
+        util.assertIncludes(t, snapPath, 'custom-output-directory', 'path contains custom output directory')
+        return fs.pathExists(snapPath)
+      }).then(exists => t.true(exists, `Snap created at ${snapPath}`))
+  })
+}
