@@ -23,19 +23,19 @@ const test = require('ava')
 require('./_util')
 
 test('desktop-launch command uses productName by default', t => {
-  const command = launcher.createDesktopLaunchCommand({name: 'app-name', productName: 'App Name'})
+  const command = launcher.createDesktopLaunchCommand({ name: 'app-name', productName: 'App Name' })
   t.true(command.startsWith('desktop-launch'), 'Command uses desktop-launch')
   t.true(command.endsWith("/App Name'"), 'Command uses exe-name')
 })
 
 test('desktop-launch command uses executableName if specified', t => {
-  const command = launcher.createDesktopLaunchCommand({name: 'app-name', productName: 'App Name', executableName: 'exe-name'})
+  const command = launcher.createDesktopLaunchCommand({ name: 'app-name', productName: 'App Name', executableName: 'exe-name' })
   t.true(command.startsWith('desktop-launch'), 'Command uses desktop-launch')
   t.true(command.endsWith("/exe-name'"), 'Command uses exe-name')
 })
 
 test('launcher is classic launcher in classic confinement', t => {
-  const command = launcher.createDesktopLaunchCommand({productName: 'App Name', confinement: 'classic'})
+  const command = launcher.createDesktopLaunchCommand({ productName: 'App Name', confinement: 'classic' })
   t.true(command.startsWith('bin/electron-launch'), 'Command uses electron-launch')
 })
 
