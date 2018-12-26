@@ -2,13 +2,21 @@
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/electron-userland/electron-installer-snap/compare/v3.0.0...master
+[Unreleased]: https://github.com/electron-userland/electron-installer-snap/compare/v3.0.1...master
+
+## [3.0.1] - 2018-12-26
+
+[3.0.1]: https://github.com/electron-userland/electron-installer-snap/compare/v3.0.0...v3.0.1
+
+### Fixed
+
+* Electron 4 support (#8)
 
 ## [3.0.0] - 2018-07-16
 
 [3.0.0]: https://github.com/electron-userland/electron-installer-snap/compare/v2.0.1...v3.0.0
 
-## Changed
+### Changed
 
 * Minimum Node version increased to Node 6, as Node 4 is no longer LTS (#6)
 
