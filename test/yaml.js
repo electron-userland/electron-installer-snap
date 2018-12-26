@@ -39,6 +39,14 @@ function createYaml (t, userDefined, electronVersion) {
     }).then(data => yaml.safeLoad(data, { filename: yamlPath }))
 }
 
+function assertStagedPackage (t, yaml, packageName) {
+  return t.true(yaml.parts.electronAppName['stage-packages'].includes(packageName), `Expected ${packageName} in stage-packages`)
+}
+
+function assertNoStagedPackage (t, yaml, packageName) {
+  return t.false(yaml.parts.electronAppName['stage-packages'].includes(packageName), `Expected ${packageName} NOT in stage-packages`)
+}
+
 test('set custom parts on app', t => {
   const newPart = { plugin: 'nil', 'stage-packages': ['foo', 'bar'] }
   const userDefined = {
@@ -119,4 +127,24 @@ test('Electron < 2 apps use desktop-gtk2', t =>
 test('Electron 2 apps use desktop-gtk3', t =>
   createYaml(t, { name: 'electronAppName' }, '2.0.0-beta.1')
     .then(snapcraftYaml => t.deepEqual(snapcraftYaml.parts.electronAppName.after, ['desktop-gtk3']))
+)
+
+test('Electron < 4 apps require gconf', t =>
+  createYaml(t, { name: 'electronAppName' }, '1.8.2')
+    .then(snapcraftYaml => assertStagedPackage(t, snapcraftYaml, 'libgconf2-4'))
+)
+
+test('Electron 4 apps do not require gconf', t =>
+  createYaml(t, { name: 'electronAppName' }, '4.0.0')
+    .then(snapcraftYaml => assertNoStagedPackage(t, snapcraftYaml, 'libgconf2-4'))
+)
+
+test('Electron < 4 apps do not require uuid', t =>
+  createYaml(t, { name: 'electronAppName' }, '1.8.2')
+    .then(snapcraftYaml => assertNoStagedPackage(t, snapcraftYaml, 'libuuid1'))
+)
+
+test('Electron 4 apps require uuid', t =>
+  createYaml(t, { name: 'electronAppName' }, '4.0.0')
+    .then(snapcraftYaml => assertStagedPackage(t, snapcraftYaml, 'libuuid1'))
 )

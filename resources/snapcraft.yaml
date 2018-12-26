@@ -28,7 +28,6 @@ parts:
     source: .
     plugin: dump
     stage-packages:
-    - libgconf2-4
     - libnotify4
     - libnss3
     - libpcre3
