@@ -120,3 +120,13 @@ test('Electron 2 apps use desktop-gtk3', t =>
   createYaml(t, { name: 'electronAppName' }, '2.0.0-beta.1')
     .then(snapcraftYaml => t.deepEqual(snapcraftYaml.parts.electronAppName.after, ['desktop-gtk3']))
 )
+
+test('Electron < 4 apps require gconf', t =>
+  createYaml(t, { name: 'electronAppName' }, '1.8.2')
+    .then(snapcraftYaml => t.true(snapcraftYaml.parts.electronAppName['stage-packages'].includes('libgconf2-4'), 'Expected libgconf2-4 in stage-packages'))
+)
+
+test('Electron 4 apps do not require gconf', t =>
+  createYaml(t, { name: 'electronAppName' }, '4.0.0')
+    .then(snapcraftYaml => t.false(snapcraftYaml.parts.electronAppName['stage-packages'].includes('libgconf2-4'), 'Expected libgconf2-4 not in stage-packages'))
+)

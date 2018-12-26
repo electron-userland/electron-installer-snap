@@ -16,15 +16,21 @@ limitations under the License.
 */
 
 const debug = require('debug')('electron-installer-snap:yaml')
+const dependencies = require('electron-installer-common/src/dependencies')
 const fs = require('fs-extra')
 const merge = require('lodash.merge')
 const path = require('path')
 const pull = require('lodash.pull')
 const readElectronVersion = require('electron-installer-common/src/readelectronversion')
-const semver = require('semver')
 const yaml = require('js-yaml')
 
 const { createDesktopLaunchCommand } = require('./launcher')
+
+const DEPENDENCY_MAP = {
+  gconf: 'libgconf2-4',
+  gtk2: 'desktop-gtk2',
+  gtk3: 'desktop-gtk3'
+}
 
 const FEATURES = {
   audio: {
@@ -151,18 +157,16 @@ class SnapcraftYAML {
     this.parts.organize = {}
     this.parts.organize[path.basename(packageDir)] = this.data.name
 
-    return this.updateGTKDependency(packageDir)
+    return readElectronVersion(packageDir)
+      .then(version => this.updateDependencies(version))
   }
 
-  updateGTKDependency (packageDir) {
-    return readElectronVersion(packageDir)
-      .then(version => {
-        if (semver.gte(version, '2.0.0-beta.1')) {
-          this.parts.after[0] = 'desktop-gtk3'
-        }
+  updateDependencies (version) {
+    this.parts.after[0] = dependencies.getGTKDepends(version, DEPENDENCY_MAP)
+    this.parts['stage-packages'] = this.parts['stage-packages'].concat(dependencies.getGConfDepends(version, DEPENDENCY_MAP))
+      .concat(dependencies.getUUIDDepends(version, DEPENDENCY_MAP))
 
-        return this.data
-      })
+    return this.data
   }
 
   transform (packageDir, userSupplied) {
