@@ -23,11 +23,11 @@ const util = require('./_util')
 
 test('missing configuration', t => t.throws(snap, 'Missing configuration'))
 
-test('package description too long', t => t.throws(snap({ src: path.join(__dirname, 'fixtures', 'description-too-long') }), /The max length of the summary/))
+test('package description too long', t => t.throwsAsync(snap({ src: path.join(__dirname, 'fixtures', 'description-too-long') }), /The max length of the summary/))
 
-test('packaged app not found', t => t.throws(snap({}), /Could not find, read, or parse package\.json/))
+test('packaged app not found', t => t.throwsAsync(snap({}), /Could not find, read, or parse package\.json/))
 
-test('cannot find custom snapcraft', t => t.throws(snap({ src: path.join(__dirname, 'fixtures', 'app-with-asar'), snapcraft: '/foo/bar/non-existent' }), /Cannot locate \/foo\/bar\/non-existent in your system/))
+test('cannot find custom snapcraft', t => t.throwsAsync(snap({ src: path.join(__dirname, 'fixtures', 'app-with-asar'), snapcraft: '/foo/bar/non-existent' }), /Cannot locate \/foo\/bar\/non-existent in your system/))
 
 if (!process.env['FAST_TESTS_ONLY']) {
   test.serial('creates a snap', t => {
