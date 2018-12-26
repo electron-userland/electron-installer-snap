@@ -20,6 +20,7 @@ const fs = require('fs-extra')
 const merge = require('lodash.merge')
 const path = require('path')
 const pull = require('lodash.pull')
+const readElectronVersion = require('electron-installer-common/src/readelectronversion')
 const semver = require('semver')
 const yaml = require('js-yaml')
 
@@ -154,7 +155,7 @@ class SnapcraftYAML {
   }
 
   updateGTKDependency (packageDir) {
-    return this.readElectronVersion(packageDir)
+    return readElectronVersion(packageDir)
       .then(version => {
         if (semver.gte(version, '2.0.0-beta.1')) {
           this.parts.after[0] = 'desktop-gtk3'
@@ -162,12 +163,6 @@ class SnapcraftYAML {
 
         return this.data
       })
-  }
-
-  readElectronVersion (packageDir) {
-    return fs.readFile(path.resolve(packageDir, 'version'))
-      // The content of the version file is the tag name, e.g. "v1.8.1"
-      .then(tag => tag.toString().slice(1).trim())
   }
 
   transform (packageDir, userSupplied) {
