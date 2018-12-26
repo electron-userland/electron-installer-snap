@@ -29,7 +29,8 @@ const { createDesktopLaunchCommand } = require('./launcher')
 const DEPENDENCY_MAP = {
   gconf: 'libgconf2-4',
   gtk2: 'desktop-gtk2',
-  gtk3: 'desktop-gtk3'
+  gtk3: 'desktop-gtk3',
+  uuid: 'libuuid1'
 }
 
 const FEATURES = {
