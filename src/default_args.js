@@ -1,6 +1,6 @@
 'use strict'
 /*
-Copyright 2017 Mark Lee and contributors
+Copyright 2017, 2018, 2019 Mark Lee and contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,10 +15,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const asar = require('asar')
 const debug = require('debug')('electron-installer-snap:default_args')
-const fs = require('fs-extra')
-const path = require('path')
+const { readMeta } = require('electron-installer-common')
 
 function defaultArgsFromPackageJSON (packageJSON) {
   return {
@@ -29,31 +27,7 @@ function defaultArgsFromPackageJSON (packageJSON) {
   }
 }
 
-function defaultArgsFromAsar (asarFilename) {
-  const packageJSON = JSON.parse(asar.extractFile(asarFilename, 'package.json'))
-  return defaultArgsFromPackageJSON(packageJSON)
+module.exports = function defaultArgsFromApp (packageDir) {
+  return readMeta({ src: packageDir, logger: debug })
+    .then(defaultArgsFromPackageJSON)
 }
-
-function defaultArgsFromPackageJSONFile (packageDir, resourcesDir) {
-  return fs.readJson(path.join(resourcesDir, 'app', 'package.json'))
-    .catch(err => {
-      throw new Error(`Could not find, read, or parse package.json in packaged app '${packageDir}':\n${err.message}`)
-    }).then(packageJSON => defaultArgsFromPackageJSON(packageJSON))
-}
-
-function defaultArgsFromApp (packageDir) {
-  const resourcesDir = path.resolve(packageDir, 'resources')
-  const asarFilename = path.join(resourcesDir, 'app.asar')
-  return fs.pathExists(asarFilename)
-    .then(asarExists => {
-      if (asarExists) {
-        debug('Loading package.json defaults from', asarFilename)
-        return defaultArgsFromAsar(asarFilename)
-      } else {
-        debug('Loading package.json defaults from', packageDir)
-        return defaultArgsFromPackageJSONFile(packageDir, resourcesDir)
-      }
-    })
-}
-
-module.exports = defaultArgsFromApp
