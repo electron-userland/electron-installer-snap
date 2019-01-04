@@ -42,10 +42,9 @@
     "nyc": "^13.1.0"
   },
   "dependencies": {
-    "asar": "^0.14.6",
     "cross-spawn-promise": "^0.10.1",
     "debug": "^4.1.1",
-    "electron-installer-common": "^0.4.0",
+    "electron-installer-common": "^0.4.2",
     "fs-extra": "^7.0.1",
     "js-yaml": "^3.10.0",
     "lodash.filter": "^4.6.0",

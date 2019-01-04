@@ -1,6 +1,6 @@
 'use strict'
 /*
-Copyright 2017 Mark Lee and contributors
+Copyright 2017, 2018, 2019 Mark Lee and contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,12 +16,11 @@ limitations under the License.
 */
 
 const debug = require('debug')('electron-installer-snap:yaml')
-const dependencies = require('electron-installer-common/src/dependencies')
+const common = require('electron-installer-common')
 const fs = require('fs-extra')
 const merge = require('lodash.merge')
 const path = require('path')
 const pull = require('lodash.pull')
-const readElectronVersion = require('electron-installer-common/src/readelectronversion')
 const yaml = require('js-yaml')
 
 const { createDesktopLaunchCommand } = require('./launcher')
@@ -158,14 +157,14 @@ class SnapcraftYAML {
     this.parts.organize = {}
     this.parts.organize[path.basename(packageDir)] = this.data.name
 
-    return readElectronVersion(packageDir)
+    return common.readElectronVersion(packageDir)
       .then(version => this.updateDependencies(version))
   }
 
   updateDependencies (version) {
-    this.parts.after[0] = dependencies.getGTKDepends(version, DEPENDENCY_MAP)
-    this.parts['stage-packages'] = this.parts['stage-packages'].concat(dependencies.getGConfDepends(version, DEPENDENCY_MAP))
-      .concat(dependencies.getUUIDDepends(version, DEPENDENCY_MAP))
+    this.parts.after[0] = common.getGTKDepends(version, DEPENDENCY_MAP)
+    this.parts['stage-packages'] = this.parts['stage-packages'].concat(common.getGConfDepends(version, DEPENDENCY_MAP))
+      .concat(common.getUUIDDepends(version, DEPENDENCY_MAP))
 
     return this.data
   }
