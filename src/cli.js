@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 /*
-Copyright 2017 Mark Lee and contributors
+Copyright 2017, 2018, 2019 Mark Lee and contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,13 +31,13 @@ function parseArgs () {
     describe: 'The absolute path to snapcraft. Defaults to searching in PATH.',
     string: true
   }).option('name', {
-    describe: 'name of the snap package (defaults to name in package.json)',
+    describe: 'A maximum 30 character name of the snap package (defaults to name in package.json)',
     string: true
   }).option('app-version', {
     describe: 'version of the snap package (defaults to version in package.json)',
     string: true
   }).option('summary', {
-    describe: 'A 78 character long summary for the snap (defaults to description in package.json)',
+    describe: 'A maximum 78 character long summary for the snap (defaults to description in package.json)',
     string: true
   }).option('description', {
     describe: 'The longer description for the snap',
