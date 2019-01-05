@@ -1,6 +1,6 @@
 'use strict'
 /*
-Copyright 2018 Mark Lee and contributors
+Copyright 2018, 2019 Mark Lee and contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,6 +28,21 @@ test('package description too long', t => t.throwsAsync(snap({ src: path.join(__
 test('packaged app not found', t => t.throwsAsync(snap({}), /Could not find, read, or parse package\.json/))
 
 test('cannot find custom snapcraft', t => t.throwsAsync(snap({ src: path.join(__dirname, 'fixtures', 'app-with-asar'), snapcraft: '/foo/bar/non-existent' }), /Cannot locate \/foo\/bar\/non-existent in your system/))
+
+test('snap name is sanitized', t => {
+  const creator = new snap.SnapCreator()
+  t.is(creator.sanitizeName('My App'), 'my-app')
+})
+
+test('snap name is too long', t => {
+  const creator = new snap.SnapCreator()
+  t.throws(() => creator.sanitizeName('My super duper long application name'), /The max length of the name/)
+})
+
+test('snap name has no letters', t => {
+  const creator = new snap.SnapCreator()
+  t.throws(() => creator.sanitizeName('0-9'), /needs to have at least one letter/)
+})
 
 if (!process.env['FAST_TESTS_ONLY']) {
   test.serial('creates a snap', t => {

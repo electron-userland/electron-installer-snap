@@ -1,6 +1,6 @@
 'use strict'
 /*
-Copyright 2017 Mark Lee and contributors
+Copyright 2017, 2018, 2019 Mark Lee and contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+const common = require('electron-installer-common')
 const debug = require('debug')('electron-installer-snap:index')
 const fs = require('fs-extra')
 const nodeify = require('nodeify')
@@ -40,6 +41,7 @@ class SnapCreator {
 
   setOptions (defaultArgs, userSupplied) {
     this.config = Object.assign(defaultArgs, userSupplied)
+    this.config.name = this.sanitizeName(this.config.name)
     this.snapcraft = new Snapcraft()
 
     const snapArch = this.snapcraft.translateArch(String(this.config.arch || process.arch))
@@ -55,6 +57,19 @@ class SnapCreator {
     delete this.config.arch
 
     return this.snapcraftOptions
+  }
+
+  sanitizeName (name) {
+    if (name.length > 30) {
+      throw new Error(`The max length of the name is 30 characters, you have ${name.length}`)
+    }
+
+    const sanitized = common.sanitizeName(name.toLowerCase(), '-a-z0-9')
+    if (!/[a-z]/.test(sanitized)) {
+      throw new Error('The snap name needs to have at least one letter')
+    }
+
+    return sanitized
   }
 
   runInTempSnapDir () {
@@ -101,3 +116,4 @@ function createSnap (userSupplied) {
 }
 
 module.exports = nodeify(createSnap)
+module.exports.SnapCreator = SnapCreator
