@@ -2,7 +2,15 @@
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/electron-userland/electron-installer-snap/compare/v3.0.1...master
+[Unreleased]: https://github.com/electron-userland/electron-installer-snap/compare/v3.1.0...master
+
+## [3.1.0] - 2019-01-06
+
+[3.1.0]: https://github.com/electron-userland/electron-installer-snap/compare/v3.0.1...v3.1.0
+
+### Added
+
+* Normalize and validate the Snap name (#13)
 
 ## [3.0.1] - 2018-12-26
 
