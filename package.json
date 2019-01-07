@@ -9,7 +9,7 @@
     "electron-installer-snap": "src/cli.js"
   },
   "files": [
-    "NEWS",
+    "NEWS.md",
     "resources",
     "src"
   ],
