@@ -16,7 +16,7 @@ limitations under the License.
 */
 
 const debug = require('debug')('electron-installer-snap:default_args')
-const { readMeta } = require('electron-installer-common')
+const { readMetadata } = require('electron-installer-common')
 
 function defaultArgsFromPackageJSON (packageJSON) {
   return {
@@ -28,6 +28,6 @@ function defaultArgsFromPackageJSON (packageJSON) {
 }
 
 module.exports = function defaultArgsFromApp (packageDir) {
-  return readMeta({ src: packageDir, logger: debug })
+  return readMetadata({ src: packageDir, logger: debug })
     .then(defaultArgsFromPackageJSON)
 }
