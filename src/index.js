@@ -55,8 +55,6 @@ class SnapCreator {
       output: this.snapDestPath
     }
     delete this.config.arch
-
-    return this.snapcraftOptions
   }
 
   sanitizeName (name) {
