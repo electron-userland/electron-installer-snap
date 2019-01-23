@@ -1,6 +1,6 @@
 'use strict'
 /*
-Copyright 2017 Mark Lee and contributors
+Copyright 2017, 2018, 2019 Mark Lee and contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,9 +15,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const fs = require('fs-extra')
+const { createDesktopFile } = require('electron-installer-common')
 const path = require('path')
-const template = require('lodash.template')
 
 function getDesktopTemplatePath (userSupplied) {
   if (userSupplied.desktopTemplate) {
@@ -41,12 +40,6 @@ function templateScope (userSupplied) {
   return Object.assign(defaults, userSupplied)
 }
 
-function createDesktopFile (snapGuiDir, userSupplied) {
-  const desktopFilePath = path.join(snapGuiDir, `${userSupplied.name}.desktop`)
-
-  return fs.readFile(getDesktopTemplatePath(userSupplied))
-    .then(templateData => template(templateData)(templateScope(userSupplied)))
-    .then(desktopData => fs.writeFile(desktopFilePath, desktopData))
+module.exports = function (snapGuiDir, userSupplied) {
+  return createDesktopFile(getDesktopTemplatePath(userSupplied), snapGuiDir, userSupplied.name, templateScope(userSupplied))
 }
-
-module.exports = createDesktopFile
