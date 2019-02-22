@@ -2,7 +2,15 @@
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/electron-userland/electron-installer-snap/compare/v3.1.0...master
+[Unreleased]: https://github.com/electron-userland/electron-installer-snap/compare/v3.1.1...master
+
+## [3.1.1] - 2019-02-21
+
+[3.1.1]: https://github.com/electron-userland/electron-installer-snap/compare/v3.1.0...v3.1.1
+
+### Changed
+
+* Upgrade to `electron-installer-common@^0.6.1`
 
 ## [3.1.0] - 2019-01-06
 
