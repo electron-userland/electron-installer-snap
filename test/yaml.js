@@ -83,7 +83,7 @@ test('setting both audio and alsa prefers alsa', t =>
 )
 
 test('browserSandbox feature', t =>
-  createYaml(t, { name: 'electronAppName', features: { 'browserSandbox': true } })
+  createYaml(t, { name: 'electronAppName', features: { browserSandbox: true } })
     .then(snapcraftYaml => {
       util.assertNotIncludes(t, snapcraftYaml.apps.electronAppName.plugs, 'browser-support', 'browser-support is not in app plugs')
       util.assertIncludes(t, snapcraftYaml.apps.electronAppName.plugs, 'browser-sandbox', 'browser-sandbox is in app plugs')
@@ -91,8 +91,16 @@ test('browserSandbox feature', t =>
     })
 )
 
+test('browserSandbox is always on for Electron >= 5.0.0', t =>
+  createYaml(t, { name: 'electronAppName' }, '5.0.0')
+    .then(snapcraftYaml => {
+      util.assertNotIncludes(t, snapcraftYaml.apps.electronAppName.plugs, 'browser-support', 'browser-support is not in app plugs')
+      return util.assertIncludes(t, snapcraftYaml.apps.electronAppName.plugs, 'browser-sandbox', 'browser-sandbox is in app plugs')
+    })
+)
+
 test('browserSandbox feature with custom plugs', t =>
-  createYaml(t, { name: 'electronAppName', appPlugs: ['foobar'], features: { 'browserSandbox': true }, plugs: { foobar: { interface: 'dbus', name: 'com.example.foobar' } } })
+  createYaml(t, { name: 'electronAppName', appPlugs: ['foobar'], features: { browserSandbox: true }, plugs: { foobar: { interface: 'dbus', name: 'com.example.foobar' } } })
     .then(snapcraftYaml => {
       util.assertIncludes(t, snapcraftYaml.apps.electronAppName.plugs, 'browser-sandbox', 'browser-sandbox is in app plugs')
       util.assertIncludes(t, snapcraftYaml.apps.electronAppName.plugs, 'foobar', 'foobar is in app plugs')

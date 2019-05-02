@@ -29,6 +29,7 @@ const copyIcon = require('./icon')
 const { copyLauncher } = require('./launcher')
 const createYamlFromTemplate = require('./yaml')
 const defaultArgsFromApp = require('./default_args')
+const { updateSandboxHelperPermissions } = require('electron-installer-common')
 
 class SnapCreator {
   prepareOptions (userSupplied) {
@@ -88,6 +89,7 @@ class SnapCreator {
     const snapMetaDir = path.join(snapDir, 'snap')
     const snapGuiDir = path.join(snapMetaDir, 'gui')
     return fs.ensureDir(snapGuiDir)
+      .then(() => updateSandboxHelperPermissions(this.packageDir))
       .then(() => createDesktopFile(snapGuiDir, this.config))
       .then(() => copyIcon(snapGuiDir, this.config))
       .then(() => copyLauncher(snapDir, this.config))

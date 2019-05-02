@@ -21,6 +21,7 @@ const fs = require('fs-extra')
 const merge = require('lodash.merge')
 const path = require('path')
 const pull = require('lodash.pull')
+const semver = require('semver')
 const yaml = require('js-yaml')
 
 const { createDesktopLaunchCommand } = require('./launcher')
@@ -117,13 +118,16 @@ class SnapcraftYAML {
   }
 
   transformFeatures () {
+    if (semver.satisfies(this.electronVersion, '>= 5.0.0') && !this.features.browserSandbox) {
+      this.features.browserSandbox = true
+    }
     for (const feature of Object.keys(this.features)) {
       this.transformFeature(feature)
     }
   }
 
   transformBrowserSandbox () {
-    debug('Replacing brower-support plug with browser-sandbox')
+    debug('Replacing browser-support plug with browser-sandbox')
     pull(this.app.plugs, 'browser-support')
     this.app.plugs.push('browser-sandbox')
     if (!this.data.plugs) {
@@ -133,7 +137,7 @@ class SnapcraftYAML {
       'allow-sandbox': true,
       interface: 'browser-support'
     }
-    console.warn('This setting will trigger a manual review in the Snap store.')
+    console.warn('The browser-sandbox feature will trigger a manual review in the Snap store.')
   }
 
   transformMPRIS () {
@@ -157,14 +161,13 @@ class SnapcraftYAML {
     this.parts.organize = {}
     this.parts.organize[path.basename(packageDir)] = this.data.name
 
-    return common.readElectronVersion(packageDir)
-      .then(version => this.updateDependencies(version))
+    return this.updateDependencies()
   }
 
-  updateDependencies (version) {
-    this.parts.after[0] = common.getGTKDepends(version, DEPENDENCY_MAP)
-    this.parts['stage-packages'] = this.parts['stage-packages'].concat(common.getGConfDepends(version, DEPENDENCY_MAP))
-      .concat(common.getUUIDDepends(version, DEPENDENCY_MAP))
+  updateDependencies () {
+    this.parts.after[0] = common.getGTKDepends(this.electronVersion, DEPENDENCY_MAP)
+    this.parts['stage-packages'] = this.parts['stage-packages'].concat(common.getGConfDepends(this.electronVersion, DEPENDENCY_MAP))
+      .concat(common.getUUIDDepends(this.electronVersion, DEPENDENCY_MAP))
 
     return this.data
   }
@@ -192,8 +195,12 @@ class SnapcraftYAML {
     this.renameSubtree(this.data.apps, 'electronApp', this.appName)
     this.validateSummary()
     this.app.command = createDesktopLaunchCommand(this.data)
-    this.transformFeatures()
-    return this.transformParts(packageDir)
+    return common.readElectronVersion(packageDir)
+      .then(electronVersion => {
+        this.electronVersion = electronVersion
+        this.transformFeatures()
+        return this.transformParts(packageDir)
+      })
   }
 
   write (filename) {
