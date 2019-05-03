@@ -149,8 +149,9 @@ Available features:
 
 * `audio` - PulseAudio support
 * `alsa` - ALSA support *(replaces `audio` support if both are specified)*
-* `browserSandbox` - [web browser functionality](https://github.com/snapcore/snapd/wiki/Interfaces#browser-support)
-  (e.g., Brave)
+* `browserSandbox` - [web browser functionality](https://github.com/snapcore/snapd/wiki/Interfaces#browser-support).
+  This is enabled by default when using Electron ≥ 5.0.0, due to the
+  [setuid sandbox support](https://github.com/electron/electron/pull/17269).
 * `mpris` - [MPRIS](https://specifications.freedesktop.org/mpris-spec/latest/) support. If enabled,
   the interface name must be specified as the feature value.
 * `passwords` - Access the secret service (e.g., GNOME Keyring)
