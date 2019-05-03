@@ -2,7 +2,15 @@
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/electron-userland/electron-installer-snap/compare/v3.1.1...master
+[Unreleased]: https://github.com/electron-userland/electron-installer-snap/compare/v3.2.0...master
+
+## [3.2.0] - 2019-05-03
+
+[3.2.0]: https://github.com/electron-userland/electron-installer-snap/compare/v3.1.1...v3.2.0
+
+### Added
+
+* Always set the browser sandbox feature for Electron >= 5.0.0 (#22)
 
 ## [3.1.1] - 2019-02-21
 
