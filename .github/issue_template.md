@@ -13,7 +13,7 @@ Please check off all of the steps as they are completed by replacing [ ] with [x
 
 <!-- For bugs and questions, please answer these questions to the best of your ability. -->
 
-**Console output when you run electron-packager with the environment variable `DEBUG='electron-forge:*'`. Please include the stack trace if one exists.**
+**Console output when you run electron-installer-snap with the environment variable `DEBUG='electron-installer-snap:*'`. Please include the stack trace if one exists.**
 
 ```
 Put the console output here
