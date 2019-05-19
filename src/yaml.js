@@ -59,13 +59,10 @@ const FEATURES = {
 }
 
 class SnapcraftYAML {
-  read (templateFilename) {
+  async read (templateFilename) {
     debug('Loading YAML template', templateFilename)
-    return fs.readFile(templateFilename)
-      .then(data => {
-        this.data = yaml.safeLoad(data, { filename: templateFilename })
-        return this.data
-      })
+    this.data = yaml.safeLoad(await fs.readFile(templateFilename), { filename: templateFilename })
+    return this.data
   }
 
   get app () {
@@ -172,7 +169,7 @@ class SnapcraftYAML {
     return this.data
   }
 
-  transform (packageDir, userSupplied) {
+  async transform (packageDir, userSupplied) {
     this.appName = userSupplied.name
     this.features = merge({}, userSupplied.features || {})
     delete userSupplied.features
@@ -195,29 +192,24 @@ class SnapcraftYAML {
     this.renameSubtree(this.data.apps, 'electronApp', this.appName)
     this.validateSummary()
     this.app.command = createDesktopLaunchCommand(this.data)
-    return common.readElectronVersion(packageDir)
-      .then(electronVersion => {
-        this.electronVersion = electronVersion
-        this.transformFeatures()
-        return this.transformParts(packageDir)
-      })
+    this.electronVersion = await common.readElectronVersion(packageDir)
+    this.transformFeatures()
+    return this.transformParts(packageDir)
   }
 
-  write (filename) {
+  async write (filename) {
     debug('Writing new YAML file', filename)
     return fs.outputFile(filename, yaml.safeDump(this.data))
   }
 }
 
-function createYamlFromTemplate (snapDir, packageDir, userSupplied) {
+module.exports = async function createYamlFromTemplate (snapDir, packageDir, userSupplied) {
   const templateFilename = path.resolve(__dirname, '..', 'resources', 'snapcraft.yaml')
   delete userSupplied.snapcraft
 
   const yamlData = new SnapcraftYAML()
 
-  return yamlData.read(templateFilename)
-    .then(() => yamlData.transform(packageDir, userSupplied))
-    .then(() => yamlData.write(path.join(snapDir, 'snap', 'snapcraft.yaml')))
+  await yamlData.read(templateFilename)
+  await yamlData.transform(packageDir, userSupplied)
+  await yamlData.write(path.join(snapDir, 'snap', 'snapcraft.yaml'))
 }
-
-module.exports = createYamlFromTemplate

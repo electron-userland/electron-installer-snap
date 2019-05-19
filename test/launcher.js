@@ -1,6 +1,6 @@
 'use strict'
 /*
-Copyright 2018 Mark Lee and contributors
+Copyright 2018, 2019 Mark Lee and contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -39,14 +39,12 @@ test('launcher is classic launcher in classic confinement', t => {
   t.true(command.startsWith('bin/electron-launch'), 'Command uses electron-launch')
 })
 
-test('no custom launcher is copied to bin folder in non-classic confinement', t =>
-  launcher.copyLauncher(t.context.tempDir.name, { confinement: 'strict' })
-    .then(() => fs.pathExists(path.join(t.context.tempDir.name, 'bin', 'electron-launch')))
-    .then(exists => t.false(exists, 'launcher does not exist'))
-)
+test('no custom launcher is copied to bin folder in non-classic confinement', async t => {
+  await launcher.copyLauncher(t.context.tempDir.name, { confinement: 'strict' })
+  t.false(await fs.pathExists(path.join(t.context.tempDir.name, 'bin', 'electron-launch')), 'launcher does not exist')
+})
 
-test('custom launcher is copied to bin folder in classic confinement', t =>
-  launcher.copyLauncher(t.context.tempDir.name, { confinement: 'classic' })
-    .then(() => fs.pathExists(path.join(t.context.tempDir.name, 'bin', 'electron-launch')))
-    .then(exists => t.true(exists, 'launcher exists'))
-)
+test('custom launcher is copied to bin folder in classic confinement', async t => {
+  await launcher.copyLauncher(t.context.tempDir.name, { confinement: 'classic' })
+  t.true(await fs.pathExists(path.join(t.context.tempDir.name, 'bin', 'electron-launch')), 'launcher exists')
+})

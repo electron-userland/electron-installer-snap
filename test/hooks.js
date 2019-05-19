@@ -1,6 +1,6 @@
 'use strict'
 /*
-Copyright 2018 Mark Lee and contributors
+Copyright 2018, 2019 Mark Lee and contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,12 +26,14 @@ test('copyHooks fails with an invalid script', t =>
   t.throwsAsync(copyHooks(t.context.tempDir.name, { hookScripts: { install: '/does/not/exist' } }), /Hook install at .* does not exist/)
 )
 
-test('copyHooks installs a hook script', t => {
+test('copyHooks installs a hook script', async t => {
   const config = { hookScripts: { install: path.join(__dirname, 'fixtures', 'install-hook') } }
   const snapHookPath = path.join(t.context.tempDir.name, 'install')
-  return copyHooks(t.context.tempDir.name, config)
-    .then(() => {
-      t.is(typeof config.hookScripts, 'undefined', 'hookScripts removed from config')
-      return fs.access(snapHookPath, fs.constants.X_OK)
-    }).catch(err => t.fail(`Could not access ${snapHookPath}: ${err}`))
+  await copyHooks(t.context.tempDir.name, config)
+  t.is(typeof config.hookScripts, 'undefined', 'hookScripts removed from config')
+  try {
+    await fs.access(snapHookPath, fs.constants.X_OK)
+  } catch (err) {
+    t.fail(`Could not access ${snapHookPath}: ${err}`)
+  }
 })

@@ -1,6 +1,6 @@
 'use strict'
 /*
-Copyright 2017 Mark Lee and contributors
+Copyright 2017, 2019 Mark Lee and contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,18 +21,17 @@ const spawn = require('cross-spawn-promise')
 const which = promisify(require('which'))
 
 class Snapcraft {
-  ensureInstalled (snapcraftPath) {
+  async ensureInstalled (snapcraftPath) {
     const cmd = snapcraftPath || 'snapcraft'
-    return which(cmd)
-      .then(cmdPath => {
-        this.snapcraftPath = cmdPath
-        return true
-      }).catch(err => {
-        throw new Error(
-          `Cannot locate ${cmd} in your system. Either install snapcraft, or specify the ` +
-          `absolute path to snapcraft in the options. Details:\n${err}`
-        )
-      })
+    try {
+      this.snapcraftPath = await which(cmd)
+      return true
+    } catch (err) {
+      throw new Error(
+        `Cannot locate ${cmd} in your system. Either install snapcraft, or specify the ` +
+        `absolute path to snapcraft in the options. Details:\n${err}`
+      )
+    }
   }
 
   /**
@@ -89,17 +88,18 @@ class Snapcraft {
     return spawnOptions
   }
 
-  run (packageDir, command, options) {
+  async run (packageDir, command, options) {
     const args = this.generateArgs(command, options)
     debug(`Running '${this.snapcraftPath} ${args.join(' ')}' in ${packageDir}`)
-    return spawn(this.snapcraftPath, args, this.generateSpawnOptions(packageDir))
-      .catch(/* istanbul ignore next */ error => {
-        console.error(`Snapcraft failed (${error.exitStatus})`)
-        if (!debug.enabled) {
-          console.error('Re-run with the environment variable DEBUG=electron-installer-snap:snapcraft for details.')
-        }
-        throw error
-      })
+    try {
+      return spawn(this.snapcraftPath, args, this.generateSpawnOptions(packageDir))
+    } /* istanbul ignore next */ catch (error) {
+      console.error(`Snapcraft failed (${error.exitStatus})`)
+      if (!debug.enabled) {
+        console.error('Re-run with the environment variable DEBUG=electron-installer-snap:snapcraft for details.')
+      }
+      throw error
+    }
   }
 }
 

@@ -1,6 +1,6 @@
 'use strict'
 /*
-Copyright 2018 Mark Lee and contributors
+Copyright 2018, 2019 Mark Lee and contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,13 +21,11 @@ const path = require('path')
 const test = require('ava')
 const util = require('./_util')
 
-test('custom desktop template', t => {
+test('custom desktop template', async t => {
   const desktopFilePath = path.join(t.context.tempDir.name, 'app.desktop')
   const desktopTemplatePath = path.join(__dirname, 'fixtures', 'custom.desktop.ejs')
-  return createDesktopFile(t.context.tempDir.name, { name: 'app', desktopTemplate: desktopTemplatePath })
-    .then(() => fs.pathExists(desktopFilePath))
-    .then(exists => {
-      t.true(exists, 'desktop file exists')
-      return fs.readFile(desktopFilePath)
-    }).then(desktopData => util.assertIncludes(t, desktopData.toString(), 'Comment=Hardcoded comment', 'uses custom template'))
+  await createDesktopFile(t.context.tempDir.name, { name: 'app', desktopTemplate: desktopTemplatePath })
+  t.true(await fs.pathExists(desktopFilePath), 'desktop file exists')
+  const desktopData = await fs.readFile(desktopFilePath)
+  util.assertIncludes(t, desktopData.toString(), 'Comment=Hardcoded comment', 'uses custom template')
 })

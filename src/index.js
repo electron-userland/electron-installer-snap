@@ -31,12 +31,12 @@ const defaultArgsFromApp = require('./default_args')
 const { updateSandboxHelperPermissions } = require('electron-installer-common')
 
 class SnapCreator {
-  prepareOptions (userSupplied) {
+  async prepareOptions (userSupplied) {
     this.packageDir = path.resolve(userSupplied.src || process.cwd())
     delete userSupplied.src
 
-    return defaultArgsFromApp(this.packageDir)
-      .then(defaultArgs => this.setOptions(defaultArgs, userSupplied))
+    const defaultArgs = await defaultArgsFromApp(this.packageDir)
+    return this.setOptions(defaultArgs, userSupplied)
   }
 
   setOptions (defaultArgs, userSupplied) {
@@ -70,48 +70,47 @@ class SnapCreator {
     return sanitized
   }
 
-  runInTempSnapDir () {
-    return tmp.dir({ prefix: 'electron-snap-', unsafeCleanup: !debug.enabled })
-      .then(tmpdir => {
-        this.tmpdir = tmpdir
-        return this.prepareAndBuildSnap(tmpdir.path)
-      }).catch(err => {
-        /* istanbul ignore if */
-        if (!debug.enabled) {
-          this.tmpdir.cleanup()
-        }
-        throw err
-      })
+  async runInTempSnapDir () {
+    this.tmpdir = await tmp.dir({ prefix: 'electron-snap-', unsafeCleanup: !debug.enabled })
+    try {
+      return this.prepareAndBuildSnap(this.tmpdir.path)
+    } catch (err) {
+      /* istanbul ignore if */
+      if (!debug.enabled) {
+        this.tmpdir.cleanup()
+      }
+      throw err
+    }
   }
 
-  prepareAndBuildSnap (snapDir) {
+  async prepareAndBuildSnap (snapDir) {
     const snapMetaDir = path.join(snapDir, 'snap')
     const snapGuiDir = path.join(snapMetaDir, 'gui')
-    return fs.ensureDir(snapGuiDir)
-      .then(() => updateSandboxHelperPermissions(this.packageDir))
-      .then(() => createDesktopFile(snapGuiDir, this.config))
-      .then(() => copyIcon(snapGuiDir, this.config))
-      .then(() => copyLauncher(snapDir, this.config))
-      .then(() => createYamlFromTemplate(snapDir, this.packageDir, this.config))
-      .then(() => copyHooks(snapMetaDir, this.config))
-      .then(() => this.snapcraft.run(snapDir, 'snap', this.snapcraftOptions))
-      .then(() => this.snapDestPath)
+    await fs.ensureDir(snapGuiDir)
+    await updateSandboxHelperPermissions(this.packageDir)
+    await createDesktopFile(snapGuiDir, this.config)
+    await copyIcon(snapGuiDir, this.config)
+    await copyLauncher(snapDir, this.config)
+    await createYamlFromTemplate(snapDir, this.packageDir, this.config)
+    await copyHooks(snapMetaDir, this.config)
+    await this.snapcraft.run(snapDir, 'snap', this.snapcraftOptions)
+    return this.snapDestPath
   }
 
-  create () {
-    return this.snapcraft.ensureInstalled(this.config.snapcraft)
-      .then(() => this.runInTempSnapDir())
+  async create () {
+    await this.snapcraft.ensureInstalled(this.config.snapcraft)
+    return this.runInTempSnapDir()
   }
 }
 
-module.exports = function createSnap (userSupplied) {
+module.exports = async function createSnap (userSupplied) {
   if (!userSupplied) {
     throw new Error('Missing configuration')
   }
 
   const creator = new SnapCreator()
-  return creator.prepareOptions(userSupplied)
-    .then(() => creator.create())
+  await creator.prepareOptions(userSupplied)
+  return creator.create()
 }
 
 module.exports.SnapCreator = SnapCreator

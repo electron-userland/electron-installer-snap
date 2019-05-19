@@ -40,6 +40,6 @@ function templateScope (userSupplied) {
   return Object.assign(defaults, userSupplied)
 }
 
-module.exports = function (snapGuiDir, userSupplied) {
+module.exports = async function (snapGuiDir, userSupplied) {
   return createDesktopFile(getDesktopTemplatePath(userSupplied), snapGuiDir, userSupplied.name, templateScope(userSupplied))
 }

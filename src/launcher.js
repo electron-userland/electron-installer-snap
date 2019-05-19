@@ -1,6 +1,6 @@
 'use strict'
 /*
-Copyright 2018 Mark Lee and contributors
+Copyright 2018, 2019 Mark Lee and contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,15 +18,13 @@ limitations under the License.
 const fs = require('fs-extra')
 const path = require('path')
 
-function copyLauncher (snapDir, config) {
+async function copyLauncher (snapDir, config) {
   if (config.confinement === 'classic') {
     const binDir = path.join(snapDir, 'bin')
     const launcherPath = path.resolve(__dirname, '..', 'resources', 'classic-launcher.sh')
-    return fs.mkdirs(binDir)
-      .then(() => fs.copy(launcherPath, path.join(binDir, 'electron-launch')))
+    await fs.mkdirs(binDir)
+    await fs.copy(launcherPath, path.join(binDir, 'electron-launch'))
   }
-
-  return Promise.resolve()
 }
 
 function createDesktopLaunchCommand (data) {
