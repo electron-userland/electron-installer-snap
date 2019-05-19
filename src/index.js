@@ -18,7 +18,6 @@ limitations under the License.
 const common = require('electron-installer-common')
 const debug = require('debug')('electron-installer-snap:index')
 const fs = require('fs-extra')
-const nodeify = require('nodeify')
 const path = require('path')
 const tmp = require('tmp-promise')
 
@@ -105,7 +104,7 @@ class SnapCreator {
   }
 }
 
-function createSnap (userSupplied) {
+module.exports = function createSnap (userSupplied) {
   if (!userSupplied) {
     throw new Error('Missing configuration')
   }
@@ -115,5 +114,4 @@ function createSnap (userSupplied) {
     .then(() => creator.create())
 }
 
-module.exports = nodeify(createSnap)
 module.exports.SnapCreator = SnapCreator
