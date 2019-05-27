@@ -44,7 +44,7 @@
   "dependencies": {
     "cross-spawn-promise": "^0.10.1",
     "debug": "^4.1.1",
-    "electron-installer-common": "^0.6.3",
+    "electron-installer-common": "^0.7.0",
     "fs-extra": "^8.0.1",
     "js-yaml": "^3.10.0",
     "lodash.filter": "^4.6.0",
