@@ -27,7 +27,7 @@ function defaultArgsFromPackageJSON (packageJSON) {
   }
 }
 
-module.exports = function defaultArgsFromApp (packageDir) {
-  return readMetadata({ src: packageDir, logger: debug })
-    .then(defaultArgsFromPackageJSON)
+module.exports = async function defaultArgsFromApp (packageDir) {
+  const packageJSON = await readMetadata({ src: packageDir, logger: debug })
+  return defaultArgsFromPackageJSON(packageJSON)
 }

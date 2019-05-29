@@ -1,6 +1,6 @@
 'use strict'
 /*
-Copyright 2018 Mark Lee and contributors
+Copyright 2018, 2019 Mark Lee and contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,9 +22,8 @@ const test = require('ava')
 
 require('./_util')
 
-test('custom icon', t => {
+test('custom icon', async t => {
   const iconPath = path.join(t.context.tempDir.name, 'icon.png')
-  return copyIcon(t.context.tempDir.name, { icon: path.join(__dirname, 'fixtures', 'icon.png') })
-    .then(() => fs.pathExists(iconPath))
-    .then(exists => t.true(exists, 'icon exists'))
+  await copyIcon(t.context.tempDir.name, { icon: path.join(__dirname, 'fixtures', 'icon.png') })
+  t.true(await fs.pathExists(iconPath), 'icon exists')
 })

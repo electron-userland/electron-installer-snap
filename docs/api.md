@@ -9,8 +9,8 @@ Minimal example:
 ```javascript
 const snap = require('electron-installer-snap')
 
-snap(options)
-  .then(snapPath => console.log(`Created snap at ${snapPath}!`))
+const snapPath = await snap(options)
+console.log(`Created snap at ${snapPath}!`)
 ```
 
 Full example with [Electron Packager](https://npm.im/electron-packager):
@@ -21,12 +21,13 @@ const snap = require('electron-installer-snap')
 
 const arch = 'x64'
 
-packager({dir: '/path/to/app', platform: 'linux', arch: arch})
-  .then(paths => snap({src: paths[0], arch: arch}))
-  .then(snapPath => console.log(`Created snap at ${snapPath}!`))
+const paths = await packager({dir: '/path/to/app', platform: 'linux', arch: arch})
+const snapPath = await snap({src: paths[0], arch: arch})
+console.log(`Created snap at ${snapPath}!`)
 ```
 
-If you need to use the callback pattern instead of the Promise pattern, look into the [`nodeify` module](https://npm.im/nodeify).
+If you need to use the callback pattern instead of the `async`/`await` pattern, look into the
+[`util.callbackify` function](https://nodejs.org/api/util.html#util_util_callbackify_original).
 
 ## `options`
 

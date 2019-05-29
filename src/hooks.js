@@ -1,6 +1,6 @@
 'use strict'
 /*
-Copyright 2018 Mark Lee and contributors
+Copyright 2018, 2019 Mark Lee and contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,19 +18,17 @@ limitations under the License.
 const fs = require('fs-extra')
 const path = require('path')
 
-function copyHook (snapMetaDir, hookName, hookPath) {
+async function copyHook (snapMetaDir, hookName, hookPath) {
   const snapHookPath = path.join(snapMetaDir, hookName)
-  return fs.pathExists(hookPath)
-    .then(exists => {
-      if (!exists) {
-        throw new Error(`Hook ${hookName} at ${hookPath} does not exist!`)
-      }
+  if (!(await fs.pathExists(hookPath))) {
+    throw new Error(`Hook ${hookName} at ${hookPath} does not exist!`)
+  }
 
-      return fs.copy(hookPath, snapHookPath)
-    }).then(() => fs.chmod(snapHookPath, 0o755))
+  await fs.copy(hookPath, snapHookPath)
+  await fs.chmod(snapHookPath, 0o755)
 }
 
-function copyHooks (snapMetaDir, config) {
+module.exports = async function copyHooks (snapMetaDir, config) {
   if (typeof config.hookScripts !== 'object') {
     return
   }
@@ -38,8 +36,6 @@ function copyHooks (snapMetaDir, config) {
   const hooks = config.hookScripts
   delete config.hookScripts
 
-  return fs.mkdirs(snapMetaDir)
-    .then(() => Promise.all(Object.keys(hooks).map(key => copyHook(snapMetaDir, key, hooks[key]))))
+  await fs.mkdirs(snapMetaDir)
+  await Promise.all(Object.keys(hooks).map(key => copyHook(snapMetaDir, key, hooks[key])))
 }
-
-module.exports = copyHooks
