@@ -29,7 +29,7 @@
     "linux"
   ],
   "devDependencies": {
-    "ava": "^1.0.1",
+    "ava": "^2.0.0",
     "codecov": "^3.1.0",
     "cross-env": "^5.2.0",
     "eslint": "^5.11.0",
