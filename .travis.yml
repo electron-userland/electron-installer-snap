@@ -4,9 +4,7 @@ os: linux
 dist: xenial
 services:
 - docker
-cache:
-  directories:
-  - node_modules
+cache: npm
 branches:
   only:
   - master
