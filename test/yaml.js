@@ -63,13 +63,13 @@ test('set feature on app', async t => {
     }
   }
   const snapcraftYaml = await createYaml(t, userDefined)
-  util.assertIncludes(t, snapcraftYaml.parts.electronAppName['stage-packages'], 'libpulse0', 'libpulse0 is in stage-packages')
+  util.assertIncludes(t, snapcraftYaml.parts.electronAppName['stage-packages'], 'pulseaudio', 'pulseaudio is in stage-packages')
   util.assertIncludes(t, snapcraftYaml.apps.electronAppName.plugs, 'pulseaudio', 'pulseaudio is in app plugs')
 })
 
 test('setting both audio and alsa prefers alsa', async t => {
   const { apps, parts } = await createYaml(t, { name: 'electronAppName', features: { 'audio': true, 'alsa': true } })
-  util.assertNotIncludes(t, parts.electronAppName['stage-packages'], 'libpulse0', 'libpulse0 is not in stage-packages')
+  util.assertNotIncludes(t, parts.electronAppName['stage-packages'], 'pulseaudio', 'pulseaudio is not in stage-packages')
   util.assertNotIncludes(t, apps.electronAppName.plugs, 'pulseaudio', 'pulseaudio is not in app plugs')
   util.assertIncludes(t, parts.electronAppName['stage-packages'], 'libasound2', 'libasound2 is in stage-packages')
   util.assertIncludes(t, apps.electronAppName.plugs, 'alsa', 'alsa is in app plugs')
