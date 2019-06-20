@@ -2,7 +2,20 @@
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/electron-userland/electron-installer-snap/compare/v3.2.0...master
+[Unreleased]: https://github.com/electron-userland/electron-installer-snap/compare/v4.0.0...master
+
+## [4.0.0] - 2019-06-20
+
+[4.0.0]: https://github.com/electron-userland/electron-installer-snap/compare/v3.2.0...v4.0.0
+
+### Fixed
+
+* Depend on `pulseaudio`, not `libpulse0`, when using the `pulseaudio` feature (#35)
+
+### Removed
+
+* Callback-style support (use `async` / `await` syntax or `util.callbackify`) (#28)
+* Node &lt; 8 support (#28)
 
 ## [3.2.0] - 2019-05-03
 
