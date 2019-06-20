@@ -35,7 +35,7 @@ const DEPENDENCY_MAP = {
 
 const FEATURES = {
   audio: {
-    packages: ['libpulse0'],
+    packages: ['pulseaudio'],
     plugs: ['pulseaudio']
   },
   alsa: {
