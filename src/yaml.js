@@ -85,7 +85,7 @@ class SnapcraftYAML {
   }
 
   transformFeature (feature) {
-    let featureData = FEATURES[feature]
+    const featureData = FEATURES[feature]
     if (!featureData) {
       debug(`Feature '${feature}' is not found.`)
       return
