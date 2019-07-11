@@ -58,8 +58,8 @@ test('set feature on app', async t => {
   const userDefined = {
     name: 'electronAppName',
     features: {
-      'audio': true,
-      'invalid': true
+      audio: true,
+      invalid: true
     }
   }
   const snapcraftYaml = await createYaml(t, userDefined)
@@ -68,7 +68,7 @@ test('set feature on app', async t => {
 })
 
 test('setting both audio and alsa prefers alsa', async t => {
-  const { apps, parts } = await createYaml(t, { name: 'electronAppName', features: { 'audio': true, 'alsa': true } })
+  const { apps, parts } = await createYaml(t, { name: 'electronAppName', features: { audio: true, alsa: true } })
   util.assertNotIncludes(t, parts.electronAppName['stage-packages'], 'pulseaudio', 'pulseaudio is not in stage-packages')
   util.assertNotIncludes(t, apps.electronAppName.plugs, 'pulseaudio', 'pulseaudio is not in app plugs')
   util.assertIncludes(t, parts.electronAppName['stage-packages'], 'libasound2', 'libasound2 is in stage-packages')
@@ -97,7 +97,7 @@ test('browserSandbox feature with custom plugs', async t => {
 })
 
 test('MPRIS feature', async t => {
-  const { apps, slots } = await createYaml(t, { name: 'electronAppName', features: { 'mpris': 'com.example.mpris' } })
+  const { apps, slots } = await createYaml(t, { name: 'electronAppName', features: { mpris: 'com.example.mpris' } })
   util.assertIncludes(t, apps.electronAppName.slots, 'electronAppName-mpris', 'mpris is in app slots')
   t.deepEqual(slots['electronAppName-mpris'], { interface: 'mpris', name: 'com.example.mpris' }, 'mpris slot defined')
 })
