@@ -32,7 +32,7 @@ test.beforeEach(t => {
   process.chdir(t.context.tempDir.name)
 })
 
-test.afterEach.always(t => fs.remove(t.context.tempDir.name))
+test.afterEach.always(t => { return fs.remove(t.context.tempDir.name) })
 
 module.exports = {
   assertIncludes: assertIncludes,
