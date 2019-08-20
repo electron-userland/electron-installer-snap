@@ -92,7 +92,7 @@ class SnapcraftYAML {
     }
 
     if (feature === 'audio' && this.features.alsa) {
-      debug(`Features audio and alsa are both selected, preferring alsa.`)
+      debug('Features audio and alsa are both selected, preferring alsa.')
       return
     }
 
