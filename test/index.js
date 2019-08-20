@@ -52,7 +52,7 @@ test('snap name has no letters', t => {
   t.throws(() => creator.sanitizeName('0-9'), /needs to have at least one letter/)
 })
 
-if (!process.env['FAST_TESTS_ONLY']) {
+if (!process.env.FAST_TESTS_ONLY) {
   test.serial('creates a snap', async t => {
     const snapPath = await snap({ src: path.join(__dirname, 'fixtures', 'app-with-asar') })
     t.truthy(snapPath, 'snap returns a truthy value')
