@@ -21,13 +21,21 @@ const snap = require('../src')
 const test = require('ava')
 const util = require('./_util')
 
-test('missing configuration', t => t.throwsAsync(snap, 'Missing configuration'))
+test('missing configuration', t => {
+  return t.throwsAsync(snap, 'Missing configuration')
+})
 
-test('package description too long', t => t.throwsAsync(snap({ src: path.join(__dirname, 'fixtures', 'description-too-long') }), /The max length of the summary/))
+test('package description too long', t => {
+  return t.throwsAsync(snap({ src: path.join(__dirname, 'fixtures', 'description-too-long') }), /The max length of the summary/)
+})
 
-test('packaged app not found', t => t.throwsAsync(snap({}), /Could not find, read, or parse package\.json/))
+test('packaged app not found', t => {
+  return t.throwsAsync(snap({}), /Could not find, read, or parse package\.json/)
+})
 
-test('cannot find custom snapcraft', t => t.throwsAsync(snap({ src: path.join(__dirname, 'fixtures', 'app-with-asar'), snapcraft: '/foo/bar/non-existent' }), /Cannot locate \/foo\/bar\/non-existent in your system/))
+test('cannot find custom snapcraft', t => {
+  return t.throwsAsync(snap({ src: path.join(__dirname, 'fixtures', 'app-with-asar'), snapcraft: '/foo/bar/non-existent' }), /Cannot locate \/foo\/bar\/non-existent in your system/)
+})
 
 test('snap name is sanitized', t => {
   const creator = new snap.SnapCreator()
