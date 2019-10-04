@@ -16,9 +16,8 @@ limitations under the License.
 */
 
 const debug = require('debug')('electron-installer-snap:snapcraft')
-const { promisify } = require('util')
 const spawn = require('cross-spawn-promise')
-const which = promisify(require('which'))
+const which = require('which')
 
 class Snapcraft {
   async ensureInstalled (snapcraftPath) {
