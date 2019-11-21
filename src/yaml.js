@@ -22,6 +22,8 @@ const merge = require('lodash.merge')
 const path = require('path')
 const pull = require('lodash.pull')
 const semver = require('semver')
+const spawn = require('cross-spawn-promise')
+const which = require('which')
 const yaml = require('js-yaml')
 
 const { createDesktopLaunchCommand } = require('./launcher')
@@ -71,6 +73,41 @@ class SnapcraftYAML {
 
   get parts () {
     return this.data.parts[this.appName]
+  }
+
+  async detectBase (lsbRelease) {
+    if (!lsbRelease) {
+      lsbRelease = 'lsb_release'
+    }
+    const lsbReleasePath = await this.findLsbRelease(lsbRelease)
+    if (!lsbReleasePath) {
+      debug('Using base: core18 as recommended by the Snapcraft docs')
+      return 'core18'
+    }
+
+    const [distro, distroVersion] = await this.detectDistro(lsbReleasePath)
+    if (distro === 'Ubuntu' && distroVersion === '16.04') {
+      return 'core'
+    }
+
+    return 'core18'
+  }
+
+  async findLsbRelease (lsbRelease) {
+    try {
+      return await which(lsbRelease)
+    } catch (err) {
+      debug(`Error when looking for lsb_release:\n${err}`)
+    }
+  }
+
+  async detectDistro (lsbRelease) {
+    const output = await spawn(lsbRelease, ['--short', '--id', '--release'])
+    if (output) {
+      return output.toString().trim().split('\n')
+    }
+
+    return [null, null]
   }
 
   renameSubtree (parentObject, fromKey, toKey) {
@@ -174,6 +211,12 @@ class SnapcraftYAML {
     this.features = merge({}, userSupplied.features || {})
     delete userSupplied.features
 
+    if (!userSupplied.base) {
+      // eslint-disable-next-line require-atomic-updates
+      userSupplied.base = await this.detectBase(userSupplied.lsbRelease)
+    }
+    delete userSupplied.lsbRelease
+
     const appConfig = { apps: { electronApp: userSupplied.appConfig || {} } }
     delete userSupplied.appConfig
     const appPlugsSlots = { apps: { electronApp: {} } }
@@ -213,3 +256,5 @@ module.exports = async function createYamlFromTemplate (snapDir, packageDir, use
   await yamlData.transform(packageDir, userSupplied)
   await yamlData.write(path.join(snapDir, 'snap', 'snapcraft.yaml'))
 }
+
+module.exports.SnapcraftYAML = SnapcraftYAML

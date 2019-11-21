@@ -18,9 +18,12 @@ limitations under the License.
 const createYamlFromTemplate = require('../src/yaml')
 const fs = require('fs-extra')
 const path = require('path')
+const sinon = require('sinon')
 const test = require('ava')
 const util = require('./_util')
 const yaml = require('js-yaml')
+
+const SnapcraftYAML = createYamlFromTemplate.SnapcraftYAML
 
 async function createYaml (t, userDefined, electronVersion) {
   const yamlPath = path.join(t.context.tempDir.name, 'snap', 'snapcraft.yaml')
@@ -140,4 +143,42 @@ test('Electron < 4 apps do not require uuid', async t => {
 test('Electron 4 apps require uuid', async t => {
   const snapcraftYaml = await createYaml(t, { name: 'electronAppName' }, '4.0.0')
   assertStagedPackage(t, snapcraftYaml, 'libuuid1')
+})
+
+test('base autodetect defaults to core18 when lsb_release is not found', async t => {
+  const snapcraftYaml = await createYaml(t, { name: 'electronAppName', lsbRelease: '/does/not/exist' })
+  t.is(snapcraftYaml.base, 'core18')
+})
+
+test('base autodetect does not run when it is set by the user', async t => {
+  const snapcraftYaml = await createYaml(t, { name: 'electronAppName', base: 'bare' })
+  t.is(snapcraftYaml.base, 'bare')
+})
+
+test('base autodetect returns core when Ubuntu 16.04 is detected', async t => {
+  const yaml = new SnapcraftYAML()
+  const lsbRelease = sinon.stub(yaml, 'findLsbRelease')
+  lsbRelease.resolves('lsb_release')
+  const distro = sinon.stub(yaml, 'detectDistro')
+  distro.resolves(['Ubuntu', '16.04'])
+  try {
+    t.is('core', await yaml.detectBase())
+  } finally {
+    lsbRelease.restore()
+    distro.restore()
+  }
+})
+
+test('base autodetect returns core18 for non-Ubuntu distros', async t => {
+  const yaml = new SnapcraftYAML()
+  const lsbRelease = sinon.stub(yaml, 'findLsbRelease')
+  lsbRelease.resolves('lsb_release')
+  const distro = sinon.stub(yaml, 'detectDistro')
+  distro.resolves(['Debian', '10'])
+  try {
+    t.is('core18', await yaml.detectBase())
+  } finally {
+    lsbRelease.restore()
+    distro.restore()
+  }
 })
