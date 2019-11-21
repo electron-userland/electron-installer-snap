@@ -4,6 +4,14 @@
 
 [Unreleased]: https://github.com/electron-userland/electron-installer-snap/compare/v4.0.0...master
 
+## [4.1.0] - 2019-11-21
+
+[4.1.0]: https://github.com/electron-userland/electron-installer-snap/compare/v4.0.0...v4.1.0
+
+### Added
+
+* Autodetect the base option when it's not specified by the user (#47)
+
 ## [4.0.0] - 2019-06-20
 
 [4.0.0]: https://github.com/electron-userland/electron-installer-snap/compare/v3.2.0...v4.0.0
