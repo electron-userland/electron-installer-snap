@@ -51,7 +51,7 @@
     "lodash.filter": "^4.6.0",
     "lodash.merge": "^4.6.0",
     "lodash.pull": "^4.1.0",
-    "semver": "^6.1.0",
+    "semver": "^7.0.0",
     "tmp-promise": "^2.0.1",
     "which": "^2.0.1",
     "yargs": "^15.0.1"
