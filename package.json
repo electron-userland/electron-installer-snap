@@ -15,6 +15,7 @@
   ],
   "scripts": {
     "ava": "ava",
+    "codecov": "nyc report --reporter=text-lcov | codecov --disable=gcov --pipe",
     "coverage": "nyc ava",
     "lint": "eslint .",
     "test": "npm run lint && ava",
