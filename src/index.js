@@ -74,8 +74,7 @@ class SnapCreator {
     this.tmpdir = await tmp.dir({ prefix: 'electron-snap-', unsafeCleanup: !debug.enabled })
     try {
       return this.prepareAndBuildSnap(this.tmpdir.path)
-    } catch (err) {
-      /* istanbul ignore if */
+    } catch (err) /* istanbul ignore next */ {
       if (!debug.enabled) {
         this.tmpdir.cleanup()
       }
