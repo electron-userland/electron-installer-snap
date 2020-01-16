@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+*
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [8.x, 10.x, 12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Snapcraft setup
+        run: |
+          sudo apt-get install --yes --no-install-recommends snapcraft
+          ci/install_snap_dependencies.sh
+      - name: Cache node_modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ matrix.node-version }}-build-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-build-
+            ${{ runner.OS }}-
+      - name: Install
+        run: |
+          npm install --engine-strict
+          npm update
+      - name: Lint
+        run: npm run lint
+      - name: Test
+        run: npm run coverage
+        env:
+          CI: true
+          DEBUG: electron-installer-snap:snapcraft
+      - name: Codecov
+        run: npm run codecov
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          NODE_VERSION: ${{ matrix.node-version }}
