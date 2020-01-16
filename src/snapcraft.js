@@ -92,7 +92,7 @@ class Snapcraft {
     debug(`Running '${this.snapcraftPath} ${args.join(' ')}' in ${packageDir}`)
     try {
       return spawn(this.snapcraftPath, args, this.generateSpawnOptions(packageDir))
-    } /* istanbul ignore next */ catch (error) {
+    } catch (error) /* istanbul ignore next */ {
       console.error(`Snapcraft failed (${error.exitStatus})`)
       if (!debug.enabled) {
         console.error('Re-run with the environment variable DEBUG=electron-installer-snap:snapcraft for details.')
