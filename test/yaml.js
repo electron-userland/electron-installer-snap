@@ -1,6 +1,6 @@
 'use strict'
 /*
-Copyright 2018, 2019 Mark Lee and contributors
+Copyright 2018, 2019, 2020 Mark Lee and contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -162,7 +162,7 @@ test('base autodetect returns core when Ubuntu 16.04 is detected', async t => {
   const distro = sinon.stub(yaml, 'detectDistro')
   distro.resolves(['Ubuntu', '16.04'])
   try {
-    t.is('core', await yaml.detectBase())
+    t.is(await yaml.detectBase(), 'core')
   } finally {
     lsbRelease.restore()
     distro.restore()
@@ -176,9 +176,14 @@ test('base autodetect returns core18 for non-Ubuntu distros', async t => {
   const distro = sinon.stub(yaml, 'detectDistro')
   distro.resolves(['Debian', '10'])
   try {
-    t.is('core18', await yaml.detectBase())
+    t.is(await yaml.detectBase(), 'core18')
   } finally {
     lsbRelease.restore()
     distro.restore()
   }
+})
+
+test('distro detection returns nulls if specified lsb_release returns nothing', async t => {
+  const yaml = new SnapcraftYAML()
+  t.deepEqual(await yaml.detectDistro('true'), [null, null])
 })
