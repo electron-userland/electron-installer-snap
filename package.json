@@ -30,12 +30,12 @@
     "linux"
   ],
   "devDependencies": {
-    "ava": "^2.0.0",
+    "ava": "^3.0.0",
     "codecov": "^3.1.0",
     "cross-env": "^6.0.0",
     "eslint": "^6.0.1",
     "eslint-config-standard": "^14.0.0",
-    "eslint-plugin-ava": "^9.0.0",
+    "eslint-plugin-ava": "^10.0.0",
     "eslint-plugin-import": "^2.17.3",
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-promise": "^4.0.1",
@@ -57,13 +57,6 @@
   "engines": {
     "node": ">= 10.0"
   },
-  "ava": {
-    "babel": false,
-    "compileEnhancements": false,
-    "files": [
-      "test/*.js"
-    ]
-  },
   "eslintConfig": {
     "extends": [
       "eslint:recommended",
@@ -77,9 +70,6 @@
     "parserOptions": {
       "sourceType": "script"
     },
-    "plugins": [
-      "ava"
-    ],
     "rules": {
       "ava/no-ignored-test-files": 0,
       "indent": [
