@@ -1,5 +1,7 @@
 #!/bin/bash -xe
 
+sudo apt update
+
 mkdir -p fakesnap/snap
 cp ci/snapcraft.yaml fakesnap/snap/
 pushd fakesnap

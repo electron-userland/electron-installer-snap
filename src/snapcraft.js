@@ -16,7 +16,7 @@ limitations under the License.
 */
 
 const debug = require('debug')('electron-installer-snap:snapcraft')
-const spawn = require('cross-spawn-promise')
+const { spawn } = require('electron-installer-common')
 const which = require('which')
 
 class Snapcraft {
