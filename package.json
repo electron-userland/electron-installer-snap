@@ -57,6 +57,9 @@
   "engines": {
     "node": ">= 10.0"
   },
+  "ava": {
+    "timeout": "5m"
+  },
   "eslintConfig": {
     "extends": [
       "eslint:recommended",
