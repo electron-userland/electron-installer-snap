@@ -95,5 +95,8 @@
       "no-console": 0,
       "strict": "error"
     }
+  },
+  "funding": {
+    "url": "https://github.com/electron-userland/electron-installer-snap?sponsor=1"
   }
 }
