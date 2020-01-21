@@ -2,7 +2,19 @@
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/electron-userland/electron-installer-snap/compare/v4.0.0...master
+[Unreleased]: https://github.com/electron-userland/electron-installer-snap/compare/v5.0.0...master
+
+## [5.0.0] - 2020-01-21
+
+[5.0.0]: https://github.com/electron-userland/electron-installer-snap/compare/v4.1.0...v5.0.0
+
+### Changed
+
+* Reduce the number of dependencies (#60, #65)
+
+### Removed
+
+* Node &lt; 10 support (#62)
 
 ## [4.1.0] - 2019-11-21
 
