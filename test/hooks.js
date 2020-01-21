@@ -22,7 +22,7 @@ const test = require('ava')
 
 require('./_util')
 
-test('copyHooks fails with an invalid script', t => { return t.throwsAsync(copyHooks(t.context.tempDir.name, { hookScripts: { install: '/does/not/exist' } }), /Hook install at .* does not exist/) }
+test('copyHooks fails with an invalid script', t => { return t.throwsAsync(copyHooks(t.context.tempDir.name, { hookScripts: { install: '/does/not/exist' } }), { message: /Hook install at .* does not exist/ }) }
 )
 
 test('copyHooks installs a hook script', async t => {

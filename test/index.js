@@ -22,19 +22,19 @@ const test = require('ava')
 const util = require('./_util')
 
 test('missing configuration', t => {
-  return t.throwsAsync(snap, 'Missing configuration')
+  return t.throwsAsync(snap, { message: 'Missing configuration' })
 })
 
 test('package description too long', t => {
-  return t.throwsAsync(snap({ src: path.join(__dirname, 'fixtures', 'description-too-long') }), /The max length of the summary/)
+  return t.throwsAsync(snap({ src: path.join(__dirname, 'fixtures', 'description-too-long') }), { message: /The max length of the summary/ })
 })
 
 test('packaged app not found', t => {
-  return t.throwsAsync(snap({}), /Could not find, read, or parse package\.json/)
+  return t.throwsAsync(snap({}), { message: /Could not find, read, or parse package\.json/ })
 })
 
 test('cannot find custom snapcraft', t => {
-  return t.throwsAsync(snap({ src: path.join(__dirname, 'fixtures', 'app-with-asar'), snapcraft: '/foo/bar/non-existent' }), /Cannot locate \/foo\/bar\/non-existent in your system/)
+  return t.throwsAsync(snap({ src: path.join(__dirname, 'fixtures', 'app-with-asar'), snapcraft: '/foo/bar/non-existent' }), { message: /Cannot locate \/foo\/bar\/non-existent in your system/ })
 })
 
 test('snap name is sanitized', t => {
@@ -44,12 +44,12 @@ test('snap name is sanitized', t => {
 
 test('snap name is too long', t => {
   const creator = new snap.SnapCreator()
-  t.throws(() => creator.sanitizeName('My super duper long application name'), /The max length of the name/)
+  t.throws(() => creator.sanitizeName('My super duper long application name'), { message: /The max length of the name/ })
 })
 
 test('snap name has no letters', t => {
   const creator = new snap.SnapCreator()
-  t.throws(() => creator.sanitizeName('0-9'), /needs to have at least one letter/)
+  t.throws(() => creator.sanitizeName('0-9'), { message: /needs to have at least one letter/ })
 })
 
 if (!process.env.FAST_TESTS_ONLY) {
