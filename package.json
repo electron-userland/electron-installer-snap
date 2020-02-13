@@ -44,6 +44,7 @@
     "sinon": "^8.0.4"
   },
   "dependencies": {
+    "@malept/cross-spawn-promise": "malept/cross-spawn-promise",
     "debug": "^4.1.1",
     "electron-installer-common": "^0.10.0",
     "fs-extra": "^8.0.1",
