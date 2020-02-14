@@ -21,6 +21,7 @@ const fs = require('fs-extra')
 const { merge, pull } = require('lodash')
 const path = require('path')
 const semver = require('semver')
+const { spawn } = require('@malept/cross-spawn-promise')
 const which = require('which')
 const yaml = require('js-yaml')
 
@@ -100,9 +101,9 @@ class SnapcraftYAML {
   }
 
   async detectDistro (lsbRelease) {
-    const output = await common.spawn(lsbRelease, ['--short', '--id', '--release'])
+    const output = await spawn(lsbRelease, ['--short', '--id', '--release'])
     if (output) {
-      return output.toString().trim().split('\n')
+      return output.trim().split('\n')
     }
 
     return [null, null]
