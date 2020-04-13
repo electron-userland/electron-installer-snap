@@ -2,4 +2,5 @@
 .nyc_output
 node_modules
 package-lock.json
+typedoc
 yarn.lock

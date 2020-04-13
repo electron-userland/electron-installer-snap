@@ -5,21 +5,27 @@
   "author": "Mark Lee",
   "license": "Apache-2.0",
   "main": "src/index.js",
+  "types": "src/index.d.ts",
   "bin": {
     "electron-installer-snap": "src/cli.js"
   },
   "files": [
     "NEWS.md",
     "resources",
-    "src"
+    "src",
+    "src/index.d.ts"
   ],
   "scripts": {
     "ava": "ava",
     "codecov": "nyc report --reporter=text-lcov | codecov --disable=gcov --pipe",
     "coverage": "nyc ava",
-    "lint": "eslint .",
+    "docs:build": "node ci/build_docs.js",
+    "eslint:js": "eslint .",
+    "eslint:ts": "eslint --ext .ts --config .eslintrc.typescript.js .",
+    "lint": "npm run eslint:js && npm run eslint:ts && npm run tsd",
     "test": "npm run lint && ava",
-    "test:fast": "cross-env FAST_TESTS_ONLY=1 npm test"
+    "test:fast": "cross-env FAST_TESTS_ONLY=1 npm test",
+    "tsd": "tsd"
   },
   "repository": "electron-userland/electron-installer-snap",
   "keywords": [
@@ -30,6 +36,8 @@
     "linux"
   ],
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.26.0",
+    "@typescript-eslint/parser": "^2.26.0",
     "ava": "^3.0.0",
     "codecov": "^3.1.0",
     "cross-env": "^7.0.0",
@@ -43,7 +51,10 @@
     "husky": "^4.2.3",
     "lint-staged": "^10.1.2",
     "nyc": "^15.0.0",
-    "sinon": "^9.0.0"
+    "sinon": "^9.0.0",
+    "tsd": "^0.11.0",
+    "typedoc": "^0.17.3",
+    "typescript": "^3.8.3"
   },
   "dependencies": {
     "@malept/cross-spawn-promise": "^1.0.0",
@@ -92,6 +103,9 @@
       "strict": "error"
     }
   },
+  "eslintIgnore": [
+    "typedoc"
+  ],
   "funding": {
     "url": "https://github.com/electron-userland/electron-installer-snap?sponsor=1"
   },
@@ -103,6 +117,12 @@
   "lint-staged": {
     "*.js": [
       "eslint . --fix"
+    ],
+    "*.ts": [
+      "npm run eslint:ts -- --fix"
     ]
+  },
+  "tsd": {
+    "directory": "test"
   }
 }

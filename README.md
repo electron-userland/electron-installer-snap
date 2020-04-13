@@ -42,8 +42,7 @@ It is recommended to ignore the generated `snap` directory in your version contr
 
 Available command-line options are displayed when you run `electron-installer-snap --help`.
 
-For the JavaScript API, please see the [API
-docs](https://github.com/electron-userland/electron-installer-snap/blob/master/docs/api.md).
+For the JavaScript API, please see the [API docs](https://electron-userland.github.io/electron-installer-snap/).
 
 ## Thanks
 
