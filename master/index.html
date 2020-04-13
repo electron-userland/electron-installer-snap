@@ -1,0 +1,143 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>electron-installer-snap</title>
+	<meta name="description" content="Documentation for electron-installer-snap">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">electron-installer-snap</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1>electron-installer-snap</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#electron-installer-snap" id="electron-installer-snap" style="color: inherit; text-decoration: none;">
+					<h1>Electron Installer: Snap</h1>
+				</a>
+				<p><a href="https://github.com/electron-userland/electron-installer-snap/actions?query=workflow:CI"><img src="https://github.com/electron-userland/electron-installer-snap/workflows/CI/badge.svg" alt="Build Status"></a>
+				<a href="https://codecov.io/gh/electron-userland/electron-installer-snap"><img src="https://codecov.io/gh/electron-userland/electron-installer-snap/branch/master/graph/badge.svg" alt="Code Coverage"></a></p>
+				<p>Builds Snap files for Electron applications that have already been bundled and customized.</p>
+				<a href="#requirements" id="requirements" style="color: inherit; text-decoration: none;">
+					<h2>Requirements</h2>
+				</a>
+				<p>Requires Node 10 or greater, and <a href="https://snapcraft.io"><code>snapcraft</code></a>.</p>
+				<a href="#quick-start" id="quick-start" style="color: inherit; text-decoration: none;">
+					<h2>Quick Start</h2>
+				</a>
+				<p>The easiest way is to use <a href="https://electronforge.io">Electron Forge</a> and enable the <code>snap</code> maker.</p>
+				<p>To use this as a standalone CLI, install <code>electron-installer-snap</code> to your project:</p>
+				<pre><code class="language-shell">npm install --save-dev electron-installer-snap
+<span class="hljs-meta">#</span><span class="bash"> or</span>
+yarn add --dev electron-installer-snap</code></pre>
+				<p>Then add to your <code>package.json</code>:</p>
+				<pre><code class="language-javascript">{
+  <span class="hljs-comment">// ...</span>
+  <span class="hljs-string">"scripts"</span>: {
+    <span class="hljs-string">"build:package"</span>: <span class="hljs-string">"electron-packager . --out=out"</span>
+    <span class="hljs-string">"build:snap"</span>: <span class="hljs-string">"electron-installer-snap --src=out/myappname-linux-x64"</span>
+  },
+  <span class="hljs-comment">// ...</span>
+}</code></pre>
+				<p>Then you can run <code>npm run build:package &amp;&amp; npm run build:snap</code>, which will prepare the Electron app
+					for bundling and generate a <code>.snap</code> file in your current directory.
+				It is recommended to ignore the generated <code>snap</code> directory in your version control.</p>
+				<a href="#options" id="options" style="color: inherit; text-decoration: none;">
+					<h2>Options</h2>
+				</a>
+				<p>Available command-line options are displayed when you run <code>electron-installer-snap --help</code>.</p>
+				<p>For the JavaScript API, please see the <a href="https://electron-userland.github.io/electron-installer-snap/">API docs</a>.</p>
+				<a href="#thanks" id="thanks" style="color: inherit; text-decoration: none;">
+					<h2>Thanks</h2>
+				</a>
+				<p>Thank you to Canonical for the support in getting this module created, during the September 2017
+				Ubuntu Rally and the January 2018 Snapcraft Summit.</p>
+				<a href="#legal" id="legal" style="color: inherit; text-decoration: none;">
+					<h2>Legal</h2>
+				</a>
+				<p>This project is copyrighted under the Apache License (version 2). See LICENSE for details.</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-namespace">
+						<a href="modules/createsnap.html">create<wbr>Snap</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
