@@ -2,7 +2,15 @@
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/electron-userland/electron-installer-snap/compare/v5.0.0...master
+[Unreleased]: https://github.com/electron-userland/electron-installer-snap/compare/v5.1.0...master
+
+## [5.1.0] - 2020-04-25
+
+[5.1.0]: https://github.com/electron-userland/electron-installer-snap/compare/v5.0.0...v5.1.0
+
+### Added
+
+* TypeScript definition (#72)
 
 ## [5.0.0] - 2020-01-21
 
