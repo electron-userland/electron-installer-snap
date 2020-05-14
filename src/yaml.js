@@ -151,7 +151,9 @@ class SnapcraftYAML {
   }
 
   transformFeatures () {
-    if (semver.satisfies(this.electronVersion, '>= 5.0.0') && !this.features.browserSandbox) {
+    if (this.features.browserSandbox === false) {
+      delete this.features.browserSandbox
+    } else if (semver.satisfies(this.electronVersion, '>= 5.0.0') && this.features.browserSandbox !== false) {
       this.features.browserSandbox = true
     }
     for (const feature of Object.keys(this.features)) {
