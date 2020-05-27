@@ -24,6 +24,8 @@ jobs:
       - name: Snapcraft setup
         run: |
           curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
+          sudo rm /etc/apt/sources.list.d/bazel.list
+          sudo apt-get update
           sudo apt-get install --yes --no-install-recommends snapcraft
           ci/install_snap_dependencies.sh
       - name: Cache node_modules
