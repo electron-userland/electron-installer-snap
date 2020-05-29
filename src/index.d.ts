@@ -29,17 +29,21 @@
 declare function createSnap(userSupplied: createSnap.Options & createSnap.SnapcraftConfig): Promise<string>;
 
 declare namespace createSnap {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  type SnapcraftConfig = Record<string, any>;
   /**
-   * Any options that aren't specified here are passed through to the `snapcraft.yaml` file.
+   * Additional Snapcraft configuration that is merged directly into `snapcraft.yaml`. In general,
+   * this does not override any configuration that is set via [[Options]].
+   */
+  type SnapcraftConfig = Record<string, unknown>;
+  /**
+   * Any options that aren't specified here are passed through to the `snapcraft.yaml` file via [[SnapcraftConfig]].
    */
   interface Options {
     src: string;
 
     /**
-     * [Additional Snapcraft configuration](https://docs.snapcraft.io/build-snaps/syntax#app-name)
-     * for the Electron app.
+     * [Additional app-specific Snapcraft configuration](https://docs.snapcraft.io/build-snaps/syntax#app-name)
+     * for the Electron app. This is different from [[SnapcraftConfig]] in that it is scoped
+     * under `apps.<app-name>`.
      */
     appConfig?: object;
     /**
