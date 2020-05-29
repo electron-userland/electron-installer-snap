@@ -29,8 +29,7 @@
 declare function createSnap(userSupplied: createSnap.Options & createSnap.SnapcraftConfig): Promise<string>;
 
 declare namespace createSnap {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  type SnapcraftConfig = Record<string, any>;
+  type SnapcraftConfig = Record<string, unknown>;
   /**
    * Any options that aren't specified here are passed through to the `snapcraft.yaml` file.
    */
