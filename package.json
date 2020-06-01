@@ -17,8 +17,7 @@
   ],
   "scripts": {
     "ava": "ava",
-    "codecov": "nyc report --reporter=text-lcov | codecov --disable=gcov --pipe",
-    "coverage": "nyc ava",
+    "coverage": "nyc ava && nyc report --reporter=text-lcov > coverage.lcov",
     "docs:build": "node ci/build_docs.js",
     "eslint:js": "eslint .",
     "eslint:ts": "eslint --ext .ts --config .eslintrc.typescript.js .",
@@ -39,7 +38,6 @@
     "@typescript-eslint/eslint-plugin": "^2.26.0",
     "@typescript-eslint/parser": "^2.26.0",
     "ava": "^3.0.0",
-    "codecov": "^3.1.0",
     "cross-env": "^7.0.0",
     "eslint": "^6.0.1",
     "eslint-config-standard": "^14.0.0",
