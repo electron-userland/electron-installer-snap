@@ -114,10 +114,10 @@
   },
   "lint-staged": {
     "*.js": [
-      "eslint . --fix"
+      "eslint --fix"
     ],
     "*.ts": [
-      "npm run eslint:ts -- --fix"
+      "eslint --ext .ts --config .eslintrc.typescript.js --fix"
     ]
   },
   "tsd": {
