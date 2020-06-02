@@ -46,10 +46,11 @@ jobs:
       - name: Test
         run: npm run coverage
         env:
-          CI: true
           DEBUG: electron-installer-snap:snapcraft
-      - name: Codecov
-        run: npm run codecov
+      - name: Upload code coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./coverage.lcov
+          env_vars: NODE_VERSION
         env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
           NODE_VERSION: ${{ matrix.node-version }}
