@@ -45,7 +45,7 @@ declare namespace createSnap {
      * for the Electron app. This is different from [[SnapcraftConfig]] in that it is scoped
      * under `apps.<app-name>`.
      */
-    appConfig?: object;
+    appConfig?: Record<string, unknown>;
     /**
      * Additional [plugs](https://docs.snapcraft.io/reference/interfaces) for the Electron app,
      * which are necessary for the app to be a consumer of a feature in the system. Common features
@@ -198,11 +198,11 @@ declare namespace createSnap {
     /**
      * See [[`appPlugs`]] for details.
      */
-    plugs?: object;
+    plugs?: Record<string, Record<string, unknown>>;
     /**
      * See [[`appSlots`]] for details.
      */
-    slots?: object;
+    slots?: Record<string, Record<string, unknown>>;
     /**
      * The absolute path to the snapcraft executable.
      *
