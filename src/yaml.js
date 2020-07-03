@@ -28,10 +28,14 @@ const yaml = require('js-yaml')
 const { createDesktopLaunchCommand } = require('./launcher')
 
 const DEPENDENCY_MAP = {
-  gconf: 'libgconf2-4',
+  atspi: 'libatspi2.0-0',
+  drm: 'libdrm2',
+  gbm: 'libgbm1',
+  gconf: 'libgconf-2-4',
   gtk2: 'desktop-gtk2',
   gtk3: 'desktop-gtk3',
-  uuid: 'libuuid1'
+  uuid: 'libuuid1',
+  xcbDri3: 'libxcb-dri3-0'
 }
 
 const FEATURES = {
@@ -199,8 +203,13 @@ class SnapcraftYAML {
 
   updateDependencies () {
     this.parts.after[0] = common.getGTKDepends(this.electronVersion, DEPENDENCY_MAP)
-    this.parts['stage-packages'] = this.parts['stage-packages'].concat(common.getGConfDepends(this.electronVersion, DEPENDENCY_MAP))
+    this.parts['stage-packages'] = this.parts['stage-packages']
+      .concat(common.getATSPIDepends(this.electronVersion, DEPENDENCY_MAP))
+      .concat(common.getDRMDepends(this.electronVersion, DEPENDENCY_MAP))
+      .concat(common.getGBMDepends(this.electronVersion, DEPENDENCY_MAP))
+      .concat(common.getGConfDepends(this.electronVersion, DEPENDENCY_MAP))
       .concat(common.getUUIDDepends(this.electronVersion, DEPENDENCY_MAP))
+      .concat(common.getXcbDri3Depends(this.electronVersion, DEPENDENCY_MAP))
 
     return this.data
   }

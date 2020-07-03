@@ -127,12 +127,12 @@ test('Electron 2 apps use desktop-gtk3', async t => {
 
 test('Electron < 4 apps require gconf', async t => {
   const snapcraftYaml = await createYaml(t, { name: 'electronAppName' }, '1.8.2')
-  assertStagedPackage(t, snapcraftYaml, 'libgconf2-4')
+  assertStagedPackage(t, snapcraftYaml, 'libgconf-2-4')
 })
 
 test('Electron 4 apps do not require gconf', async t => {
   const snapcraftYaml = await createYaml(t, { name: 'electronAppName' }, '4.0.0')
-  assertNoStagedPackage(t, snapcraftYaml, 'libgconf2-4')
+  assertNoStagedPackage(t, snapcraftYaml, 'libgconf-2-4')
 })
 
 test('Electron < 4 apps do not require uuid', async t => {
@@ -143,6 +143,46 @@ test('Electron < 4 apps do not require uuid', async t => {
 test('Electron 4 apps require uuid', async t => {
   const snapcraftYaml = await createYaml(t, { name: 'electronAppName' }, '4.0.0')
   assertStagedPackage(t, snapcraftYaml, 'libuuid1')
+})
+
+test('Electron < 5 apps do not require atspi', async t => {
+  const snapcraftYaml = await createYaml(t, { name: 'electronAppName' }, '4.0.0')
+  assertNoStagedPackage(t, snapcraftYaml, 'libatspi2.0-0')
+})
+
+test('Electron 5 apps require atspi', async t => {
+  const snapcraftYaml = await createYaml(t, { name: 'electronAppName' }, '5.0.0')
+  assertStagedPackage(t, snapcraftYaml, 'libatspi2.0-0')
+})
+
+test('Electron < 9 apps do not require libdrm', async t => {
+  const snapcraftYaml = await createYaml(t, { name: 'electronAppName' }, '8.0.0')
+  assertNoStagedPackage(t, snapcraftYaml, 'libdrm2')
+})
+
+test('Electron 9 apps require libdrm', async t => {
+  const snapcraftYaml = await createYaml(t, { name: 'electronAppName' }, '9.0.0')
+  assertStagedPackage(t, snapcraftYaml, 'libdrm2')
+})
+
+test('Electron < 9 apps do not require xdb-dri3', async t => {
+  const snapcraftYaml = await createYaml(t, { name: 'electronAppName' }, '8.0.0')
+  assertNoStagedPackage(t, snapcraftYaml, 'libxcb-dri3-0')
+})
+
+test('Electron 9 apps require xcb-dri3', async t => {
+  const snapcraftYaml = await createYaml(t, { name: 'electronAppName' }, '9.0.0')
+  assertStagedPackage(t, snapcraftYaml, 'libxcb-dri3-0')
+})
+
+test('Electron < 9 apps do not require gbm', async t => {
+  const snapcraftYaml = await createYaml(t, { name: 'electronAppName' }, '8.0.0')
+  assertNoStagedPackage(t, snapcraftYaml, 'libgbm1')
+})
+
+test('Electron 9 apps require gbm', async t => {
+  const snapcraftYaml = await createYaml(t, { name: 'electronAppName' }, '9.0.0')
+  assertStagedPackage(t, snapcraftYaml, 'libgbm1')
 })
 
 test('base autodetect defaults to core18 when lsb_release is not found', async t => {
