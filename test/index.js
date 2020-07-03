@@ -30,7 +30,7 @@ test('package description too long', t => {
 })
 
 test('packaged app not found', t => {
-  return t.throwsAsync(snap({}), { message: /Could not find, read, or parse package\.json/ })
+  return t.throwsAsync(snap({}), { message: /Could not determine resources directory in Electron app/ })
 })
 
 test('cannot find custom snapcraft', t => {
