@@ -81,17 +81,17 @@
 								<p>The <code>electron-installer-snap</code> API uses the Promise pattern to perform asynchronous operations.</p>
 							</div>
 							<p>Minimal example:</p>
-							<pre><code class="language-javascript"><span class="hljs-keyword">const</span> snap = <span class="hljs-built_in">require</span>(<span class="hljs-string">'electron-installer-snap'</span>)
+							<pre><code class="language-javascript"><span class="hljs-keyword">const</span> snap = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;electron-installer-snap&#x27;</span>)
 
 <span class="hljs-keyword">const</span> snapPath = <span class="hljs-keyword">await</span> snap(options)
 <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Created snap at <span class="hljs-subst">${snapPath}</span>!`</span>)</code></pre>
 							<p>Full example with <a href="https://npm.im/electron-packager">Electron Packager</a>:</p>
-							<pre><code class="language-javascript"><span class="hljs-keyword">const</span> packager = <span class="hljs-built_in">require</span>(<span class="hljs-string">'electron-packager'</span>)
-<span class="hljs-keyword">const</span> snap = <span class="hljs-built_in">require</span>(<span class="hljs-string">'electron-installer-snap'</span>)
+							<pre><code class="language-javascript"><span class="hljs-keyword">const</span> packager = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;electron-packager&#x27;</span>)
+<span class="hljs-keyword">const</span> snap = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;electron-installer-snap&#x27;</span>)
 
-<span class="hljs-keyword">const</span> arch = <span class="hljs-string">'x64'</span>
+<span class="hljs-keyword">const</span> arch = <span class="hljs-string">&#x27;x64&#x27;</span>
 
-<span class="hljs-keyword">const</span> paths = <span class="hljs-keyword">await</span> packager({<span class="hljs-attr">dir</span>: <span class="hljs-string">'/path/to/app'</span>, <span class="hljs-attr">platform</span>: <span class="hljs-string">'linux'</span>, <span class="hljs-attr">arch</span>: arch})
+<span class="hljs-keyword">const</span> paths = <span class="hljs-keyword">await</span> packager({<span class="hljs-attr">dir</span>: <span class="hljs-string">&#x27;/path/to/app&#x27;</span>, <span class="hljs-attr">platform</span>: <span class="hljs-string">&#x27;linux&#x27;</span>, <span class="hljs-attr">arch</span>: arch})
 <span class="hljs-keyword">const</span> snapPath = <span class="hljs-keyword">await</span> snap({<span class="hljs-attr">src</span>: paths[<span class="hljs-number">0</span>], <span class="hljs-attr">arch</span>: arch})
 <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Created snap at <span class="hljs-subst">${snapPath}</span>!`</span>)</code></pre>
 							<p>If you need to use the callback pattern instead of the <code>async</code>/<code>await</code> pattern, look into the
@@ -182,6 +182,5 @@
 </div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>

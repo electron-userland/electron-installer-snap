@@ -83,9 +83,9 @@ yarn add --dev electron-installer-snap</code></pre>
 				<p>Then add to your <code>package.json</code>:</p>
 				<pre><code class="language-javascript">{
   <span class="hljs-comment">// ...</span>
-  <span class="hljs-string">"scripts"</span>: {
-    <span class="hljs-string">"build:package"</span>: <span class="hljs-string">"electron-packager . --out=out"</span>
-    <span class="hljs-string">"build:snap"</span>: <span class="hljs-string">"electron-installer-snap --src=out/myappname-linux-x64"</span>
+  <span class="hljs-string">&quot;scripts&quot;</span>: {
+    <span class="hljs-string">&quot;build:package&quot;</span>: <span class="hljs-string">&quot;electron-packager . --out=out&quot;</span>
+    <span class="hljs-string">&quot;build:snap&quot;</span>: <span class="hljs-string">&quot;electron-installer-snap --src=out/myappname-linux-x64&quot;</span>
   },
   <span class="hljs-comment">// ...</span>
 }</code></pre>
@@ -138,6 +138,5 @@ yarn add --dev electron-installer-snap</code></pre>
 </div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>
