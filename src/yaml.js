@@ -222,6 +222,7 @@ class SnapcraftYAML {
     if (!userSupplied.base) {
       // eslint-disable-next-line require-atomic-updates
       userSupplied.base = await this.detectBase(userSupplied.lsbRelease)
+      debug('Autodetected base:', userSupplied.base)
     }
     delete userSupplied.lsbRelease
 
