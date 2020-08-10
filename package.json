@@ -50,7 +50,7 @@
     "nyc": "^15.0.0",
     "sinon": "^9.0.0",
     "tsd": "^0.13.1",
-    "typedoc": "^0.17.3",
+    "typedoc": "^0.18.0",
     "typescript": "^3.8.3"
   },
   "dependencies": {
