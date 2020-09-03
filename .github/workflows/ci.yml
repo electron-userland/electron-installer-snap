@@ -24,6 +24,8 @@ jobs:
       - name: Snapcraft setup
         run: |
           curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
+          sudo rm /etc/apt/sources.list.d/bazel.list
+          sudo apt-get update
           sudo apt-get install --yes --no-install-recommends snapcraft
           ci/install_snap_dependencies.sh
       - name: Cache node_modules
@@ -44,10 +46,11 @@ jobs:
       - name: Test
         run: npm run coverage
         env:
-          CI: true
           DEBUG: electron-installer-snap:snapcraft
-      - name: Codecov
-        run: npm run codecov
+      - name: Upload code coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./coverage.lcov
+          env_vars: NODE_VERSION
         env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
           NODE_VERSION: ${{ matrix.node-version }}
