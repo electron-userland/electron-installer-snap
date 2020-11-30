@@ -73,9 +73,9 @@ class Snapcraft {
     const spawnOptions = {
       cwd: packageDir,
       env: {
+        ...process.env,
         LC_ALL: 'C.UTF-8',
-        LOCALE: 'C.UTF-8',
-        PATH: process.env.PATH
+        LOCALE: 'C.UTF-8'
       },
       stdio: ['ignore', 'ignore', process.stderr]
     }
