@@ -63,7 +63,7 @@
     "semver": "^7.1.1",
     "tmp-promise": "^3.0.2",
     "which": "^2.0.1",
-    "yargs": "^16.0.2"
+    "yargs": "^17.0.1"
   },
   "engines": {
     "node": ">= 10.0"
