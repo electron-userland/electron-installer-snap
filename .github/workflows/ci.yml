@@ -25,7 +25,6 @@ jobs:
         run: |
           curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
           sudo apt-get update
-          sudo snap install snapd
           sudo snap install snapcraft --classic
       - name: Cache node_modules
         uses: actions/cache@v1

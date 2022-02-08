@@ -54,7 +54,7 @@ test('snap name has no letters', t => {
 
 // TODO: These are currently failing in CI, due to GH Actions not working with multipass.
 // Configure this with a custom Docker image or LXD to get these working in CI again.
-if (!process.env.FAST_TESTS_ONLY && !process.env.CI) {
+if (!process.env.FAST_TESTS_ONLY) {
   test.serial('creates a snap', async t => {
     const snapPath = await snap({ src: path.join(__dirname, 'fixtures', 'app-with-asar') })
     t.truthy(snapPath, 'snap returns a truthy value')
