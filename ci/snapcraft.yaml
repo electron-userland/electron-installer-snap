@@ -3,7 +3,7 @@ version: '1.0.0'
 summary: App summary
 description: |
   App description
-
+base: core18
 grade: devel
 confinement: devmode
 

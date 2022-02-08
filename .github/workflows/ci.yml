@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [10.x, 12.x]
+        node-version: [10.x, 12.x, 14.x, 16.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -24,10 +24,9 @@ jobs:
       - name: Snapcraft setup
         run: |
           curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
-          sudo rm /etc/apt/sources.list.d/bazel.list
           sudo apt-get update
-          sudo apt-get install --yes --no-install-recommends snapcraft
-          ci/install_snap_dependencies.sh
+          sudo snap install snapd
+          sudo snap install snapcraft --classic
       - name: Cache node_modules
         uses: actions/cache@v1
         with:
