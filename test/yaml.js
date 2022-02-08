@@ -85,10 +85,10 @@ test('browserSandbox feature', async t => {
   t.deepEqual(plugs['browser-sandbox'], { interface: 'browser-support', 'allow-sandbox': true }, 'browser-sandbox plug exists')
 })
 
-test('browserSandbox is always on for Electron >= 5.0.0', async t => {
-  const { apps } = await createYaml(t, { name: 'electronAppName' }, '5.0.0')
-  util.assertNotIncludes(t, apps.electronAppName.plugs, 'browser-support', 'browser-support is not in app plugs')
-  util.assertIncludes(t, apps.electronAppName.plugs, 'browser-sandbox', 'browser-sandbox is in app plugs')
+test('browserSandbox feature allow both true and false', async t => {
+  const { apps } = await createYaml(t, { name: 'electronAppName', features: { browserSandbox: false } })
+  util.assertIncludes(t, apps.electronAppName.plugs, 'browser-support', 'browser-support is not in app plugs')
+  util.assertNotIncludes(t, apps.electronAppName.plugs, 'browser-sandbox', 'browser-sandbox is in app plugs')
 })
 
 test('browserSandbox feature with custom plugs', async t => {

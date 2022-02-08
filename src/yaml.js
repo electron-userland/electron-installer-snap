@@ -20,7 +20,6 @@ const common = require('electron-installer-common')
 const fs = require('fs-extra')
 const { merge, pull } = require('lodash')
 const path = require('path')
-const semver = require('semver')
 const { spawn } = require('@malept/cross-spawn-promise')
 const which = require('which')
 const yaml = require('js-yaml')
@@ -155,9 +154,6 @@ class SnapcraftYAML {
   }
 
   transformFeatures () {
-    if (semver.satisfies(this.electronVersion, '>= 5.0.0') && !this.features.browserSandbox) {
-      this.features.browserSandbox = true
-    }
     for (const feature of Object.keys(this.features)) {
       this.transformFeature(feature)
     }
@@ -165,16 +161,19 @@ class SnapcraftYAML {
 
   transformBrowserSandbox () {
     debug('Replacing browser-support plug with browser-sandbox')
-    pull(this.app.plugs, 'browser-support')
-    this.app.plugs.push('browser-sandbox')
-    if (!this.data.plugs) {
-      this.data.plugs = {}
+    if (this.app.plugs.includes('browser-sandbox') ||
+       (this.features.browserSandbox && this.features.browserSandbox === true)) {
+      pull(this.app.plugs, 'browser-support')
+      this.app.plugs.push('browser-sandbox')
+      if (!this.data.plugs) {
+        this.data.plugs = {}
+      }
+      this.data.plugs['browser-sandbox'] = {
+        'allow-sandbox': true,
+        interface: 'browser-support'
+      }
+      console.warn('The browser-sandbox feature will trigger a manual review in the Snap store.')
     }
-    this.data.plugs['browser-sandbox'] = {
-      'allow-sandbox': true,
-      interface: 'browser-support'
-    }
-    console.warn('The browser-sandbox feature will trigger a manual review in the Snap store.')
   }
 
   transformMPRIS () {
