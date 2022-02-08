@@ -66,6 +66,10 @@ class Snapcraft {
       Array.prototype.push.apply(args, extraArgs)
     }
 
+    if (process.env.CI) {
+      args.push('--destructive-mode')
+    }
+
     return args
   }
 
