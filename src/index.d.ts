@@ -157,10 +157,12 @@ declare namespace createSnap {
       alsa?: true;
       /**
        * [Web browser functionality](https://github.com/snapcore/snapd/wiki/Interfaces#browser-support).
-       * This is enabled by default when using Electron ≥ 5.0.0, due to the
+       * This was originally enabled by default when using Electron ≥ 5.0.0, due to the
        * [setuid sandbox support](https://github.com/electron/electron/pull/17269).
+       * However, Snapcraft allows for use of the snap confined sandbox, particularly within
+       * strict confinement. We should encourage but not enforce the browser-sandbox plug.
        */
-      browserSandbox?: true;
+      browserSandbox?: false;
       /**
        * [MPRIS](https://specifications.freedesktop.org/mpris-spec/latest/) support.
        *
