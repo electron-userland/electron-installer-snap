@@ -115,6 +115,41 @@ test('custom app config', async t => {
   t.true(apps.electronAppName.daemon, 'daemon is set in app')
 })
 
+test('strict confinement should apply by default', async t => {
+  const snapcraftYaml = await createYaml(t, { name: 'electronAppName' })
+  t.is(snapcraftYaml.confinement, 'strict')
+})
+
+test('custom confinement config (devmode should apply correctly)', async t => {
+  const snapcraftYaml = await createYaml(t, { name: 'electronAppName', confinement: 'devmode' })
+  t.is(snapcraftYaml.confinement, 'devmode')
+})
+
+test('custom confinement config (strict should apply correctly)', async t => {
+  const snapcraftYaml = await createYaml(t, { name: 'electronAppName', confinement: 'strict' })
+  t.is(snapcraftYaml.confinement, 'strict')
+})
+
+test('custom confinement config (classic should apply correctly)', async t => {
+  const snapcraftYaml = await createYaml(t, { name: 'electronAppName', confinement: 'classic' })
+  t.is(snapcraftYaml.confinement, 'classic')
+})
+
+test('use gnome extensions with strict confinement', async t => {
+  const { apps } = await createYaml(t, { name: 'electronAppName' })
+  t.deepEqual(apps.electronAppName.extensions, ['gnome-3-34'])
+})
+
+test('Electron < 2 classic confinement apps use desktop-gtk2', async t => {
+  const { parts } = await createYaml(t, { name: 'electronAppName', confinement: 'classic' }, '1.8.2')
+  t.deepEqual(parts.electronAppName.after, ['desktop-gtk2'])
+})
+
+test('Electron 2 classic confinement apps use desktop-gtk3', async t => {
+  const { parts } = await createYaml(t, { name: 'electronAppName', confinement: 'classic' }, '2.0.0-beta.1')
+  t.deepEqual(parts.electronAppName.after, ['desktop-gtk3'])
+})
+
 test('Electron < 4 apps require gconf', async t => {
   const snapcraftYaml = await createYaml(t, { name: 'electronAppName' }, '1.8.2')
   assertStagedPackage(t, snapcraftYaml, 'libgconf-2-4')

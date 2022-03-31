@@ -5,7 +5,7 @@ description: |
   App description
 
 grade: devel
-confinement: devmode
+confinement: classic
 
 apps:
   electronApp:
@@ -24,7 +24,7 @@ apps:
       TMPDIR: $XDG_RUNTIME_DIR
 
 parts:
-  electron-deps:
+  electronApp:
     source: .
     plugin: nil
     stage-packages:
