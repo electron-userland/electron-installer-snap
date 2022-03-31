@@ -61,6 +61,11 @@ class Snapcraft {
         args.push(`--${flag}`)
       }
     }
+    args.push('--destructive-mode')
+    /* istanbul ignore if */
+    if (debug.enabled) {
+      args.push('--debug')
+    }
 
     if (extraArgs) {
       Array.prototype.push.apply(args, extraArgs)

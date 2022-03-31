@@ -24,14 +24,15 @@ apps:
       TMPDIR: $XDG_RUNTIME_DIR
 
 parts:
-  electronApp:
+  electron-deps:
     source: .
-    plugin: dump
+    plugin: nil
     stage-packages:
     - libnotify4
     - libnss3
     - libpcre3
+    - libuuid1
     - libxss1
     - libxtst6
     after:
-    - desktop-gtk2
+    - desktop-gtk3

@@ -115,16 +115,6 @@ test('custom app config', async t => {
   t.true(apps.electronAppName.daemon, 'daemon is set in app')
 })
 
-test('Electron < 2 apps use desktop-gtk2', async t => {
-  const { parts } = await createYaml(t, { name: 'electronAppName' }, '1.8.2')
-  t.deepEqual(parts.electronAppName.after, ['desktop-gtk2'])
-})
-
-test('Electron 2 apps use desktop-gtk3', async t => {
-  const { parts } = await createYaml(t, { name: 'electronAppName' }, '2.0.0-beta.1')
-  t.deepEqual(parts.electronAppName.after, ['desktop-gtk3'])
-})
-
 test('Electron < 4 apps require gconf', async t => {
   const snapcraftYaml = await createYaml(t, { name: 'electronAppName' }, '1.8.2')
   assertStagedPackage(t, snapcraftYaml, 'libgconf-2-4')

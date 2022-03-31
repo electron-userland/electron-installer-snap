@@ -24,14 +24,14 @@ require('./_util')
 
 test('desktop-launch command uses productName by default', t => {
   const command = launcher.createDesktopLaunchCommand({ name: 'app-name', productName: 'App Name' })
-  t.true(command.startsWith('desktop-launch'), 'Command uses desktop-launch')
-  t.true(command.endsWith("/App Name'"), 'Command uses exe-name')
+  t.true(command.startsWith('bin/electron-launch'), 'Command uses electron-launch')
+  t.true(command.includes('App Name'), 'Command uses productName')
 })
 
 test('desktop-launch command uses executableName if specified', t => {
   const command = launcher.createDesktopLaunchCommand({ name: 'app-name', productName: 'App Name', executableName: 'exe-name' })
-  t.true(command.startsWith('desktop-launch'), 'Command uses desktop-launch')
-  t.true(command.endsWith("/exe-name'"), 'Command uses exe-name')
+  t.true(command.startsWith('bin/electron-launch'), 'Command uses electron-launch')
+  t.true(command.includes('exe-name'), 'Command uses exe-name')
 })
 
 test('launcher is classic launcher in classic confinement', t => {
@@ -39,9 +39,9 @@ test('launcher is classic launcher in classic confinement', t => {
   t.true(command.startsWith('bin/electron-launch'), 'Command uses electron-launch')
 })
 
-test('no custom launcher is copied to bin folder in non-classic confinement', async t => {
+test('custom launcher is copied to bin folder in non-classic confinement', async t => {
   await launcher.copyLauncher(t.context.tempDir.name, { confinement: 'strict' })
-  t.false(await fs.pathExists(path.join(t.context.tempDir.name, 'bin', 'electron-launch')), 'launcher does not exist')
+  t.true(await fs.pathExists(path.join(t.context.tempDir.name, 'bin', 'electron-launch')), 'launcher exists')
 })
 
 test('custom launcher is copied to bin folder in classic confinement', async t => {

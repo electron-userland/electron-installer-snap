@@ -33,5 +33,5 @@ test('generateArgs flags and options', t => {
   const snapcraft = new Snapcraft()
   const args = snapcraft.generateArgs('nonexistent', { a: 1, b: null }, ['foo', 'bar'])
 
-  t.deepEqual(args, ['nonexistent', '--a=1', '--b', 'foo', 'bar'], 'generated args')
+  t.deepEqual(args, ['nonexistent', '--a=1', '--b', '--destructive-mode', 'foo', 'bar'], 'generated args')
 })

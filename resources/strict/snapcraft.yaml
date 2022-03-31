@@ -4,7 +4,7 @@ summary: App summary
 description: |
   App description
 
-base: core20
+base: core18
 confinement: strict
 grade: devel
 
@@ -12,15 +12,12 @@ apps:
   electronApp:
     extensions: [gnome-3-34]
     plugs:
-      - alsa
       - browser-support
       - desktop
       - desktop-legacy
       - gsettings
       - home
       - network
-      - opengl
-      - pulseaudio
       - unity7
       - wayland
       - x11
@@ -36,7 +33,6 @@ parts:
     - libnotify4
     - libnss3
     - libpcre3
-    - libuuid1
     - libxss1
     - libxtst6
   
