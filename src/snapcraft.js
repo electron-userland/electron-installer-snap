@@ -55,11 +55,18 @@ class Snapcraft {
     const args = [command]
     for (const flag in options) {
       const value = options[flag]
-      if (value) {
-        args.push(`--${flag}=${value}`)
-      } else {
-        args.push(`--${flag}`)
+      if (flag !== 'target-arch') {
+        if (value) {
+          args.push(`--${flag}=${value}`)
+        } else {
+          args.push(`--${flag}`)
+        }
       }
+    }
+    /* istanbul ignore if */
+    if (debug.enabled) {
+      args.push('--destructive-mode')
+      args.push('--debug')
     }
 
     if (extraArgs) {

@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+const debug = require('debug')('electron-installer-snap:snapcraft')
 const Snapcraft = require('../src/snapcraft')
 const test = require('ava')
 
@@ -33,5 +34,10 @@ test('generateArgs flags and options', t => {
   const snapcraft = new Snapcraft()
   const args = snapcraft.generateArgs('nonexistent', { a: 1, b: null }, ['foo', 'bar'])
 
-  t.deepEqual(args, ['nonexistent', '--a=1', '--b', 'foo', 'bar'], 'generated args')
+  // Note: --destructive-mode and --debug are enabled by default in CI
+  if (debug.enabled) {
+    t.deepEqual(args, ['nonexistent', '--a=1', '--b', '--destructive-mode', '--debug', 'foo', 'bar'], 'generated args')
+  } else {
+    t.deepEqual(args, ['nonexistent', '--a=1', '--b', 'foo', 'bar'], 'generated args')
+  }
 })

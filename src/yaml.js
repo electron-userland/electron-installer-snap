@@ -201,7 +201,6 @@ class SnapcraftYAML {
   }
 
   updateDependencies () {
-    this.parts.after[0] = common.getGTKDepends(this.electronVersion, DEPENDENCY_MAP)
     this.parts['stage-packages'] = this.parts['stage-packages']
       .concat(common.getATSPIDepends(this.electronVersion, DEPENDENCY_MAP))
       .concat(common.getDRMDepends(this.electronVersion, DEPENDENCY_MAP))
@@ -209,6 +208,10 @@ class SnapcraftYAML {
       .concat(common.getGConfDepends(this.electronVersion, DEPENDENCY_MAP))
       .concat(common.getUUIDDepends(this.electronVersion, DEPENDENCY_MAP))
       .concat(common.getXcbDri3Depends(this.electronVersion, DEPENDENCY_MAP))
+
+    if (this.data.confinement === 'classic') {
+      this.parts.after[0] = common.getGTKDepends(this.electronVersion, DEPENDENCY_MAP)
+    }
 
     return this.data
   }
@@ -255,7 +258,9 @@ class SnapcraftYAML {
 }
 
 module.exports = async function createYamlFromTemplate (snapDir, packageDir, userSupplied) {
-  const templateFilename = path.resolve(__dirname, '..', 'resources', 'snapcraft.yaml')
+  const templateFilename = (userSupplied.confinement && userSupplied.confinement === 'classic')
+    ? path.resolve(__dirname, '..', 'resources', 'classic', 'snapcraft.yaml')
+    : path.resolve(__dirname, '..', 'resources', 'strict', 'snapcraft.yaml')
   delete userSupplied.snapcraft
 
   const yamlData = new SnapcraftYAML()

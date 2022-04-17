@@ -18,24 +18,33 @@ limitations under the License.
 const fs = require('fs-extra')
 const path = require('path')
 
-async function copyLauncher (snapDir, config) {
-  if (config.confinement === 'classic') {
-    const binDir = path.join(snapDir, 'bin')
-    const launcherPath = path.resolve(__dirname, '..', 'resources', 'classic-launcher.sh')
-    await fs.mkdirs(binDir)
-    await fs.copy(launcherPath, path.join(binDir, 'electron-launch'))
+function getBrowserSandboxFlag (data) {
+  if (data.apps) {
+    const plugs = data.apps[`${data.name}`].plugs
+    return plugs.includes('browser-sandbox') ? '' : '--no-sandbox'
   }
+  return ''
+}
+
+async function copyLauncher (snapDir, config) {
+  const binDir = path.join(snapDir, 'bin')
+  let launcherPath = path.resolve(__dirname, '..', 'resources', 'desktop-launcher.sh')
+  if (config.confinement === 'classic') {
+    launcherPath = path.resolve(__dirname, '..', 'resources', 'classic', 'classic-launcher.sh')
+  }
+  await fs.mkdirs(binDir)
+  await fs.copy(launcherPath, path.join(binDir, 'electron-launch'))
 }
 
 function createDesktopLaunchCommand (data) {
-  const executableName = data.executableName || data.productName
+  const executableName = data.executableName || data.productName || data.name
 
   delete data.executableName
   delete data.productName
 
-  const launcher = data.confinement === 'classic' ? 'bin/electron-launch' : 'desktop-launch'
+  const sandboxFlag = getBrowserSandboxFlag(data)
 
-  return `${launcher} '$SNAP/${data.name}/${executableName}'`
+  return `bin/electron-launch $SNAP/${data.name}/${executableName} ${sandboxFlag}`
 }
 
 module.exports = {
