@@ -2,7 +2,21 @@
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/electron-userland/electron-installer-snap/compare/v5.1.0...master
+[Unreleased]: https://github.com/electron-userland/electron-installer-snap/compare/v5.2.0...master
+
+## [5.2.0] - 2022-07-25
+
+[5.2.0]: https://github.com/electron-userland/electron-installer-snap/compare/v5.2.0...v5.1.0
+
+### Changed
+
+* Change confinement default from classic to strict (#144)
+* Allow disabling of browser sandbox for snap sandbox (#141)
+
+### Fixed
+
+* Clarify the use of SnapcraftConfig (#76)
+* Update snapcraft requirements, fix multipass errors (#144)
 
 ## [5.1.0] - 2020-04-25
 
