@@ -79,7 +79,8 @@
 				<p>To use this as a standalone CLI, install <code>electron-installer-snap</code> to your project:</p>
 				<pre><code class="language-shell">npm install --save-dev electron-installer-snap
 <span class="hljs-meta">#</span><span class="bash"> or</span>
-yarn add --dev electron-installer-snap</code></pre>
+yarn add --dev electron-installer-snap
+</code></pre>
 				<p>Then add to your <code>package.json</code>:</p>
 				<pre><code class="language-javascript">{
   <span class="hljs-comment">// ...</span>
@@ -88,7 +89,8 @@ yarn add --dev electron-installer-snap</code></pre>
     <span class="hljs-string">&quot;build:snap&quot;</span>: <span class="hljs-string">&quot;electron-installer-snap --src=out/myappname-linux-x64&quot;</span>
   },
   <span class="hljs-comment">// ...</span>
-}</code></pre>
+}
+</code></pre>
 				<p>Then you can run <code>npm run build:package &amp;&amp; npm run build:snap</code>, which will prepare the Electron app
 					for bundling and generate a <code>.snap</code> file in your current directory.
 				It is recommended to ignore the generated <code>snap</code> directory in your version control.</p>
