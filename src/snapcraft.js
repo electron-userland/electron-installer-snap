@@ -16,6 +16,8 @@ limitations under the License.
 */
 
 const debug = require('debug')('electron-installer-snap:snapcraft')
+// const { spawn } = require('child_process');
+const path = require('path')
 const { spawn } = require('@malept/cross-spawn-promise')
 const which = require('which')
 
@@ -63,11 +65,13 @@ class Snapcraft {
         }
       }
     }
+    // args.push('--use-lxd')
+    // args.push('--provider:host')
     /* istanbul ignore if */
-    if (debug.enabled) {
-      args.push('--destructive-mode')
-      args.push('--debug')
-    }
+    // if (debug.enabled) {
+    args.push('--debug')
+    // args.push('--destructive-mode')
+    // }
 
     if (extraArgs) {
       Array.prototype.push.apply(args, extraArgs)
@@ -80,9 +84,11 @@ class Snapcraft {
     const spawnOptions = {
       cwd: packageDir,
       env: {
+        ...process.env,
+        SNAPCRAFT_SETUP_CORE: 1,
         LC_ALL: 'C.UTF-8',
-        LOCALE: 'C.UTF-8',
-        PATH: process.env.PATH
+        LOCALE: 'C.UTF-8'
+        // PATH: process.env.PATH
       },
       stdio: ['ignore', 'ignore', process.stderr]
     }
@@ -96,9 +102,12 @@ class Snapcraft {
 
   async run (packageDir, command, options) {
     const args = this.generateArgs(command, options)
-    debug(`Running '${this.snapcraftPath} ${args.join(' ')}' in ${packageDir}`)
+    console.log(`Running '${this.snapcraftPath} ${args.join(' ')}' in ${packageDir}`)
+    console.log('Spawn Options: ', this.generateSpawnOptions(packageDir))
     try {
-      return spawn(this.snapcraftPath, args, this.generateSpawnOptions(packageDir))
+      // await this.createSnapPackage(packageDir)
+      return spawn('snapcraft', args, this.generateSpawnOptions(packageDir))
+      // return spawn(this.snapcraftPath, args, this.generateSpawnOptions(packageDir))
     } catch (error) /* istanbul ignore next */ {
       console.error(`Snapcraft failed (${error.exitStatus})`)
       if (!debug.enabled) {
@@ -106,6 +115,61 @@ class Snapcraft {
       }
       throw error
     }
+  }
+
+  async createSnapPackage (packageDir) {
+    let result = null
+
+    // const snapFile = `${this.values.executableName}-${this.values.version}.snap`;
+    const snapFile = 'footest_0.0.1_amd64.snap'
+    console.log(`Snap file artifact name will be: ${snapFile}`)
+
+    // const pathToSnapFile = path.join(this.options.makeOptions.makeDir, 'snapcraft', snapFile);
+    const pathToSnapFile = path.join(packageDir, snapFile)
+    console.log(`Snap file will be created at: ${pathToSnapFile}`)
+
+    try {
+      result = await new Promise((resolve, reject) => {
+        const spawnSnapcraftInDirectory = packageDir
+
+        const snapcraft = spawn('snapcraft', ['snap', '--output', snapFile], {
+          cwd: spawnSnapcraftInDirectory
+        })
+
+        console.log(`Snapcraft is now running with: snapcraft snap --output ${snapFile}`)
+        console.log(`Snapcraft has been spawned within the directory: ${spawnSnapcraftInDirectory}`)
+
+        snapcraft.on('close', code => {
+          console.log(`Snapcraft has finished running, with a status code of: ${code}`)
+
+          if (code === 0) {
+            resolve(code)
+            return
+          }
+
+          reject(new Error(`Snapcraft exited with a non-zero status code of: ${code}`))
+        })
+
+        snapcraft.on('error', error => {
+          console.log(`Snapcraft has encountered an error and is aborting: ${error}`)
+
+          reject(error)
+        })
+
+        snapcraft.stdout.on('data', data => {
+          console.log(`Snapcraft stdout: ${data.toString()}`)
+        })
+      })
+    } catch (error) {
+      console.log('Snapcraft ERROR: ', error)
+
+      throw error
+    }
+
+    console.log(`Snapcraft finished with status code: ${result}`)
+    console.log(`Snapcraft file generated to: ${pathToSnapFile}`)
+
+    return pathToSnapFile
   }
 }
 

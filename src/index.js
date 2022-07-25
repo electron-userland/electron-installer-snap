@@ -18,8 +18,9 @@ limitations under the License.
 const common = require('electron-installer-common')
 const debug = require('debug')('electron-installer-snap:index')
 const fs = require('fs-extra')
+const os = require('node:os')
 const path = require('path')
-const tmp = require('tmp-promise')
+// const tmp = require('tmp-promise')
 
 const Snapcraft = require('./snapcraft')
 const createDesktopFile = require('./desktop')
@@ -32,7 +33,7 @@ const { updateSandboxHelperPermissions } = require('electron-installer-common')
 
 class SnapCreator {
   async prepareOptions (userSupplied) {
-    this.packageDir = path.resolve(userSupplied.src || process.cwd())
+    this.packageDir = path.resolve(userSupplied.src || os.homedir())
     delete userSupplied.src
 
     const defaultArgs = await defaultArgsFromApp(this.packageDir)
@@ -45,7 +46,7 @@ class SnapCreator {
     this.snapcraft = new Snapcraft()
 
     const snapArch = this.snapcraft.translateArch(String(this.config.arch || process.arch))
-    const outputDir = path.resolve(this.config.dest || process.cwd())
+    const outputDir = path.resolve(this.config.dest || os.homedir())
     delete this.config.dest
     const snapFilename = `${this.config.name}_${this.config.version}_${snapArch}.snap`
     this.snapDestPath = path.join(outputDir, snapFilename)
@@ -71,12 +72,20 @@ class SnapCreator {
   }
 
   async runInTempSnapDir () {
-    this.tmpdir = await tmp.dir({ prefix: 'electron-snap-', unsafeCleanup: !debug.enabled })
+    // this.tmpdir = await tmp.dir({ prefix: 'electron-snap-', unsafeCleanup: !debug.enabled })
+    // this.tmpdir = await tmp.dir({ prefix: 'electron-snap-' })
+    this.tmpdir = path.join(os.homedir(), 'snap-stageDir')
+    await fs.rm(this.tmpdir, { recursive: true, force: true })
+    await fs.mkdir(this.tmpdir, { recursive: true })
+    console.log('***************************')
+    console.log('tmpdir: ', this.tmpdir)
+    console.log('***************************')
     try {
-      return this.prepareAndBuildSnap(this.tmpdir.path)
+      // return this.prepareAndBuildSnap(this.tmpdir.path)
+      return this.prepareAndBuildSnap(this.tmpdir)
     } catch (err) /* istanbul ignore next */ {
       if (!debug.enabled) {
-        this.tmpdir.cleanup()
+        // this.tmpdir.cleanup()
       }
       throw err
     }
