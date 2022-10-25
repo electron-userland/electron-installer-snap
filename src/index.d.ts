@@ -26,18 +26,18 @@
  * If you need to use the callback pattern instead of the `async`/`await` pattern, look into the
  * [`util.callbackify` function](https://nodejs.org/api/util.html#util_util_callbackify_original).
  */
-declare function createSnap(userSupplied: createSnap.Options & createSnap.SnapcraftConfig): Promise<string>;
+declare function createSnap(userSupplied: createSnap.SnapcraftOptions & createSnap.CustomSnapcraftConfig): Promise<string>;
 
 declare namespace createSnap {
   /**
    * Additional Snapcraft configuration that is merged directly into `snapcraft.yaml`. In general,
    * this does not override any configuration that is set via [[Options]].
    */
-  type SnapcraftConfig = Record<string, unknown>;
+  type CustomSnapcraftConfig = Record<string, unknown>;
   /**
    * Any options that aren't specified here are passed through to the `snapcraft.yaml` file via [[SnapcraftConfig]].
    */
-  interface Options {
+  interface SnapcraftOptions {
     src: string;
 
     /**
@@ -191,6 +191,10 @@ declare namespace createSnap {
      * can be found in the Snapcraft documentation.
      */
     hookScripts?: Record<string, string>;
+    /**
+    * Modifies the execution environment of a strictly-confined snap.
+    */
+    layouts?: Record<string, Record<string, unknown>>;
     /**
      * The name of the Snap package.
      *
