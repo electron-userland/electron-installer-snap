@@ -1,0 +1,27 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  reviewers:
+  - malept
+  ignore:
+  - dependency-name: typedoc
+    versions:
+    - ">= 0.20.a, < 0.21"
+  - dependency-name: sinon
+    versions:
+    - 10.0.0
+  - dependency-name: husky
+    versions:
+    - 5.0.9
+    - 5.1.0
+    - 5.1.1
+    - 5.1.2
+    - 5.1.3
+    - 5.2.0
+  - dependency-name: js-yaml
+    versions:
+    - 4.0.0
