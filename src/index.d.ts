@@ -31,26 +31,26 @@ declare function createSnap(userSupplied: createSnap.SnapcraftOptions & createSn
 declare namespace createSnap {
   /**
    * Additional Snapcraft configuration that is merged directly into `snapcraft.yaml`. In general,
-   * this does not override any configuration that is set via [[Options]].
+   * this does not override any configuration that is set via {@link Options}.
    */
   type CustomSnapcraftConfig = Record<string, unknown>;
   /**
-   * Any options that aren't specified here are passed through to the `snapcraft.yaml` file via [[SnapcraftConfig]].
+   * Any options that aren't specified here are passed through to the `snapcraft.yaml` file via {@link SnapcraftConfig}.
    */
   interface SnapcraftOptions {
     src: string;
 
     /**
      * [Additional app-specific Snapcraft configuration](https://docs.snapcraft.io/build-snaps/syntax#app-name)
-     * for the Electron app. This is different from [[SnapcraftConfig]] in that it is scoped
+     * for the Electron app. This is different from {@link SnapcraftConfig} in that it is scoped
      * under `apps.<app-name>`.
      */
     appConfig?: Record<string, unknown>;
     /**
      * Additional [plugs](https://docs.snapcraft.io/reference/interfaces) for the Electron app,
      * which are necessary for the app to be a consumer of a feature in the system. Common features
-     * can be set via the [[`features`]] option. To set any attributes for the plugs, set them in
-     * the [[`plugs`]] option.
+     * can be set via the {@link features} option. To set any attributes for the plugs, set them in
+     * the {@link plugs} option.
      *
      * For example, if the app uses a DBus interface:
      *
@@ -73,8 +73,8 @@ declare namespace createSnap {
     /**
      * Additional [slots](https://docs.snapcraft.io/reference/interfaces) for the Electron app,
      * which are necessary for the app to be a producer of a feature in the system. Common features
-     * can be set via the [[`features`]] option. To set any attributes for the plugs, set them in
-     * the [[`slots`]] option.
+     * can be set via the {@link features} option. To set any attributes for the plugs, set them in
+     * the {@link slots} option.
      *
      * For example, if the app creates a DBus interface:
      *
@@ -91,7 +91,7 @@ declare namespace createSnap {
      * }
      * ```
      *
-     * [[`slots`]] will be passed through directly to the generated `snapcraft.yaml`.
+     * {@link slots} will be passed through directly to the generated `snapcraft.yaml`.
      */
     appSlots?: string[];
     /**
@@ -202,11 +202,11 @@ declare namespace createSnap {
      */
     name?: string;
     /**
-     * See [[`appPlugs`]] for details.
+     * See {@link appPlugs} for details.
      */
     plugs?: Record<string, Record<string, unknown>>;
     /**
-     * See [[`appSlots`]] for details.
+     * See {@link appSlots} for details.
      */
     slots?: Record<string, Record<string, unknown>>;
     /**
