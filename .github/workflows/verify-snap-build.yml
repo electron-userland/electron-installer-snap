@@ -1,0 +1,52 @@
+name: Verify snap build
+
+# Non-blocking proof-of-build: builds one core22 snap of the test fixture and
+# uploads it as an artifact. Runs on the host in snapcraft's destructive mode
+# because the generated part `source:` is an absolute host path that does not
+# exist inside an LXD managed-build container.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify-snap-build:
+    name: verify-snap-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22.x
+          cache: 'yarn'
+      - name: Enable Corepack
+        run: corepack enable
+      - name: Install snapcraft
+        run: sudo snap install snapcraft --classic
+      - name: Pre-seed core22 + gnome extension build snaps
+        # Snapcraft's lazy install of these fails in destructive builds.
+        run: |
+          set -eux
+          sudo snap install core22
+          sudo snap install gnome-42-2204
+          sudo snap install gnome-42-2204-sdk
+          sudo snap install gtk-common-themes
+          snap list
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Refresh apt package index
+        # A stale index makes snapcraft request superseded .debs that 404.
+        run: sudo apt-get update
+      - name: Build a core22 snap of the test fixture (host/destructive mode)
+        # The DEBUG namespace makes src/snapcraft.js append --destructive-mode --debug.
+        run: DEBUG=electron-installer-snap:snapcraft node ci/build-core22-snap.js
+      - name: Upload built snap as proof artifact
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: core22-snap
+          path: dist-snap/*.snap
+          if-no-files-found: error
