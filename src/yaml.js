@@ -83,8 +83,8 @@ class SnapcraftYAML {
     }
     const lsbReleasePath = await this.findLsbRelease(lsbRelease)
     if (!lsbReleasePath) {
-      debug('Using base: core18 as recommended by the Snapcraft docs')
-      return 'core18'
+      debug('Using base: core22 as recommended by the Snapcraft docs')
+      return 'core22'
     }
 
     const [distro, distroVersion] = await this.detectDistro(lsbReleasePath)
@@ -92,7 +92,7 @@ class SnapcraftYAML {
       return 'core'
     }
 
-    return 'core18'
+    return 'core22'
   }
 
   async findLsbRelease (lsbRelease) {
