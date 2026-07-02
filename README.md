@@ -7,7 +7,7 @@ Builds Snap files for Electron applications that have already been bundled and c
 
 ## Requirements
 
-Requires Node 10 or greater, and [`snapcraft`](https://snapcraft.io).
+Requires Node 22.12 or greater, and [`snapcraft`](https://snapcraft.io).
 
 ## Quick Start
 

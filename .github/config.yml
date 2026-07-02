@@ -15,7 +15,7 @@ newPRWelcomeComment: |
   Here are some highlighted action items that will help get it across the finish line, from the
   [pull request guidelines](https://github.com/electron-userland/electron-installer-snap/blob/master/CONTRIBUTING.md#filing-pull-requests):
   - Follow the [JavaScript coding style](https://standardjs.com/).
-  - Run `npm run lint` locally to catch formatting errors earlier.
+  - Run `yarn lint` locally to catch formatting errors earlier.
   - Document any user-facing changes in `NEWS.md` and other docs.
   - Include tests when adding/changing behavior.
 
