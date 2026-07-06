@@ -53,18 +53,23 @@ test('snap name has no letters', t => {
 })
 
 if (!process.env.FAST_TESTS_ONLY) {
-  test.serial('creates a snap', async t => {
-    const snapPath = await snap({ src: path.join(__dirname, 'fixtures', 'app-with-asar') })
-    t.truthy(snapPath, 'snap returns a truthy value')
-    t.true(await fs.pathExists(snapPath), `Snap created at ${snapPath}`)
-  })
+  // core18/core20 are EOL, so run the snap-build tests per maintained base.
+  const bases = ['core22', 'core24', 'core26']
 
-  test.serial('creates a snap in a custom output directory', async t => {
-    const destDir = path.join(t.context.tempDir.name, 'custom-output-directory')
-    await fs.mkdirs(destDir)
-    const snapPath = await snap({ src: path.join(__dirname, 'fixtures', 'app-with-asar'), dest: destDir })
-    t.truthy(snapPath, 'snap returns a truthy value')
-    util.assertIncludes(t, snapPath, 'custom-output-directory', 'path contains custom output directory')
-    t.true(await fs.pathExists(snapPath), `Snap created at ${snapPath}`)
-  })
+  for (const base of bases) {
+    test.serial(`creates a snap (base: ${base})`, async t => {
+      const snapPath = await snap({ src: path.join(__dirname, 'fixtures', 'app-with-asar'), base })
+      t.truthy(snapPath, 'snap returns a truthy value')
+      t.true(await fs.pathExists(snapPath), `Snap created at ${snapPath}`)
+    })
+
+    test.serial(`creates a snap in a custom output directory (base: ${base})`, async t => {
+      const destDir = path.join(t.context.tempDir.name, 'custom-output-directory')
+      await fs.mkdirs(destDir)
+      const snapPath = await snap({ src: path.join(__dirname, 'fixtures', 'app-with-asar'), dest: destDir, base })
+      t.truthy(snapPath, 'snap returns a truthy value')
+      util.assertIncludes(t, snapPath, 'custom-output-directory', 'path contains custom output directory')
+      t.true(await fs.pathExists(snapPath), `Snap created at ${snapPath}`)
+    })
+  }
 }

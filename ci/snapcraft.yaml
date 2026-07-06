@@ -10,7 +10,7 @@ grade: devel
 
 apps:
   electronApp:
-    extensions: [gnome-3-34]
+    extensions: [gnome]
     plugs:
       - alsa
       - browser-support

@@ -51,7 +51,7 @@ test('set custom parts on app', async t => {
   const newPart = { plugin: 'nil', 'stage-packages': ['foo', 'bar'] }
   const userDefined = {
     name: 'electronAppName',
-    parts: { newPart: newPart }
+    parts: { newPart }
   }
   const snapcraftYaml = await createYaml(t, userDefined)
   t.deepEqual(snapcraftYaml.parts.newPart, newPart)
@@ -137,8 +137,17 @@ test('custom confinement config (classic should apply correctly)', async t => {
 
 test('use gnome extensions with strict confinement', async t => {
   const { apps } = await createYaml(t, { name: 'electronAppName' })
-  t.deepEqual(apps.electronAppName.extensions, ['gnome-3-34'])
+  t.deepEqual(apps.electronAppName.extensions, ['gnome'])
 })
+
+for (const base of ['core22', 'core24', 'core26']) {
+  test(`base ${base} uses the gnome extension with strict confinement`, async t => {
+    const snapcraftYaml = await createYaml(t, { name: 'electronAppName', base })
+    t.is(snapcraftYaml.base, base, `base is ${base}`)
+    t.is(snapcraftYaml.confinement, 'strict', 'confinement is strict')
+    t.deepEqual(snapcraftYaml.apps.electronAppName.extensions, ['gnome'], 'app uses the gnome extension')
+  })
+}
 
 test('Electron < 2 classic confinement apps use desktop-gtk2', async t => {
   const { parts } = await createYaml(t, { name: 'electronAppName', confinement: 'classic' }, '1.8.2')
@@ -210,9 +219,9 @@ test('Electron 9 apps require gbm', async t => {
   assertStagedPackage(t, snapcraftYaml, 'libgbm1')
 })
 
-test('base autodetect defaults to core18 when lsb_release is not found', async t => {
+test('base autodetect defaults to core22 when lsb_release is not found', async t => {
   const snapcraftYaml = await createYaml(t, { name: 'electronAppName', lsbRelease: '/does/not/exist' })
-  t.is(snapcraftYaml.base, 'core18')
+  t.is(snapcraftYaml.base, 'core22')
 })
 
 test('base autodetect does not run when it is set by the user', async t => {
@@ -234,14 +243,14 @@ test('base autodetect returns core when Ubuntu 16.04 is detected', async t => {
   }
 })
 
-test('base autodetect returns core18 for non-Ubuntu distros', async t => {
+test('base autodetect returns core22 for non-Ubuntu distros', async t => {
   const yaml = new SnapcraftYAML()
   const lsbRelease = sinon.stub(yaml, 'findLsbRelease')
   lsbRelease.resolves('lsb_release')
   const distro = sinon.stub(yaml, 'detectDistro')
   distro.resolves(['Debian', '10'])
   try {
-    t.is(await yaml.detectBase(), 'core18')
+    t.is(await yaml.detectBase(), 'core22')
   } finally {
     lsbRelease.restore()
     distro.restore()

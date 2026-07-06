@@ -4,13 +4,13 @@ summary: App summary
 description: |
   App description
 
-base: core18
+base: core22
 confinement: strict
 grade: devel
 
 apps:
   electronApp:
-    extensions: [gnome-3-34]
+    extensions: [gnome]
     plugs:
       - browser-support
       - desktop

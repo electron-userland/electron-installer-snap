@@ -92,7 +92,7 @@ class SnapCreator {
     await copyLauncher(snapDir, this.config)
     await createYamlFromTemplate(snapDir, this.packageDir, this.config)
     await copyHooks(snapMetaDir, this.config)
-    await this.snapcraft.run(snapDir, 'snap', this.snapcraftOptions)
+    await this.snapcraft.run(snapDir, 'pack', this.snapcraftOptions)
     return this.snapDestPath
   }
 
