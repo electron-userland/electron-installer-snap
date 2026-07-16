@@ -20,6 +20,7 @@
     "eslint:js": "eslint .",
     "eslint:ts": "eslint --ext .ts --config .eslintrc.typescript.js .",
     "lint": "yarn eslint:js && yarn eslint:ts && yarn tsd",
+    "prepare": "husky",
     "test": "yarn lint && ava",
     "test:fast": "cross-env FAST_TESTS_ONLY=1 yarn test",
     "tsd": "tsd"
@@ -44,7 +45,7 @@
     "eslint-plugin-n": "^16.0.0",
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-promise": "^6.0.0",
-    "husky": "^4.2.3",
+    "husky": "^9.1.7",
     "lint-staged": "^10.1.2",
     "nyc": "^15.0.0",
     "sinon": "^9.0.0",
@@ -112,11 +113,6 @@
   ],
   "funding": {
     "url": "https://github.com/electron-userland/electron-installer-snap?sponsor=1"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "*.js": [
