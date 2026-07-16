@@ -1,4 +1,3 @@
-'use strict'
 /*
 Copyright 2017, 2018, 2019 Mark Lee and contributors
 
@@ -15,8 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const debug = require('debug')('electron-installer-snap:default_args')
-const { readMetadata } = require('electron-installer-common')
+import createDebug from 'debug'
+import common from 'electron-installer-common'
+
+const debug = createDebug('electron-installer-snap:default_args')
+const { readMetadata } = common
 
 function defaultArgsFromPackageJSON (packageJSON) {
   return {
@@ -27,7 +29,7 @@ function defaultArgsFromPackageJSON (packageJSON) {
   }
 }
 
-module.exports = async function defaultArgsFromApp (packageDir) {
+export default async function defaultArgsFromApp (packageDir) {
   const packageJSON = await readMetadata({ src: packageDir, logger: debug })
   return defaultArgsFromPackageJSON(packageJSON)
 }

@@ -1,4 +1,3 @@
-'use strict'
 /*
 Copyright 2017, 2018, 2019 Mark Lee and contributors
 
@@ -15,8 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const { createDesktopFile } = require('electron-installer-common')
-const path = require('path')
+import common from 'electron-installer-common'
+import path from 'node:path'
+
+const { createDesktopFile } = common
 
 function getDesktopTemplatePath (userSupplied) {
   if (userSupplied.desktopTemplate) {
@@ -24,7 +25,7 @@ function getDesktopTemplatePath (userSupplied) {
     delete userSupplied.desktopTemplate
     return desktopTemplatePath
   } else {
-    return path.resolve(__dirname, '..', 'resources', 'desktop.ejs')
+    return path.resolve(import.meta.dirname, '..', 'resources', 'desktop.ejs')
   }
 }
 
@@ -40,6 +41,6 @@ function templateScope (userSupplied) {
   return Object.assign(defaults, userSupplied)
 }
 
-module.exports = async function (snapGuiDir, userSupplied) {
+export default async function createSnapDesktopFile (snapGuiDir, userSupplied) {
   return createDesktopFile(getDesktopTemplatePath(userSupplied), snapGuiDir, userSupplied.name, templateScope(userSupplied))
 }

@@ -1,6 +1,4 @@
-'use strict'
-
-const { Application } = require('typedoc')
+import { Application } from 'typedoc'
 
 const config = {
   excludeExternals: true,
@@ -36,6 +34,6 @@ if (project) {
   app.generateDocs(project, 'typedoc')
 } else {
   console.error('Could not generate API documentation from TypeScript definition!')
-  // eslint-disable-next-line no-process-exit
+  // eslint-disable-next-line n/no-process-exit
   process.exit(1)
 }

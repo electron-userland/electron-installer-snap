@@ -4,6 +4,7 @@
   "description": "Build snapcraft packages for Electron applications",
   "author": "Mark Lee",
   "license": "Apache-2.0",
+  "type": "module",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "packageManager": "yarn@4.17.0",
@@ -15,10 +16,10 @@
   ],
   "scripts": {
     "ava": "ava",
-    "coverage": "nyc ava && nyc report --reporter=text-lcov > coverage.lcov",
+    "coverage": "c8 ava && c8 report --reporter=text-lcov > coverage.lcov",
     "docs:build": "node ci/build_docs.js",
     "eslint:js": "eslint .",
-    "eslint:ts": "eslint --ext .ts --config .eslintrc.typescript.js .",
+    "eslint:ts": "eslint --ext .ts --config .eslintrc.typescript.cjs .",
     "lint": "yarn eslint:js && yarn eslint:ts && yarn tsd",
     "prepare": "husky",
     "test": "yarn lint && ava",
@@ -36,18 +37,17 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
-    "ava": "^3.0.0",
+    "ava": "^6.4.0",
+    "c8": "^10.1.3",
     "cross-env": "^7.0.0",
     "eslint": "^8.57.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-ava": "^14.0.0",
     "eslint-plugin-import": "^2.17.3",
     "eslint-plugin-n": "^16.0.0",
-    "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-promise": "^6.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^10.1.2",
-    "nyc": "^15.0.0",
     "sinon": "^9.0.0",
     "tsd": "^0.31.0",
     "typedoc": "^0.25.13",
@@ -69,7 +69,8 @@
     "node": ">=22.12.0"
   },
   "ava": {
-    "timeout": "5m"
+    "timeout": "5m",
+    "workerThreads": false
   },
   "eslintConfig": {
     "extends": [
@@ -77,12 +78,13 @@
       "plugin:ava/recommended",
       "plugin:import/errors",
       "plugin:import/warnings",
-      "plugin:node/recommended",
+      "plugin:n/recommended",
       "plugin:promise/recommended",
       "standard"
     ],
     "parserOptions": {
-      "sourceType": "script"
+      "sourceType": "module",
+      "ecmaVersion": 2022
     },
     "rules": {
       "ava/no-ignored-test-files": 0,
@@ -97,7 +99,8 @@
         }
       ],
       "no-console": 0,
-      "node/no-missing-require": [
+      "strict": "error",
+      "n/no-missing-import": [
         "error",
         {
           "allowModules": [
@@ -105,8 +108,26 @@
           ]
         }
       ],
-      "strict": "error"
-    }
+      "import/no-unresolved": [
+        "error",
+        {
+          "ignore": [
+            "^ava$",
+            "^typedoc$"
+          ]
+        }
+      ]
+    },
+    "overrides": [
+      {
+        "files": [
+          "*.cjs"
+        ],
+        "parserOptions": {
+          "sourceType": "script"
+        }
+      }
+    ]
   },
   "eslintIgnore": [
     "typedoc"
@@ -119,7 +140,7 @@
       "eslint --fix"
     ],
     "*.ts": [
-      "eslint --ext .ts --config .eslintrc.typescript.js --fix"
+      "eslint --ext .ts --config .eslintrc.typescript.cjs --fix"
     ]
   },
   "tsd": {
@@ -127,5 +148,12 @@
     "compilerOptions": {
       "esModuleInterop": false
     }
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
   }
 }

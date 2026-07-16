@@ -1,4 +1,3 @@
-'use strict'
 /*
 Copyright 2018, 2019 Mark Lee and contributors
 
@@ -15,15 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const copyIcon = require('../src/icon')
-const fs = require('fs-extra')
-const path = require('path')
-const test = require('ava')
+import fs from 'fs-extra'
+import path from 'node:path'
+import test from 'ava'
 
-require('./_util')
+import copyIcon from '../src/icon.js'
+import './_util.js'
 
 test('custom icon', async t => {
   const iconPath = path.join(t.context.tempDir.name, 'icon.png')
-  await copyIcon(t.context.tempDir.name, { icon: path.join(__dirname, 'fixtures', 'icon.png') })
+  await copyIcon(t.context.tempDir.name, { icon: path.join(import.meta.dirname, 'fixtures', 'icon.png') })
   t.true(await fs.pathExists(iconPath), 'icon exists')
 })

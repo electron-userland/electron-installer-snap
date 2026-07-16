@@ -1,4 +1,3 @@
-'use strict'
 /*
 Copyright 2018, 2019, 2020 Mark Lee and contributors
 
@@ -15,15 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const createYamlFromTemplate = require('../src/yaml')
-const fs = require('fs-extra')
-const path = require('path')
-const sinon = require('sinon')
-const test = require('ava')
-const util = require('./_util')
-const yaml = require('js-yaml')
+import fs from 'fs-extra'
+import path from 'node:path'
+import sinon from 'sinon'
+import test from 'ava'
+import yaml from 'js-yaml'
 
-const SnapcraftYAML = createYamlFromTemplate.SnapcraftYAML
+import createYamlFromTemplate, { SnapcraftYAML } from '../src/yaml.js'
+import * as util from './_util.js'
 
 async function createYaml (t, userDefined, electronVersion) {
   const yamlPath = path.join(t.context.tempDir.name, 'snap', 'snapcraft.yaml')

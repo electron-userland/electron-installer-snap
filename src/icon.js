@@ -1,4 +1,3 @@
-'use strict'
 /*
 Copyright 2017 Mark Lee and contributors
 
@@ -15,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const fs = require('fs-extra')
-const path = require('path')
+import fs from 'fs-extra'
+import path from 'node:path'
 
 function getSourceIconPath (userSupplied) {
   if (userSupplied.icon) {
@@ -24,11 +23,11 @@ function getSourceIconPath (userSupplied) {
     delete userSupplied.icon
     return iconPath
   } else {
-    return path.resolve(__dirname, '..', 'resources', 'icon.png')
+    return path.resolve(import.meta.dirname, '..', 'resources', 'icon.png')
   }
 }
 
-module.exports = async function copyIcon (snapGuiDir, userSupplied) {
+export default async function copyIcon (snapGuiDir, userSupplied) {
   const srcIconPath = getSourceIconPath(userSupplied)
   const destIconPath = path.resolve(snapGuiDir, `icon${path.extname(srcIconPath)}`)
   return fs.copy(srcIconPath, destIconPath)

@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-'use strict'
 /*
 Copyright 2017, 2018, 2019 Mark Lee and contributors
 
@@ -16,12 +15,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const buildSnap = require('.')
-const debug = require('debug')('electron-installer-snap:cli')
-const yargs = require('yargs')
+import buildSnap from './index.js'
+import createDebug from 'debug'
+import yargs from 'yargs'
+import { hideBin } from 'yargs/helpers'
+
+const debug = createDebug('electron-installer-snap:cli')
 
 function parseArgs () {
-  const args = yargs.option('src', {
+  const args = yargs(hideBin(process.argv)).option('src', {
     describe: 'directory of the packaged Electron app',
     default: process.cwd()
   }).option('dest', {

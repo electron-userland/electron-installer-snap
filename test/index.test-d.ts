@@ -1,4 +1,4 @@
-import * as createSnap from '..';
+import createSnap from '..';
 import { expectError } from 'tsd';
 
 expectError(createSnap());

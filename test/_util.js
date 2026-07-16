@@ -1,4 +1,3 @@
-'use strict'
 /*
 Copyright 2018 Mark Lee and contributors
 
@@ -15,15 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const fs = require('fs-extra')
-const test = require('ava')
-const tmp = require('tmp-promise')
+import fs from 'fs-extra'
+import test from 'ava'
+import tmp from 'tmp-promise'
 
-function assertIncludes (t, collection, value, message) {
+export function assertIncludes (t, collection, value, message) {
   return t.true(collection.includes(value), message)
 }
 
-function assertNotIncludes (t, collection, value, message) {
+export function assertNotIncludes (t, collection, value, message) {
   return t.false(collection.includes(value), message)
 }
 
@@ -33,8 +32,3 @@ test.beforeEach(t => {
 })
 
 test.afterEach.always(t => { return fs.remove(t.context.tempDir.name) })
-
-module.exports = {
-  assertIncludes: assertIncludes,
-  assertNotIncludes: assertNotIncludes
-}

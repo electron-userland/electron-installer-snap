@@ -1,4 +1,3 @@
-'use strict'
 /*
 Copyright 2017, 2018, 2019 Mark Lee and contributors
 
@@ -15,22 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const common = require('electron-installer-common')
-const debug = require('debug')('electron-installer-snap:index')
-const fs = require('fs-extra')
-const path = require('path')
-const tmp = require('tmp-promise')
+import common from 'electron-installer-common'
+import createDebug from 'debug'
+import fs from 'fs-extra'
+import path from 'node:path'
+import tmp from 'tmp-promise'
 
-const Snapcraft = require('./snapcraft')
-const createDesktopFile = require('./desktop')
-const copyHooks = require('./hooks')
-const copyIcon = require('./icon')
-const { copyLauncher } = require('./launcher')
-const createYamlFromTemplate = require('./yaml')
-const defaultArgsFromApp = require('./default_args')
-const { updateSandboxHelperPermissions } = require('electron-installer-common')
+import Snapcraft from './snapcraft.js'
+import createDesktopFile from './desktop.js'
+import copyHooks from './hooks.js'
+import copyIcon from './icon.js'
+import { copyLauncher } from './launcher.js'
+import createYamlFromTemplate from './yaml.js'
+import defaultArgsFromApp from './default_args.js'
 
-class SnapCreator {
+const debug = createDebug('electron-installer-snap:index')
+const { updateSandboxHelperPermissions } = common
+
+export class SnapCreator {
   async prepareOptions (userSupplied) {
     this.packageDir = path.resolve(userSupplied.src || process.cwd())
     delete userSupplied.src
@@ -102,7 +103,7 @@ class SnapCreator {
   }
 }
 
-module.exports = async function createSnap (userSupplied) {
+export default async function createSnap (userSupplied) {
   if (!userSupplied) {
     throw new Error('Missing configuration')
   }
@@ -111,5 +112,3 @@ module.exports = async function createSnap (userSupplied) {
   await creator.prepareOptions(userSupplied)
   return creator.create()
 }
-
-module.exports.SnapCreator = SnapCreator

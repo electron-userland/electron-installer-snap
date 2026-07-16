@@ -1,4 +1,3 @@
-'use strict'
 /*
 Copyright 2018, 2019 Mark Lee and contributors
 
@@ -15,18 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const copyHooks = require('../src/hooks')
-const fs = require('fs-extra')
-const path = require('path')
-const test = require('ava')
+import fs from 'fs-extra'
+import path from 'node:path'
+import test from 'ava'
 
-require('./_util')
+import copyHooks from '../src/hooks.js'
+import './_util.js'
 
 test('copyHooks fails with an invalid script', t => { return t.throwsAsync(copyHooks(t.context.tempDir.name, { hookScripts: { install: '/does/not/exist' } }), { message: /Hook install at .* does not exist/ }) }
 )
 
 test('copyHooks installs a hook script', async t => {
-  const config = { hookScripts: { install: path.join(__dirname, 'fixtures', 'install-hook') } }
+  const config = { hookScripts: { install: path.join(import.meta.dirname, 'fixtures', 'install-hook') } }
   const snapHookPath = path.join(t.context.tempDir.name, 'install')
   await copyHooks(t.context.tempDir.name, config)
   t.is(typeof config.hookScripts, 'undefined', 'hookScripts removed from config')

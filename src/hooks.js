@@ -1,4 +1,3 @@
-'use strict'
 /*
 Copyright 2018, 2019 Mark Lee and contributors
 
@@ -15,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const fs = require('fs-extra')
-const path = require('path')
+import fs from 'fs-extra'
+import path from 'node:path'
 
 async function copyHook (snapMetaDir, hookName, hookPath) {
   const snapHookPath = path.join(snapMetaDir, hookName)
@@ -28,7 +27,7 @@ async function copyHook (snapMetaDir, hookName, hookPath) {
   await fs.chmod(snapHookPath, 0o755)
 }
 
-module.exports = async function copyHooks (snapMetaDir, config) {
+export default async function copyHooks (snapMetaDir, config) {
   if (typeof config.hookScripts !== 'object') {
     return
   }
