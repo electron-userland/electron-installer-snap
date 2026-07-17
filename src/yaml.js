@@ -1,4 +1,3 @@
-'use strict'
 /*
 Copyright 2017, 2018, 2019 Mark Lee and contributors
 
@@ -15,16 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const debug = require('debug')('electron-installer-snap:yaml')
-const common = require('electron-installer-common')
-const fs = require('fs-extra')
-const { merge, pull } = require('lodash')
-const path = require('path')
-const { spawn } = require('@malept/cross-spawn-promise')
-const which = require('which')
-const yaml = require('js-yaml')
+import createDebug from 'debug'
+import common from 'electron-installer-common'
+import fs from 'fs-extra'
+import lodash from 'lodash'
+import path from 'node:path'
+import { spawn } from '@malept/cross-spawn-promise'
+import which from 'which'
+import yaml from 'js-yaml'
 
-const { createDesktopLaunchCommand } = require('./launcher')
+import { createDesktopLaunchCommand } from './launcher.js'
+
+const debug = createDebug('electron-installer-snap:yaml')
+const { merge, pull } = lodash
 
 const DEPENDENCY_MAP = {
   atspi: 'libatspi2.0-0',
@@ -62,7 +64,7 @@ const FEATURES = {
   }
 }
 
-class SnapcraftYAML {
+export class SnapcraftYAML {
   async read (templateFilename) {
     debug('Loading YAML template', templateFilename)
     this.data = yaml.safeLoad(await fs.readFile(templateFilename), { filename: templateFilename })
@@ -257,10 +259,10 @@ class SnapcraftYAML {
   }
 }
 
-module.exports = async function createYamlFromTemplate (snapDir, packageDir, userSupplied) {
+export default async function createYamlFromTemplate (snapDir, packageDir, userSupplied) {
   const templateFilename = (userSupplied.confinement && userSupplied.confinement === 'classic')
-    ? path.resolve(__dirname, '..', 'resources', 'classic', 'snapcraft.yaml')
-    : path.resolve(__dirname, '..', 'resources', 'strict', 'snapcraft.yaml')
+    ? path.resolve(import.meta.dirname, '..', 'resources', 'classic', 'snapcraft.yaml')
+    : path.resolve(import.meta.dirname, '..', 'resources', 'strict', 'snapcraft.yaml')
   delete userSupplied.snapcraft
 
   const yamlData = new SnapcraftYAML()
@@ -269,5 +271,3 @@ module.exports = async function createYamlFromTemplate (snapDir, packageDir, use
   await yamlData.transform(packageDir, userSupplied)
   await yamlData.write(path.join(snapDir, 'snap', 'snapcraft.yaml'))
 }
-
-module.exports.SnapcraftYAML = SnapcraftYAML

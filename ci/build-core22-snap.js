@@ -1,4 +1,3 @@
-'use strict'
 /*
 Copyright 2026 Mark Lee and contributors
 
@@ -18,13 +17,14 @@ limitations under the License.
 // Builds a core22 snap of the app-with-asar fixture for the non-blocking
 // verify-snap-build workflow (host/destructive mode; see that workflow).
 
-const path = require('path')
-const fs = require('fs-extra')
-const createSnap = require('../src')
+import path from 'node:path'
+import fs from 'fs-extra'
+
+import createSnap from '../src/index.js'
 
 async function main () {
-  const src = path.join(__dirname, '..', 'test', 'fixtures', 'app-with-asar')
-  const dest = path.join(__dirname, '..', 'dist-snap')
+  const src = path.join(import.meta.dirname, '..', 'test', 'fixtures', 'app-with-asar')
+  const dest = path.join(import.meta.dirname, '..', 'dist-snap')
   await fs.mkdirs(dest)
 
   console.log(`Building a core22 snap from fixture: ${src}`)
@@ -42,6 +42,6 @@ async function main () {
 
 main().catch(err => {
   console.error(err)
-  // eslint-disable-next-line no-process-exit
+  // eslint-disable-next-line n/no-process-exit
   process.exit(1)
 })

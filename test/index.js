@@ -1,4 +1,3 @@
-'use strict'
 /*
 Copyright 2018, 2019 Mark Lee and contributors
 
@@ -15,18 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const fs = require('fs-extra')
-const path = require('path')
-const snap = require('../src')
-const test = require('ava')
-const util = require('./_util')
+import fs from 'fs-extra'
+import path from 'node:path'
+import test from 'ava'
+
+import snap, { SnapCreator } from '../src/index.js'
+import * as util from './_util.js'
 
 test('missing configuration', t => {
   return t.throwsAsync(snap, { message: 'Missing configuration' })
 })
 
 test('package description too long', t => {
-  return t.throwsAsync(snap({ src: path.join(__dirname, 'fixtures', 'description-too-long') }), { message: /The max length of the summary/ })
+  return t.throwsAsync(snap({ src: path.join(import.meta.dirname, 'fixtures', 'description-too-long') }), { message: /The max length of the summary/ })
 })
 
 test('packaged app not found', t => {
@@ -34,21 +34,21 @@ test('packaged app not found', t => {
 })
 
 test('cannot find custom snapcraft', t => {
-  return t.throwsAsync(snap({ src: path.join(__dirname, 'fixtures', 'app-with-asar'), snapcraft: '/foo/bar/non-existent' }), { message: /Cannot locate \/foo\/bar\/non-existent in your system/ })
+  return t.throwsAsync(snap({ src: path.join(import.meta.dirname, 'fixtures', 'app-with-asar'), snapcraft: '/foo/bar/non-existent' }), { message: /Cannot locate \/foo\/bar\/non-existent in your system/ })
 })
 
 test('snap name is sanitized', t => {
-  const creator = new snap.SnapCreator()
+  const creator = new SnapCreator()
   t.is(creator.sanitizeName('My App'), 'my-app')
 })
 
 test('snap name is too long', t => {
-  const creator = new snap.SnapCreator()
+  const creator = new SnapCreator()
   t.throws(() => creator.sanitizeName('My super duper long application name'), { message: /The max length of the name/ })
 })
 
 test('snap name has no letters', t => {
-  const creator = new snap.SnapCreator()
+  const creator = new SnapCreator()
   t.throws(() => creator.sanitizeName('0-9'), { message: /needs to have at least one letter/ })
 })
 
@@ -58,7 +58,7 @@ if (!process.env.FAST_TESTS_ONLY) {
 
   for (const base of bases) {
     test.serial(`creates a snap (base: ${base})`, async t => {
-      const snapPath = await snap({ src: path.join(__dirname, 'fixtures', 'app-with-asar'), base })
+      const snapPath = await snap({ src: path.join(import.meta.dirname, 'fixtures', 'app-with-asar'), base })
       t.truthy(snapPath, 'snap returns a truthy value')
       t.true(await fs.pathExists(snapPath), `Snap created at ${snapPath}`)
     })
@@ -66,7 +66,7 @@ if (!process.env.FAST_TESTS_ONLY) {
     test.serial(`creates a snap in a custom output directory (base: ${base})`, async t => {
       const destDir = path.join(t.context.tempDir.name, 'custom-output-directory')
       await fs.mkdirs(destDir)
-      const snapPath = await snap({ src: path.join(__dirname, 'fixtures', 'app-with-asar'), dest: destDir, base })
+      const snapPath = await snap({ src: path.join(import.meta.dirname, 'fixtures', 'app-with-asar'), dest: destDir, base })
       t.truthy(snapPath, 'snap returns a truthy value')
       util.assertIncludes(t, snapPath, 'custom-output-directory', 'path contains custom output directory')
       t.true(await fs.pathExists(snapPath), `Snap created at ${snapPath}`)

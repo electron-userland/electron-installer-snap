@@ -1,4 +1,3 @@
-'use strict'
 /*
 Copyright 2018 Mark Lee and contributors
 
@@ -15,11 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const debug = require('debug')('electron-installer-snap:snapcraft')
-const Snapcraft = require('../src/snapcraft')
-const test = require('ava')
+import createDebug from 'debug'
+import test from 'ava'
 
-require('./_util')
+import Snapcraft from '../src/snapcraft.js'
+import './_util.js'
+
+const debug = createDebug('electron-installer-snap:snapcraft')
 
 test('translate node arches to snap arches', t => {
   const snapcraft = new Snapcraft()

@@ -1,4 +1,3 @@
-'use strict'
 /*
 Copyright 2018, 2019 Mark Lee and contributors
 
@@ -15,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const fs = require('fs-extra')
-const path = require('path')
+import fs from 'fs-extra'
+import path from 'node:path'
 
 function getBrowserSandboxFlag (data) {
   if (data.apps) {
@@ -26,17 +25,17 @@ function getBrowserSandboxFlag (data) {
   return ''
 }
 
-async function copyLauncher (snapDir, config) {
+export async function copyLauncher (snapDir, config) {
   const binDir = path.join(snapDir, 'bin')
-  let launcherPath = path.resolve(__dirname, '..', 'resources', 'desktop-launcher.sh')
+  let launcherPath = path.resolve(import.meta.dirname, '..', 'resources', 'desktop-launcher.sh')
   if (config.confinement === 'classic') {
-    launcherPath = path.resolve(__dirname, '..', 'resources', 'classic', 'classic-launcher.sh')
+    launcherPath = path.resolve(import.meta.dirname, '..', 'resources', 'classic', 'classic-launcher.sh')
   }
   await fs.mkdirs(binDir)
   await fs.copy(launcherPath, path.join(binDir, 'electron-launch'))
 }
 
-function createDesktopLaunchCommand (data) {
+export function createDesktopLaunchCommand (data) {
   const executableName = data.executableName || data.productName || data.name
 
   delete data.executableName
@@ -45,9 +44,4 @@ function createDesktopLaunchCommand (data) {
   const sandboxFlag = getBrowserSandboxFlag(data)
 
   return `bin/electron-launch $SNAP/${data.name}/${executableName} ${sandboxFlag}`
-}
-
-module.exports = {
-  copyLauncher: copyLauncher,
-  createDesktopLaunchCommand: createDesktopLaunchCommand
 }

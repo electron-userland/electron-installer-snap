@@ -1,4 +1,3 @@
-'use strict'
 /*
 Copyright 2018, 2019 Mark Lee and contributors
 
@@ -15,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const fs = require('fs-extra')
-const launcher = require('../src/launcher')
-const path = require('path')
-const test = require('ava')
+import fs from 'fs-extra'
+import path from 'node:path'
+import test from 'ava'
 
-require('./_util')
+import * as launcher from '../src/launcher.js'
+import './_util.js'
 
 test('desktop-launch command uses productName by default', t => {
   const command = launcher.createDesktopLaunchCommand({ name: 'app-name', productName: 'App Name' })

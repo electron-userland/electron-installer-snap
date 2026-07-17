@@ -1,4 +1,3 @@
-'use strict'
 /*
 Copyright 2018, 2019 Mark Lee and contributors
 
@@ -15,15 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const createDesktopFile = require('../src/desktop')
-const fs = require('fs-extra')
-const path = require('path')
-const test = require('ava')
-const util = require('./_util')
+import fs from 'fs-extra'
+import path from 'node:path'
+import test from 'ava'
+
+import createDesktopFile from '../src/desktop.js'
+import * as util from './_util.js'
 
 test('custom desktop template', async t => {
   const desktopFilePath = path.join(t.context.tempDir.name, 'app.desktop')
-  const desktopTemplatePath = path.join(__dirname, 'fixtures', 'custom.desktop.ejs')
+  const desktopTemplatePath = path.join(import.meta.dirname, 'fixtures', 'custom.desktop.ejs')
   await createDesktopFile(t.context.tempDir.name, { name: 'app', desktopTemplate: desktopTemplatePath })
   t.true(await fs.pathExists(desktopFilePath), 'desktop file exists')
   const desktopData = await fs.readFile(desktopFilePath)

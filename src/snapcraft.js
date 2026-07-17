@@ -1,4 +1,3 @@
-'use strict'
 /*
 Copyright 2017, 2019 Mark Lee and contributors
 
@@ -15,11 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const debug = require('debug')('electron-installer-snap:snapcraft')
-const { spawn } = require('@malept/cross-spawn-promise')
-const which = require('which')
+import createDebug from 'debug'
+import { spawn } from '@malept/cross-spawn-promise'
+import which from 'which'
 
-class Snapcraft {
+const debug = createDebug('electron-installer-snap:snapcraft')
+
+export default class Snapcraft {
   async ensureInstalled (snapcraftPath) {
     const cmd = snapcraftPath || 'snapcraft'
     try {
@@ -108,5 +109,3 @@ class Snapcraft {
     }
   }
 }
-
-module.exports = Snapcraft
