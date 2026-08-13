@@ -1,11 +1,10 @@
 import { Application } from 'typedoc'
 
 const config = {
+  entryPoints: ['src/index.d.ts'],
   excludeExternals: true,
   excludePrivate: true,
-  excludeProtected: true,
-  includeDeclarations: true,
-  mode: 'file'
+  excludeProtected: true
 }
 
 const replaceRef = /^refs\/(head|tag)s\//
@@ -26,12 +25,11 @@ if (gitRevision) {
   }
 }
 
-const app = new Application()
-app.bootstrap(config)
+const app = await Application.bootstrapWithPlugins(config)
 
-const project = app.convert(['src/index.d.ts'])
+const project = await app.convert()
 if (project) {
-  app.generateDocs(project, 'typedoc')
+  await app.generateDocs(project, 'typedoc')
 } else {
   console.error('Could not generate API documentation from TypeScript definition!')
   // eslint-disable-next-line n/no-process-exit
