@@ -34,16 +34,7 @@ jobs:
         run: yarn lint
       # Fast unit tests only; full snap builds run in the non-blocking verify-snap-build workflow.
       - name: Test
-        run: yarn coverage
+        run: yarn ava
         env:
           DEBUG: electron-installer-snap:snapcraft
           FAST_TESTS_ONLY: '1'
-      - name: Upload code coverage to Codecov
-        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
-        continue-on-error: true
-        with:
-          file: ./coverage.lcov
-          env_vars: NODE_VERSION
-          fail_ci_if_error: false
-        env:
-          NODE_VERSION: ${{ matrix.node-version }}
